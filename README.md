@@ -1,7 +1,7 @@
 # SALTY DOG
 
-**S**chema **a**nalysis, **l**inting, and **t**ransformation for **Y**AML with **d**efaults, **o**ptional fields, and
-other **g**ood stuff.
+JSON **s**chema **a**nalysis, **l**inting, and **t**ransformation for **Y**AML, featuring **d**efaults, **o**ptional
+fields, and other **g**ood stuff.
 
 - [SALTY DOG](#salty-dog)
   - [Build](#build)
@@ -20,18 +20,17 @@ other **g**ood stuff.
 ## Build
 
 ```shell
-> git clone
-> make bundle
+> git clone git@github.com:ssube/salty-dog.git
+> make
 ```
 
 ## Usage
 
 ```shell
-> cat rules/examples/kubernetes-require-resources-pass.yml |\
-    node out/bundle.js \
-      --rules rules/kubernetes.yml \
-      --source - \
-      --tag important
+> cat rules/examples/kubernetes-require-resources-pass.yml | salty-dog \
+    --rules rules/kubernetes.yml \
+    --source - \
+    --tag important
 ```
 
 ### Options

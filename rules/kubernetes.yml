@@ -23,17 +23,13 @@ rules:
               properties:
                 cpu:
                   type: string
-                  default: 100m
                 memory:
                   type: string
-                  default: 256Mi
             requests:
               type: object
               required: [cpu, memory]
               properties:
                 cpu:
                   type: string
-                  default: 100m
                 memory:
                   type: string
-                  default: 256Mi
