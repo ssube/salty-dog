@@ -12,6 +12,7 @@ const CONFIG_ARGS_PATH = 'config-path';
 
 const MAIN_ARGS: Options = {
   alias: {
+    'count': ['c'],
     'includeTag': ['t', 'tag'],
     'mode': ['m'],
   },
@@ -25,10 +26,14 @@ const MAIN_ARGS: Options = {
     'includeTag',
     'rules',
   ],
+  boolean: [
+    'count',
+  ],
   count: ['v'],
   default: {
     [CONFIG_ARGS_NAME]: `.${VERSION_INFO.app.name}.yml`,
     [CONFIG_ARGS_PATH]: [],
+    'count': false,
     'excludeLevel': [],
     'excludeName': [],
     'excludeTag': [],
@@ -69,24 +74,33 @@ export async function main(argv: Array<string>): Promise<number> {
   const activeRules = await resolveRules(rules, args.argv as any);
 
   // run rules
-  let status = STATUS_SUCCESS;
+  let errors = 0;
   switch (args.argv.mode) {
     case 'check':
       for (const rule of activeRules) {
-        if (checkRule(rule, data)) {
+        if (checkRule(rule, data, logger)) {
           logger.info({ rule }, 'passed rule');
         } else {
           logger.warn({ rule }, 'failed rule');
-          status = STATUS_ERROR;
+          ++errors;
         }
       }
       break;
     default:
       logger.error({ mode: args.argv.mode }, 'unsupported mode');
-      status = STATUS_ERROR;
+      ++errors;
   }
 
-  return status;
+  if (errors > 0) {
+    logger.error({ errors }, 'some rules failed');
+    if (args.argv.count) {
+      return errors;
+    } else {
+      return STATUS_ERROR;
+    }
+  } else {
+    return STATUS_SUCCESS;
+  }
 }
 
 main(process.argv).then((status) => process.exit(status)).catch((err) => {

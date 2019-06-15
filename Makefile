@@ -42,7 +42,7 @@ RELEASE_OPTS ?= --commit-all
 export NODE_VERSION		:= $(shell node -v)
 export RUNNER_VERSION  := $(CI_RUNNER_VERSION)
 
-all: build run-terminal
+all: build
 
 clean: ## clean up the target directory
 	rm -rf node_modules
@@ -74,16 +74,7 @@ todo:
 
 # build targets
 build: ## builds, bundles, and tests the application
-build: build-fast
-
-build-cover: ## builds, bundles, and tests the application with code coverage
-build-cover: configure node_modules
-
-build-fast: ## builds, bundles, and tests the application
-build-fast: configure node_modules
-
-build-strict: ## builds, bundles, and tests the application with type checks and extra warnings (slow)
-build-strict: configure node_modules
+build: bundle
 
 bundle: node_modules
 	$(NODE_BIN)/rollup --config $(CONFIG_PATH)/rollup.js

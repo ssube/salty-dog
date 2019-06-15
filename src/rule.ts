@@ -2,7 +2,7 @@ import * as Ajv from 'ajv';
 import { readFile } from 'fs';
 import { JSONPath } from 'jsonpath-plus';
 import { intersection } from 'lodash';
-import { LogLevel } from 'noicejs';
+import { LogLevel, Logger } from 'noicejs';
 import { promisify } from 'util';
 import { safeLoad } from 'js-yaml';
 import { CONFIG_SCHEMA } from './config';
@@ -81,12 +81,21 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
   return Array.from(activeRules);
 }
 
-export function checkRule(rule: Rule, data: any): boolean {
+export function checkRule(rule: Rule, data: any, logger: Logger): boolean {
   const ajv = new ((Ajv as any).default)()
   const schema = ajv.compile(rule.schema);
   const scopes = JSONPath({
     json: data,
     path: rule.nodes.select,
   });
-  return scopes.every((s: any) => schema(s));
+
+  for (const scope of scopes) {
+    const valid = schema(scope);
+    if (!valid) {
+      logger.warn({ errors: schema.errors, item: scope }, 'rule failed on item');
+      return false;
+    }
+  }
+  
+  return true;
 }
