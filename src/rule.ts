@@ -88,8 +88,5 @@ export function checkRule(rule: Rule, data: any): boolean {
     json: data,
     path: rule.nodes.select,
   });
-  const valid = scopes.every((s: any) => schema(s));
-  console.log(rule.nodes.select, scopes, valid, data, rule.schema);
-  console.log(schema.errors);
-  return !!valid;
+  return scopes.every((s: any) => schema(s));
 }

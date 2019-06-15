@@ -70,13 +70,20 @@ export async function main(argv: Array<string>): Promise<number> {
 
   // run rules
   let status = STATUS_SUCCESS;
-  for (const rule of activeRules) {
-    if (checkRule(rule, data)) {
-      logger.info({ rule }, 'passed rule');
-    } else {
-      logger.warn({ rule }, 'failed rule');
+  switch (args.argv.mode) {
+    case 'check':
+      for (const rule of activeRules) {
+        if (checkRule(rule, data)) {
+          logger.info({ rule }, 'passed rule');
+        } else {
+          logger.warn({ rule }, 'failed rule');
+          status = STATUS_ERROR;
+        }
+      }
+      break;
+    default:
+      logger.error({ mode: args.argv.mode }, 'unsupported mode');
       status = STATUS_ERROR;
-    }
   }
 
   return status;
