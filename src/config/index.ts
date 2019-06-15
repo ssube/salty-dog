@@ -9,7 +9,7 @@ import { includeSchema, includeType } from 'src/config/type/Include';
 import { regexpType } from 'src/config/type/Regexp';
 import { NotFoundError } from 'src/error/NotFoundError';
 
-export const CONFIG_ENV = 'ISOLEX_HOME';
+export const CONFIG_ENV = 'SALTY_HOME';
 export const CONFIG_SCHEMA = Schema.create([DEFAULT_SAFE_SCHEMA], [
   envType,
   includeType,
@@ -23,7 +23,7 @@ const readFileSync = promisify(readFile);
 /**
  * With the given name, generate all potential config paths in their complete, absolute form.
  *
- * This will include the value of `ISOLEX_HOME`, `HOME`, the current working directory, and any extra paths
+ * This will include the value of `SALTY_HOME`, `HOME`, the current working directory, and any extra paths
  * passed as the final arguments.
  */
 export function completePaths(name: string, extras: Array<string>): Array<string> {

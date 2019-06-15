@@ -1,20 +1,46 @@
 import { createLogger } from 'bunyan';
 import { detailed, Options } from 'yargs-parser';
 
-import { loadConfig } from 'src/config';
+import { loadConfig, CONFIG_SCHEMA } from 'src/config';
+import { loadRules, resolveRules, checkRule } from 'src/rule';
+import { loadSource } from 'src/source';
 import { VERSION_INFO } from 'src/version';
+import { safeLoad } from 'js-yaml';
 
 const CONFIG_ARGS_NAME = 'config-name';
 const CONFIG_ARGS_PATH = 'config-path';
 
 const MAIN_ARGS: Options = {
-  array: [CONFIG_ARGS_PATH],
+  alias: {
+    'includeTag': ['t', 'tag'],
+    'mode': ['m'],
+  },
+  array: [
+    CONFIG_ARGS_PATH,
+    'excludeLevel',
+    'excludeName',
+    'excludeTag',
+    'includeLevel',
+    'includeName',
+    'includeTag',
+    'rules',
+  ],
   count: ['v'],
   default: {
     [CONFIG_ARGS_NAME]: `.${VERSION_INFO.app.name}.yml`,
     [CONFIG_ARGS_PATH]: [],
+    'excludeLevel': [],
+    'excludeName': [],
+    'excludeTag': [],
+    'includeLevel': [],
+    'includeName': [],
+    'includeTag': [],
+    'mode': 'check',
+    'rules': [],
+    'source': '-',
   },
   envPrefix: VERSION_INFO.app.name,
+  string: ['mode'],
 };
 
 const STATUS_SUCCESS = 0;
@@ -35,12 +61,25 @@ export async function main(argv: Array<string>): Promise<number> {
     return STATUS_ERROR;
   }
 
-  if (args.argv.test) {
-    logger.info('config is valid');
-    return STATUS_SUCCESS;
+  const rules = await loadRules(args.argv.rules);
+  const source = await loadSource(args.argv.source);
+  const data = safeLoad(source, {
+    schema: CONFIG_SCHEMA,
+  });
+  const activeRules = await resolveRules(rules, args.argv as any);
+
+  // run rules
+  let status = STATUS_SUCCESS;
+  for (const rule of activeRules) {
+    if (checkRule(rule, data)) {
+      logger.info({ rule }, 'passed rule');
+    } else {
+      logger.warn({ rule }, 'failed rule');
+      status = STATUS_ERROR;
+    }
   }
 
-  return STATUS_SUCCESS;
+  return status;
 }
 
 main(process.argv).then((status) => process.exit(status)).catch((err) => {

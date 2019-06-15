@@ -1,4 +1,5 @@
 import commonjs from 'rollup-plugin-commonjs';
+import json from 'rollup-plugin-json';
 import replace from 'rollup-plugin-replace';
 import resolve from 'rollup-plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript2';
@@ -17,6 +18,7 @@ export default {
 		sourcemap: true,
 	},
 	plugins: [
+		json(),
 		replace({
 			delimiters: ['{{ ', ' }}'],
 			values: {
@@ -33,7 +35,7 @@ export default {
 		}),
 		commonjs({
 			namedExports: {
-				'node_modules/lodash/lodash.js': ['isNil', 'isString'],
+				'node_modules/lodash/lodash.js': ['intersection', 'isNil', 'isString'],
 				'node_modules/noicejs/out/main-bundle.js': ['BaseError'],
 				'node_modules/js-yaml/index.js': ['DEFAULT_SAFE_SCHEMA', 'SAFE_SCHEMA', 'safeLoad', 'Schema', 'Type'],
 				'node_modules/yargs-parser/index.js': ['detailed'],

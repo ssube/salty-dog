@@ -1,0 +1,40 @@
+rules:
+  - name: require-resources
+    level: info
+    tags:
+      - cluster-health
+      - important
+
+    nodes:
+      filter: ''
+      select: '$.spec.template.spec.containers[*]'
+
+    schema:
+      type: object
+      additionalProperties: true
+      required: [resources]
+      properties:
+        resources:
+          type: object
+          required: [limits, requests]
+          properties:
+            limits:
+              type: object
+              required: [cpu, memory]
+              properties:
+                cpu:
+                  type: string
+                  default: 100m
+                memory:
+                  type: string
+                  default: 256Mi
+            requests:
+              type: object
+              required: [cpu, memory]
+              properties:
+                cpu:
+                  type: string
+                  default: 100m
+                memory:
+                  type: string
+                  default: 256Mi
