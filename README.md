@@ -8,12 +8,14 @@ fields, and other **g**ood stuff.
   - [Usage](#usage)
     - [Options](#options)
       - [Count](#count)
-      - [Exclude Level](#exclude-level)
-      - [Exclude Name](#exclude-name)
-      - [Exclude Tag](#exclude-tag)
-      - [Include Level](#include-level)
-      - [Include Name](#include-name)
-      - [Include Tag](#include-tag)
+      - [Exclude](#exclude)
+        - [Exclude Level](#exclude-level)
+        - [Exclude Name](#exclude-name)
+        - [Exclude Tag](#exclude-tag)
+      - [Include](#include)
+        - [Include Level](#include-level)
+        - [Include Name](#include-name)
+        - [Include Tag](#include-tag)
       - [Mode](#mode)
       - [Rules](#rules)
       - [Source](#source)
@@ -49,35 +51,39 @@ fields, and other **g**ood stuff.
 
 ### Options
 
-Excludes take priority over includes: a rule matching some of both will be excluded.
-
 #### Count
 
 - Alias: `c`
 
 Exit with the error count (max of 255) rather than `0` or `1`.
 
-#### Exclude Level
+#### Exclude
+
+Excludes take priority over includes: a rule matching some of both will be excluded.
+
+##### Exclude Level
 
 Exclude rules by log level.
 
-#### Exclude Name
+##### Exclude Name
 
 Exclude rules by name.
 
-#### Exclude Tag
+##### Exclude Tag
 
 Exclude rules by tag.
 
-#### Include Level
+#### Include
+
+##### Include Level
 
 Include rules by log level.
 
-#### Include Name
+##### Include Name
 
 Include rules by name.
 
-#### Include Tag
+##### Include Tag
 
 - Alias: `t`, `tag`
 
