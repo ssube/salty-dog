@@ -28,10 +28,23 @@ fields, and other **g**ood stuff.
 ## Usage
 
 ```shell
-> cat rules/examples/kubernetes-require-resources-pass.yml | salty-dog \
-    --rules rules/kubernetes.yml \
-    --source - \
-    --tag important
+> cat rules/examples/kubernetes-require-resources-fail.yml |\
+    salty-dog \
+      --rules rules/kubernetes.yml \
+      --source - \
+      --tag important |\
+    ./node_modules/.bin/bunyan
+
+[2019-06-15T23:56:04.764Z] ERROR: salty-dog/22211 on cerberus: some rules failed (errors=1)
+
+> cat rules/examples/kubernetes-require-resources-pass.yml |\
+    salty-dog \
+      --rules rules/kubernetes.yml \
+      --source - \
+      --tag important |\
+    ./node_modules/.bin/bunyan
+
+[2019-06-15T23:53:34.223Z]  INFO: salty-dog/19839 on cerberus: all rules passed
 ```
 
 ### Options

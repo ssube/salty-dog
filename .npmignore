@@ -19,6 +19,7 @@ vendor/
 Dockerfile
 licensed.yml
 Makefile
+package-lock.json
 renovate.json
 tsconfig.json
 yarn-*

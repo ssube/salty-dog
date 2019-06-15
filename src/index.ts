@@ -99,6 +99,7 @@ export async function main(argv: Array<string>): Promise<number> {
       return STATUS_ERROR;
     }
   } else {
+    logger.info('all rules passed');
     return STATUS_SUCCESS;
   }
 }
