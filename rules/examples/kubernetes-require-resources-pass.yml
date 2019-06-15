@@ -1,0 +1,14 @@
+metadata:
+  name: example
+spec:
+  template:
+    spec:
+      containers:
+        - name: test
+          resources:
+            limits:
+              cpu: 200m
+              memory: 250Mi
+            requests:
+              cpu: 200m
+              memory: 250Mi

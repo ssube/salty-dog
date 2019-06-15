@@ -1,12 +1,11 @@
 rules:
-  - name: require-resources
+  - name: kubernetes-require-resources
     level: info
     tags:
       - cluster-health
       - important
 
     nodes:
-      filter: ''
       select: '$.spec.template.spec.containers[*]'
 
     schema:

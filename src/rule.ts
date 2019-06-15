@@ -1,5 +1,6 @@
-import * as ajv from 'ajv';
+import * as Ajv from 'ajv';
 import { readFile } from 'fs';
+import { JSONPath } from 'jsonpath-plus';
 import { intersection } from 'lodash';
 import { LogLevel } from 'noicejs';
 import { promisify } from 'util';
@@ -81,8 +82,14 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
 }
 
 export function checkRule(rule: Rule, data: any): boolean {
-  const schema = new ((ajv as any).default)().compile(rule.schema);
-  const valid = schema(data);
-  console.log(data, valid);
+  const ajv = new ((Ajv as any).default)()
+  const schema = ajv.compile(rule.schema);
+  const scopes = JSONPath({
+    json: data,
+    path: rule.nodes.select,
+  });
+  const valid = scopes.every((s: any) => schema(s));
+  console.log(rule.nodes.select, scopes, valid, data, rule.schema);
+  console.log(schema.errors);
   return !!valid;
 }

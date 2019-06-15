@@ -538,6 +538,11 @@ jsonfile@^4.0.0:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
+jsonpath-plus@^0.20.1:
+  version "0.20.1"
+  resolved "https://registry.yarnpkg.com/jsonpath-plus/-/jsonpath-plus-0.20.1.tgz#5358b8e8a5df569c541de64908d54bca55550e1c"
+  integrity sha512-8O4tBeXh9XGma2x2aPVwvpo9lXJAd4bx0XA0eRjYs4Cpz7e5PQy7sPttk2YmhvROJhEUu4DNUxmtLueicCqyZg==
+
 kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
