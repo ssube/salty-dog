@@ -94,7 +94,7 @@ export async function main(argv: Array<string>): Promise<number> {
   if (errors > 0) {
     logger.error({ errors }, 'some rules failed');
     if (args.argv.count) {
-      return errors;
+      return Math.min(errors, 255);
     } else {
       return STATUS_ERROR;
     }
