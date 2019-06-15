@@ -7,6 +7,7 @@ fields, and other **g**ood stuff.
   - [Build](#build)
   - [Usage](#usage)
     - [Options](#options)
+      - [Count](#count)
       - [Exclude Level](#exclude-level)
       - [Exclude Name](#exclude-name)
       - [Exclude Tag](#exclude-tag)
@@ -36,6 +37,12 @@ fields, and other **g**ood stuff.
 ### Options
 
 Excludes take priority over includes: a rule matching some of both will be excluded.
+
+#### Count
+
+- Alias: `c`
+
+Exit with the error count (max of 255) rather than `0` or `1`.
 
 #### Exclude Level
 
