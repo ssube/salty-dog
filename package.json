@@ -1,8 +1,8 @@
 {
-  "name": "salty",
+  "name": "salty-dog",
   "version": "0.1.0",
   "description": "YAML linter, transformer, and validator",
-  "main": "out/index.js",
+  "main": "out/bundle.js",
   "directories": {
     "doc": "docs",
     "test": "test"

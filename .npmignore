@@ -5,9 +5,11 @@ deploy/
 node_modules/
 out/*.html
 out/*.json
+out/*.map
 scripts/
 src/
 test/
+vendor/
 
 .codeclimate.yml
 .gitlab-ci.yml
