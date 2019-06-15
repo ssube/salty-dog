@@ -1,7 +1,9 @@
-
-import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
+import replace from 'rollup-plugin-replace';
+import resolve from 'rollup-plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript2';
+
+const metadata = require('../package.json');
 
 // `npm run build` -> `production` is true
 // `npm run dev` -> `production` is false
@@ -15,6 +17,17 @@ export default {
 		sourcemap: true,
 	},
 	plugins: [
+		replace({
+			delimiters: ['{{ ', ' }}'],
+			values: {
+				APP_NAME: metadata.name,
+				BUILD_JOB: '0',
+				BUILD_RUNNER: 'rollup',
+				GIT_BRANCH: '',
+				GIT_COMMIT: '',
+				NODE_VERSION: '',
+			},
+		}),
 		resolve({
 			preferBuiltins: true,
 		}),
