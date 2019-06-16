@@ -52,13 +52,13 @@ To validate a file:
 ```shell
 > salty-dog \
     --rules rules/kubernetes.yml \
-    --source rules/examples/kubernetes-require-resources-fail.yml \
+    --source examples/kubernetes-resources-fail.yml \
     --tag important
 
 ...
 [2019-06-15T23:56:04.764Z] ERROR: salty-dog/22211 on cerberus: some rules failed (errors=1)
 
-> cat rules/examples/kubernetes-require-resources-pass.yml | salty-dog \
+> cat examples/kubernetes-resources-pass.yml | salty-dog \
     --rules rules/kubernetes.yml \
     --source - \
     --tag important
