@@ -1,23 +1,25 @@
 import * as Ajv from 'ajv';
 import { readFile } from 'fs';
-import { JSONPath } from 'jsonpath-plus';
-import { intersection } from 'lodash';
-import { LogLevel, Logger } from 'noicejs';
-import { promisify } from 'util';
 import { safeLoad } from 'js-yaml';
+import { JSONPath } from 'jsonpath-plus';
+import { intersection, isNil } from 'lodash';
+import { Logger, LogLevel } from 'noicejs';
+import { promisify } from 'util';
+
 import { CONFIG_SCHEMA } from './config';
 
 const readFileSync = promisify(readFile);
 
 export interface Rule {
+  // metadata
+  desc: string;
   level: LogLevel;
   name: string;
-  nodes: {
-    filter: string;
-    select: string;
-  };
-  schema: any;
   tags: Array<string>;
+  // data
+  check: any;
+  filter: any;
+  select: string;
 }
 
 export interface RuleSelector {
@@ -83,19 +85,34 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
 
 export function checkRule(rule: Rule, data: any, logger: Logger): boolean {
   const ajv = new ((Ajv as any).default)()
-  const schema = ajv.compile(rule.schema);
+  const check = ajv.compile(rule.check);
+  const filter = ajv.compile(rule.filter);
   const scopes = JSONPath({
     json: data,
-    path: rule.nodes.select,
+    path: rule.select,
   });
 
-  for (const scope of scopes) {
-    const valid = schema(scope);
-    if (!valid) {
-      logger.warn({ errors: schema.errors, item: scope }, 'rule failed on item');
-      return false;
+  if (isNil(scopes) || scopes.length === 0) {
+    logger.debug('no data selected');
+    return true;
+  }
+
+  for (const item of scopes) {
+    logger.debug({ item }, 'filtering item');
+    if (filter(item)) {
+      logger.debug({ item }, 'checking item')
+      if (!check(item)) {
+        logger.warn({
+          desc: rule.desc,
+          errors: check.errors,
+          item,
+        }, 'rule failed on item');
+        return false;
+      }
+    } else {
+      logger.debug({ errors: filter.errors, item }, 'skipping item');
     }
   }
-  
+
   return true;
 }

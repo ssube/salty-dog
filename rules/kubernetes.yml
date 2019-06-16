@@ -1,14 +1,15 @@
 rules:
-  - name: kubernetes-require-resources
+  - name: kubernetes-resources
     level: info
     tags:
       - cluster-health
       - important
 
-    nodes:
-      select: '$.spec.template.spec.containers[*]'
+    select: '$.spec.template.spec.containers[*]'
+    filter:
+      type: object
 
-    schema:
+    check:
       type: object
       additionalProperties: true
       required: [resources]
@@ -33,3 +34,30 @@ rules:
                   type: string
                 memory:
                   type: string
+
+  - name: kubernetes-resources-minimum-cpu
+    desc: resource limits are too low
+    level: debug
+    tags:
+      - optional
+
+    select: '$.spec.template.spec.containers[*].resources'
+    filter:
+      type: object
+      properties:
+        limits:
+          type: object
+          properties:
+            cpu:
+              type: string
+              pattern: "[0-9]{1,3}m"
+
+    check:
+      type: object
+      properties:
+        limits:
+          type: object
+          properties:
+            cpu:
+              type: string
+              pattern: "[0-9]{3}m"
