@@ -1,8 +1,7 @@
 import { createLogger } from 'bunyan';
-import { safeDump } from 'js-yaml';
 import { detailed, Options } from 'yargs-parser';
 
-import { CONFIG_SCHEMA, loadConfig } from 'src/config';
+import { loadConfig } from 'src/config';
 import { YamlParser } from 'src/parser/YamlParser';
 import { loadRules, resolveRules } from 'src/rule';
 import { loadSource, writeSource } from 'src/source';
@@ -108,9 +107,7 @@ export async function main(argv: Array<string>): Promise<number> {
     }
   } else {
     logger.info('all rules passed');
-    const output = safeDump(data, {
-      schema: CONFIG_SCHEMA,
-    });
+    const output = parser.dump(data);
     await writeSource(args.argv.dest, output);
     return STATUS_SUCCESS;
   }
@@ -121,4 +118,3 @@ main(process.argv).then((status) => process.exit(status)).catch((err) => {
   console.error('uncaught error during main:', err);
   process.exit(STATUS_ERROR);
 });
-

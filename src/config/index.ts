@@ -1,22 +1,11 @@
-import { DEFAULT_SAFE_SCHEMA, Schema } from 'js-yaml';
 import { isNil, isString } from 'lodash';
 import { join } from 'path';
 
-import { envType } from 'src/config/type/Env';
-import { includeSchema, includeType } from 'src/config/type/Include';
-import { regexpType } from 'src/config/type/Regexp';
-import { streamType } from 'src/config/type/Stream';
+import { CONFIG_ENV, CONFIG_SCHEMA } from 'src/config/schema';
+import { includeSchema } from 'src/config/type/Include';
 import { NotFoundError } from 'src/error/NotFoundError';
 import { YamlParser } from 'src/parser/YamlParser';
 import { readFileSync } from 'src/source';
-
-export const CONFIG_ENV = 'SALTY_HOME';
-export const CONFIG_SCHEMA = Schema.create([DEFAULT_SAFE_SCHEMA], [
-  envType,
-  includeType,
-  regexpType,
-  streamType,
-]);
 
 includeSchema.schema = CONFIG_SCHEMA;
 
