@@ -23,18 +23,22 @@ rules:
               type: object
               required: [cpu, memory]
               properties:
-                cpu:
-                  type: string
-                memory:
-                  type: string
+                cpu: &resources-cpu
+                  oneOf:
+                    - type: number
+                    - type: string
+                      pattern: "[1-9][0-9]*m"
+                memory: &resources-memory
+                  oneOf:
+                    - type: number
+                    - type: string
+                      pattern: "[1-9][0-9]*[KMG]i"
             requests:
               type: object
               required: [cpu, memory]
               properties:
-                cpu:
-                  type: string
-                memory:
-                  type: string
+                cpu: *resources-cpu
+                memory: *resources-memory
 
   - name: kubernetes-resources-minimum-cpu
     desc: resource limits are too low
