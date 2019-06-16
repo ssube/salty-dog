@@ -35,7 +35,12 @@ export default {
 		}),
 		commonjs({
 			namedExports: {
-				'node_modules/lodash/lodash.js': ['cloneDeep', 'intersection', 'isNil', 'isString'],
+				'node_modules/lodash/lodash.js': [
+					'cloneDeep',
+					'intersection',
+					'isNil',
+					'isString',
+				],
 				'node_modules/noicejs/out/main-bundle.js': ['BaseError'],
 				'node_modules/js-yaml/index.js': [
 					'DEFAULT_SAFE_SCHEMA',

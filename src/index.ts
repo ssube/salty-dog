@@ -1,8 +1,9 @@
 import { createLogger } from 'bunyan';
-import { safeDump, safeLoad } from 'js-yaml';
+import { safeDump } from 'js-yaml';
 import { detailed, Options } from 'yargs-parser';
 
 import { CONFIG_SCHEMA, loadConfig } from 'src/config';
+import { YamlParser } from 'src/parser/YamlParser';
 import { loadRules, resolveRules } from 'src/rule';
 import { loadSource, writeSource } from 'src/source';
 import { VERSION_INFO } from 'src/version';
@@ -76,13 +77,13 @@ export async function main(argv: Array<string>): Promise<number> {
 
   const rules = await loadRules(args.argv.rules);
   const source = await loadSource(args.argv.source);
-  const data = safeLoad(source, {
-    schema: CONFIG_SCHEMA,
-  });
-  const activeRules = await resolveRules(rules, args.argv as any);
 
-  // run rules
+  const parser = new YamlParser();
+  const data = parser.parse(source);
+
+  const activeRules = await resolveRules(rules, args.argv as any);
   const ctx = new VisitorContext(logger);
+
   switch (args.argv.mode) {
     case 'check':
       for (const rule of activeRules) {

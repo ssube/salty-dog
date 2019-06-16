@@ -1,4 +1,4 @@
-import { DEFAULT_SAFE_SCHEMA, safeLoad, Schema } from 'js-yaml';
+import { DEFAULT_SAFE_SCHEMA, Schema } from 'js-yaml';
 import { isNil, isString } from 'lodash';
 import { join } from 'path';
 
@@ -7,6 +7,7 @@ import { includeSchema, includeType } from 'src/config/type/Include';
 import { regexpType } from 'src/config/type/Regexp';
 import { streamType } from 'src/config/type/Stream';
 import { NotFoundError } from 'src/error/NotFoundError';
+import { YamlParser } from 'src/parser/YamlParser';
 import { readFileSync } from 'src/source';
 
 export const CONFIG_ENV = 'SALTY_HOME';
@@ -50,14 +51,13 @@ export function completePaths(name: string, extras: Array<string>): Array<string
 }
 
 export async function loadConfig(name: string, ...extras: Array<string>): Promise<any> {
+  const parser = new YamlParser();
   const paths = completePaths(name, extras);
 
   for (const p of paths) {
     const data = await readConfig(p);
     if (!isNil(data)) {
-      return safeLoad(data, {
-        schema: CONFIG_SCHEMA,
-      });
+      return parser.parse(data);
     }
   }
 

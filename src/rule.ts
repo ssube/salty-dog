@@ -1,12 +1,10 @@
 import * as Ajv from 'ajv';
-import { safeLoad } from 'js-yaml';
 import { JSONPath } from 'jsonpath-plus';
 import { cloneDeep, intersection, isNil } from 'lodash';
 import { LogLevel } from 'noicejs';
 
-import { CONFIG_SCHEMA } from 'src/config';
+import { YamlParser } from 'src/parser/YamlParser';
 import { readFileSync } from 'src/source';
-
 import { Visitor } from 'src/visitor';
 import { VisitorContext } from 'src/visitor/context';
 
@@ -32,6 +30,7 @@ export interface RuleSelector {
 }
 
 export async function loadRules(paths: Array<string>): Promise<Array<Rule>> {
+  const parser = new YamlParser();
   const rules = [];
 
   for (const path of paths) {
@@ -39,10 +38,7 @@ export async function loadRules(paths: Array<string>): Promise<Array<Rule>> {
       encoding: 'utf-8',
     });
 
-    const data = safeLoad(contents, {
-      schema: CONFIG_SCHEMA,
-    });
-
+    const data = parser.parse(contents);
     rules.push(...data.rules.map((data: any) => new Rule(data)));
   }
 
