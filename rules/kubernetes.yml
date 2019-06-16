@@ -1,5 +1,6 @@
 rules:
   - name: kubernetes-resources
+    desc: containers must have complete resources specified
     level: info
     tags:
       - cluster-health

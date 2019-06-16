@@ -1,0 +1,41 @@
+rules:
+  - name: salty-dog-rule
+    desc: rules must be complete
+    level: info
+    tags:
+      - important
+
+    select: '$.rules[*]'
+    filter:
+      type: object
+
+    check:
+      type: object
+      additionalProperties: false
+      required:
+        # metadata
+        - name
+        - desc
+        - level
+        - tags
+        # data
+        - select
+        - filter
+        - check
+      properties:
+        name:
+          type: string
+        desc:
+          type: string
+        level:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        select:
+          type: string
+        filter:
+          type: object
+        check:
+          type: object
