@@ -29,6 +29,16 @@ fields, and other **g**ood stuff.
 
 ## Usage
 
+To validate the rules in the `rules/` directory:
+
+```shell
+> make run-rules
+...
+{"name":"salty-dog","hostname":"cerberus","pid":29403,"level":30,"msg":"all rules passed","time":"2019-06-16T00:56:55.132Z","v":0}
+```
+
+To validate a file:
+
 ```shell
 > cat rules/examples/kubernetes-require-resources-fail.yml |\
     salty-dog \

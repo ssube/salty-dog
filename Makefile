@@ -112,3 +112,11 @@ upload-climate:
 
 upload-codecov:
 	codecov --disable=gcov --file=$(TARGET_PATH)/coverage/lcov.info --token=$(shell echo "${CODECOV_SECRET}" | base64 -d)
+
+# run targets
+run-rules: ## validate the rules directory
+	find $(ROOT_PATH)/rules -maxdepth 1 -name '*.yml' | while read file; \
+	do \
+		echo "Validating $${file}..."; \
+		node out/bundle.js --rules $(ROOT_PATH)/rules/salty-dog.yml --source $${file} --tag important; \
+	done
