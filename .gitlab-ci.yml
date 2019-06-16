@@ -88,9 +88,8 @@ build-node:
   artifacts:
     expire_in: 1 week
     paths:
-      - out/coverage
       - out/docs
-      - out/main-bundle.*
+      - out/bundle.*
       - out/version.json
   cache:
     key: "${CI_COMMIT_REF_SLUG}"
