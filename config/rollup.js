@@ -23,11 +23,11 @@ export default {
 			delimiters: ['{{ ', ' }}'],
 			values: {
 				APP_NAME: metadata.name,
-				BUILD_JOB: '0',
-				BUILD_RUNNER: 'rollup',
-				GIT_BRANCH: '',
-				GIT_COMMIT: '',
-				NODE_VERSION: '',
+				BUILD_JOB: process.env['CI_JOB_ID'],
+				BUILD_RUNNER: process.env['CI_ENVIRONMENT_SLUG'],
+				GIT_BRANCH: process.env['CI_COMMIT_REF_SLUG'],
+				GIT_COMMIT: process.env['CI_COMMIT_SHA'],
+				NODE_VERSION: process.env['NODE_VERSION'],
 			},
 		}),
 		resolve({
