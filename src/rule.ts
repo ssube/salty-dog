@@ -1,16 +1,16 @@
 import * as Ajv from 'ajv';
-import { readFile } from 'fs';
 import { safeLoad } from 'js-yaml';
 import { JSONPath } from 'jsonpath-plus';
-import { intersection, isNil } from 'lodash';
-import { Logger, LogLevel } from 'noicejs';
-import { promisify } from 'util';
+import { cloneDeep, intersection, isNil } from 'lodash';
+import { LogLevel } from 'noicejs';
 
-import { CONFIG_SCHEMA } from './config';
+import { CONFIG_SCHEMA } from 'src/config';
+import { readFileSync } from 'src/source';
 
-const readFileSync = promisify(readFile);
+import { Visitor } from 'src/visitor';
+import { VisitorContext } from 'src/visitor/context';
 
-export interface Rule {
+export interface RuleData {
   // metadata
   desc: string;
   level: LogLevel;
@@ -43,7 +43,7 @@ export async function loadRules(paths: Array<string>): Promise<Array<Rule>> {
       schema: CONFIG_SCHEMA,
     });
 
-    rules.push(...data.rules);
+    rules.push(...data.rules.map((data: any) => new Rule(data)));
   }
 
   return rules;
@@ -83,44 +83,69 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
   return Array.from(activeRules);
 }
 
-export function checkRule(rule: Rule, data: any, logger: Logger): boolean {
-  const ajv = new ((Ajv as any).default)()
-  const check = ajv.compile(rule.check);
-  const filter = compileFilter(rule, ajv);
-  const scopes = JSONPath({
-    json: data,
-    path: rule.select,
-  });
+export class Rule implements RuleData, Visitor {
+  public readonly check: any;
+  public readonly desc: string;
+  public readonly filter?: any;
+  public readonly level: LogLevel;
+  public readonly name: string;
+  public readonly select: string;
+  public readonly tags: string[];
 
-  if (isNil(scopes) || scopes.length === 0) {
-    logger.debug('no data selected');
-    return true;
-  }
+  constructor(data: RuleData) {
+    this.desc = data.desc;
+    this.level = data.level;
+    this.name = data.name;
+    this.select = data.select;
+    this.tags = Array.from(data.tags);
 
-  for (const item of scopes) {
-    logger.debug({ item }, 'filtering item');
-    if (filter(item)) {
-      logger.debug({ item }, 'checking item')
-      if (!check(item)) {
-        logger.warn({
-          desc: rule.desc,
-          errors: check.errors,
-          item,
-        }, 'rule failed on item');
-        return false;
-      }
-    } else {
-      logger.debug({ errors: filter.errors, item }, 'skipping item');
+    // copy schema objects
+    this.check = cloneDeep(data.check);
+    if (!isNil(data.filter)) {
+      this.filter = cloneDeep(data.filter);
     }
   }
 
-  return true;
-}
+  public async visit(ctx: VisitorContext, node: any): Promise<VisitorContext> {
+    const ajv = new ((Ajv as any).default)()
+    const check = ajv.compile(this.check);
+    const filter = this.compileFilter(ajv);
+    const scopes = JSONPath({
+      json: node,
+      path: this.select,
+    });
 
-export function compileFilter(rule: Rule, ajv: any): any {
-  if (isNil(rule.filter)) {
-    return () => true;
-  } else {
-    return ajv.compile(rule.filter);
+    if (isNil(scopes) || scopes.length === 0) {
+      ctx.logger.debug('no data selected');
+      return ctx;
+    }
+
+    for (const item of scopes) {
+      ctx.logger.debug({ item }, 'filtering item');
+      if (filter(item)) {
+        ctx.logger.debug({ item }, 'checking item')
+        if (!check(item)) {
+          ctx.logger.warn({
+            desc: this.desc,
+            errors: check.errors,
+            item,
+          }, 'rule failed on item');
+          ctx.errors.push(...check.errors);
+          return ctx;
+        }
+      } else {
+        ctx.logger.debug({ errors: filter.errors, item }, 'skipping item');
+      }
+    }
+
+    return ctx;
+  }
+
+  protected compileFilter(ajv: any): any {
+    if (isNil(this.filter)) {
+      return () => true;
+    } else {
+      return ajv.compile(this.filter);
+    }
   }
 }

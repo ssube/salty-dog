@@ -22,10 +22,18 @@ rules:
       properties:
         name:
           type: string
+          pattern: "[-a-z0-9]+"
         desc:
           type: string
+          minLength: 8
+          maxLength: 255
         level:
           type: string
+          enum:
+            - debug
+            - info
+            - warn
+            - error
         tags:
           type: array
           items:
@@ -33,6 +41,7 @@ rules:
             pattern: "[-:a-z0-9]+"
         select:
           type: string
+          minLength: 1
         filter:
           type: object
         check:

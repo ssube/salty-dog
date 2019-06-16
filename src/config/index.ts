@@ -1,14 +1,13 @@
-import { readFile } from 'fs';
 import { DEFAULT_SAFE_SCHEMA, safeLoad, Schema } from 'js-yaml';
 import { isNil, isString } from 'lodash';
 import { join } from 'path';
-import { promisify } from 'util';
 
 import { envType } from 'src/config/type/Env';
 import { includeSchema, includeType } from 'src/config/type/Include';
 import { regexpType } from 'src/config/type/Regexp';
 import { streamType } from 'src/config/type/Stream';
 import { NotFoundError } from 'src/error/NotFoundError';
+import { readFileSync } from 'src/source';
 
 export const CONFIG_ENV = 'SALTY_HOME';
 export const CONFIG_SCHEMA = Schema.create([DEFAULT_SAFE_SCHEMA], [
@@ -19,8 +18,6 @@ export const CONFIG_SCHEMA = Schema.create([DEFAULT_SAFE_SCHEMA], [
 ]);
 
 includeSchema.schema = CONFIG_SCHEMA;
-
-const readFileSync = promisify(readFile);
 
 /**
  * With the given name, generate all potential config paths in their complete, absolute form.

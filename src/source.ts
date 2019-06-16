@@ -1,8 +1,8 @@
 import { promisify } from 'util';
 import { readFile, writeFile } from 'fs';
 
-const readFileSync = promisify(readFile);
-const writeFileSync = promisify(writeFile);
+export const readFileSync = promisify(readFile);
+export const writeFileSync = promisify(writeFile);
 
 export async function loadSource(path: string): Promise<string> {
   if (path === '-') {

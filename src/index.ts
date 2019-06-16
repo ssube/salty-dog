@@ -3,9 +3,10 @@ import { safeDump, safeLoad } from 'js-yaml';
 import { detailed, Options } from 'yargs-parser';
 
 import { CONFIG_SCHEMA, loadConfig } from 'src/config';
-import { checkRule, loadRules, resolveRules } from 'src/rule';
+import { loadRules, resolveRules } from 'src/rule';
 import { loadSource, writeSource } from 'src/source';
 import { VERSION_INFO } from 'src/version';
+import { VisitorContext } from 'src/visitor/context';
 
 const CONFIG_ARGS_NAME = 'config-name';
 const CONFIG_ARGS_PATH = 'config-path';
@@ -81,27 +82,26 @@ export async function main(argv: Array<string>): Promise<number> {
   const activeRules = await resolveRules(rules, args.argv as any);
 
   // run rules
-  let errors = 0;
+  const ctx = new VisitorContext(logger);
   switch (args.argv.mode) {
     case 'check':
       for (const rule of activeRules) {
-        if (checkRule(rule, data, logger)) {
+        if (rule.visit(ctx, data)) {
           logger.info({ rule }, 'passed rule');
         } else {
           logger.warn({ rule }, 'failed rule');
-          ++errors;
         }
       }
       break;
     default:
-      logger.error({ mode: args.argv.mode }, 'unsupported mode');
-      ++errors;
+      ctx.logger.error({ mode: args.argv.mode }, 'unsupported mode');
+      ctx.errors.push('unsupported mode');
   }
 
-  if (errors > 0) {
-    logger.error({ errors }, 'some rules failed');
+  if (ctx.errors.length > 0) {
+    logger.error({ errors: ctx.errors }, 'some rules failed');
     if (args.argv.count) {
-      return Math.min(errors, 255);
+      return Math.min(ctx.errors.length, 255);
     } else {
       return STATUS_ERROR;
     }
