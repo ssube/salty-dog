@@ -122,36 +122,6 @@ publish-npm:
     - npm publish
 
 # commit status
-climate-pending:
-  <<: [*build-climate]
-  stage: status-pre
-  script:
-    - cc-test-reporter before-build
-
-climate-failure:
-  <<: [*build-climate]
-  stage: status-post
-  when: on_failure
-  script:
-    - cc-test-reporter after-build --debug --exit-code 1
-
-climate-success:
-  <<: [*build-climate]
-  stage: status-post
-  dependencies:
-    - build-node
-  script:
-    - make upload-climate
-
-codecov-success:
-  <<: [*build-codecov]
-  stage: status-post
-  when: on_success
-  dependencies:
-    - build-node
-  script:
-    - make upload-codecov
-
 github-pending:
   <<: [*build-curl]
   stage: status-pre
@@ -171,20 +141,3 @@ github-success:
   when: on_success
   script:
     - ./scripts/github-status.sh success
-
-sonar-success:
-  <<: [*build-sonar]
-  stage: status-post
-  when: on_success
-  dependencies:
-    - build-node
-  script:
-    - make node_modules
-    - sonar-scanner
-        -Dsonar.projectKey=ssube_isolex
-        -Dsonar.projectVersion=${CI_COMMIT_REF_SLUG}
-        -Dsonar.organization=ssube-github
-        -Dsonar.sources=src/,test/
-        -Dsonar.host.url=https://sonarcloud.io
-        -Dsonar.login=${SONAR_SECRET}
-        -Dsonar.typescript.lcov.reportPaths=out/coverage/lcov.info
