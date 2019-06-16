@@ -1,11 +1,11 @@
 import { createLogger } from 'bunyan';
+import { safeDump, safeLoad } from 'js-yaml';
 import { detailed, Options } from 'yargs-parser';
 
-import { loadConfig, CONFIG_SCHEMA } from 'src/config';
-import { loadRules, resolveRules, checkRule } from 'src/rule';
-import { loadSource } from 'src/source';
+import { CONFIG_SCHEMA, loadConfig } from 'src/config';
+import { checkRule, loadRules, resolveRules } from 'src/rule';
+import { loadSource, writeSource } from 'src/source';
 import { VERSION_INFO } from 'src/version';
-import { safeLoad } from 'js-yaml';
 
 const CONFIG_ARGS_NAME = 'config-name';
 const CONFIG_ARGS_PATH = 'config-path';
@@ -13,8 +13,11 @@ const CONFIG_ARGS_PATH = 'config-path';
 const MAIN_ARGS: Options = {
   alias: {
     'count': ['c'],
+    'dest': ['d'],
+    'format': ['f'],
     'includeTag': ['t', 'tag'],
     'mode': ['m'],
+    'source': ['s'],
   },
   array: [
     CONFIG_ARGS_PATH,
@@ -34,9 +37,11 @@ const MAIN_ARGS: Options = {
     [CONFIG_ARGS_NAME]: `.${VERSION_INFO.app.name}.yml`,
     [CONFIG_ARGS_PATH]: [],
     'count': false,
+    'dest': '-',
     'excludeLevel': [],
     'excludeName': [],
     'excludeTag': [],
+    'format': 'yaml',
     'includeLevel': [],
     'includeName': [],
     'includeTag': [],
@@ -45,7 +50,9 @@ const MAIN_ARGS: Options = {
     'source': '-',
   },
   envPrefix: VERSION_INFO.app.name,
-  string: ['mode'],
+  string: [
+    'mode',
+  ],
 };
 
 const STATUS_SUCCESS = 0;
@@ -100,6 +107,10 @@ export async function main(argv: Array<string>): Promise<number> {
     }
   } else {
     logger.info('all rules passed');
+    const output = safeDump(data, {
+      schema: CONFIG_SCHEMA,
+    });
+    await writeSource(args.argv.dest, output);
     return STATUS_SUCCESS;
   }
 }

@@ -120,3 +120,13 @@ run-rules: ## validate the rules directory
 		echo "Validating $${file}..."; \
 		node out/bundle.js --rules $(ROOT_PATH)/rules/salty-dog.yml --source $${file} --tag important; \
 	done
+
+run-stream: ## validate stdin and write it to stdout, errors to stderr
+	@node out/bundle.js \
+		--config-path $(ROOT_PATH)/docs --config-name config-stderr.yml \
+		--dest - \
+		--format yaml \
+		--rules $(ROOT_PATH)/rules/kubernetes.yml \
+		--source - \
+		--tag important \
+		--tag optional

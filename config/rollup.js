@@ -37,7 +37,14 @@ export default {
 			namedExports: {
 				'node_modules/lodash/lodash.js': ['intersection', 'isNil', 'isString'],
 				'node_modules/noicejs/out/main-bundle.js': ['BaseError'],
-				'node_modules/js-yaml/index.js': ['DEFAULT_SAFE_SCHEMA', 'SAFE_SCHEMA', 'safeLoad', 'Schema', 'Type'],
+				'node_modules/js-yaml/index.js': [
+					'DEFAULT_SAFE_SCHEMA',
+					'SAFE_SCHEMA',
+					'safeDump',
+					'safeLoad',
+					'Schema',
+					'Type',
+				],
 				'node_modules/yargs-parser/index.js': ['detailed'],
 			},
 		}),
