@@ -40,11 +40,22 @@ This project is written in Typescript and requires `node` and `yarn` to build.
 
 ## Usage
 
-To run with Docker: `docker run ssube/salty-dog:master`
+To run with Docker (**recommended**): `docker run -v ${HOME}:/root:ro --rm -i ssube/salty-dog:master`
 
 To run after `yarn global add` or `npm i -g`: `salty-dog`
 
 To run after building: `node out/bundle.js`
+
+To run with `make`, apply with `kubectl`, and format logs with `bunyan`:
+
+```shell
+> curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml | make run-stream 2> >(./node_modules/.bin/bunyan) > >(kubectl apply --dry-run -f -)
+
+...
+[2019-06-16T03:23:56.645Z]  INFO: salty-dog/8015 on cerberus: all rules passed
+ingress.extensions/gitlab created (dry run)
+
+```
 
 ### Validate
 

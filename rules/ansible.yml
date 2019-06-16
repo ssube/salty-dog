@@ -6,8 +6,6 @@ rules:
       - playbook
     
     select: '$'
-    filter:
-      type: array
     
     check:
       type: array
@@ -39,8 +37,6 @@ rules:
       - role
 
     select: '$'
-    filter:
-      type: array
     
     check:
       type: array

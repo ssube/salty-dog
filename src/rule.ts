@@ -18,7 +18,7 @@ export interface Rule {
   tags: Array<string>;
   // data
   check: any;
-  filter: any;
+  filter?: any;
   select: string;
 }
 
@@ -86,7 +86,7 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
 export function checkRule(rule: Rule, data: any, logger: Logger): boolean {
   const ajv = new ((Ajv as any).default)()
   const check = ajv.compile(rule.check);
-  const filter = ajv.compile(rule.filter);
+  const filter = compileFilter(rule, ajv);
   const scopes = JSONPath({
     json: data,
     path: rule.select,
@@ -115,4 +115,12 @@ export function checkRule(rule: Rule, data: any, logger: Logger): boolean {
   }
 
   return true;
+}
+
+export function compileFilter(rule: Rule, ajv: any): any {
+  if (isNil(rule.filter)) {
+    return () => true;
+  } else {
+    return ajv.compile(rule.filter);
+  }
 }
