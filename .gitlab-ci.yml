@@ -1,0 +1,190 @@
+stages:
+  - status-pre
+  - build
+  - image
+  - publish
+  - status-post
+
+# template jobs
+
+.branch-deploy: &branch-deploy
+  only:
+    - master
+
+.build-curl: &build-curl
+  image: apextoaster/base:1.2
+  tags:
+    - platform:k8s
+    - runner:shared
+
+.build-climate: &build-climate
+  image: apextoaster/code-climate:0.6
+  tags:
+    - platform:k8s
+    - runner:shared
+  allow_failure: false
+  variables:
+    CI_BRANCH: "${CI_COMMIT_REF_NAME}"
+    GIT_BRANCH: "${CI_COMMIT_REF_NAME}"
+    GIT_COMMIT_SHA: "${CI_COMMIT_SHA}"
+
+.build-codecov: &build-codecov
+  image: apextoaster/codecov:3.1
+  tags:
+    - platform:k8s
+    - runner:shared
+  allow_failure: false
+
+.build-docker: &build-docker
+  image: docker:stable
+  services:
+    - docker:stable-dind
+  tags:
+    - platform:k8s
+    - runner:shared
+  allow_failure: false
+
+  before_script:
+    # prep secrets
+    - mkdir ${HOME}/.docker
+    - echo "${DOCKER_SECRET}" | base64 -d > ${HOME}/.docker/config.json
+    - docker info
+
+  after_script:
+    - rm -rfv ${HOME}/.docker
+
+  variables: &vars-docker
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://localhost:2375
+    IMAGE_TAG: ssube/isolex:$CI_COMMIT_REF_SLUG
+
+.build-node: &build-node
+  image: apextoaster/node:10.1
+  tags:
+    - platform:k8s
+    - runner:shared
+  allow_failure: false
+
+  before_script:
+    - echo "${NPM_SECRET}" | base64 -d > ${HOME}/.npmrc
+
+.build-sonar: &build-sonar
+  image: apextoaster/sonar-scanner:3.3
+  tags:
+    - platform:k8s
+    - runner:shared
+  allow_failure: false
+
+# build jobs
+build-node:
+  <<: [*build-node]
+  stage: build
+
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  script:
+    - source docs/isolex.env
+    - make build-strict
+
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - out/coverage
+      - out/docs
+      - out/main-bundle.*
+      - out/version.json
+  cache:
+    key: "${CI_COMMIT_REF_SLUG}"
+    policy: pull-push
+    paths:
+      - node_modules
+
+build-image:
+  <<: [*build-docker]
+  stage: image
+
+  dependencies:
+    - build-node
+  script:
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+
+# publish jobs
+publish-npm:
+  <<: [*build-node]
+  stage: publish
+  only:
+    - tags
+
+  dependencies:
+    - build-node
+  script:
+    - npm publish
+
+# commit status
+climate-pending:
+  <<: [*build-climate]
+  stage: status-pre
+  script:
+    - cc-test-reporter before-build
+
+climate-failure:
+  <<: [*build-climate]
+  stage: status-post
+  when: on_failure
+  script:
+    - cc-test-reporter after-build --debug --exit-code 1
+
+climate-success:
+  <<: [*build-climate]
+  stage: status-post
+  dependencies:
+    - build-node
+  script:
+    - make upload-climate
+
+codecov-success:
+  <<: [*build-codecov]
+  stage: status-post
+  when: on_success
+  dependencies:
+    - build-node
+  script:
+    - make upload-codecov
+
+github-pending:
+  <<: [*build-curl]
+  stage: status-pre
+  script:
+    - ./scripts/github-status.sh pending
+
+github-failure:
+  <<: [*build-curl]
+  stage: status-post
+  when: on_failure
+  script:
+    - ./scripts/github-status.sh failure
+
+github-success:
+  <<: [*build-curl]
+  stage: status-post
+  when: on_success
+  script:
+    - ./scripts/github-status.sh success
+
+sonar-success:
+  <<: [*build-sonar]
+  stage: status-post
+  when: on_success
+  dependencies:
+    - build-node
+  script:
+    - make node_modules
+    - sonar-scanner
+        -Dsonar.projectKey=ssube_isolex
+        -Dsonar.projectVersion=${CI_COMMIT_REF_SLUG}
+        -Dsonar.organization=ssube-github
+        -Dsonar.sources=src/,test/
+        -Dsonar.host.url=https://sonarcloud.io
+        -Dsonar.login=${SONAR_SECRET}
+        -Dsonar.typescript.lcov.reportPaths=out/coverage/lcov.info

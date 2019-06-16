@@ -1,0 +1,17 @@
+rules:
+  - name: gitlab-stages
+    desc: should specify stages
+    level: info
+    tags:
+      - gitlab
+      - optional
+
+    select: '$'
+    check:
+      type: object
+      required: [stages]
+      properties:
+        stages:
+          type: array
+          items:
+            type: string
