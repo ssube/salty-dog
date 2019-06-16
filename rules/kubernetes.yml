@@ -66,3 +66,27 @@ rules:
             cpu:
               type: string
               pattern: "[0-9]{3}m"
+
+  - name: kubernetes-deployment-replicas
+    desc: deployments must specify a replica count
+    level: info
+    tags:
+      - important
+
+    select: '$'
+    filter:
+      type: object
+      properties:
+        kind:
+          type: string
+          const: Deployment
+
+    check:
+      type: object
+      properties:
+        spec:
+          type: object
+          properties:
+            replica:
+              type: number
+              minimum: 1
