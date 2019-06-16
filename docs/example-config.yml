@@ -1,0 +1,5 @@
+data:
+  logger:
+    level: debug
+    name: salty-dog
+    stream: !stream stderr

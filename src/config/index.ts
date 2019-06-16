@@ -7,6 +7,7 @@ import { promisify } from 'util';
 import { envType } from 'src/config/type/Env';
 import { includeSchema, includeType } from 'src/config/type/Include';
 import { regexpType } from 'src/config/type/Regexp';
+import { streamType } from 'src/config/type/Stream';
 import { NotFoundError } from 'src/error/NotFoundError';
 
 export const CONFIG_ENV = 'SALTY_HOME';
@@ -14,6 +15,7 @@ export const CONFIG_SCHEMA = Schema.create([DEFAULT_SAFE_SCHEMA], [
   envType,
   includeType,
   regexpType,
+  streamType,
 ]);
 
 includeSchema.schema = CONFIG_SCHEMA;
