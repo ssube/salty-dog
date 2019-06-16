@@ -30,10 +30,11 @@ Or, as an acronym, JSON **s**chema **a**nalysis, **l**inting, and **t**ransforma
 
 ## Build
 
-This project is written in Typescript and requires Node to be built.
+This project is written in Typescript and requires `node` and `yarn` to build.
 
 ```shell
 > git clone git@github.com:ssube/salty-dog.git
+> cd salty-dog
 > make
 ```
 
@@ -175,4 +176,4 @@ The path to a file containing some `rules`.
 
 The source file to validate.
 
-Defaults to stdin (`-`) to work with pipes: `cat file.yml | salty --source -`
+Defaults to stdin (`-`) to work with pipes: `cat file.yml | salty-dog --source -`
