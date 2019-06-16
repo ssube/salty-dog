@@ -118,12 +118,18 @@ run-rules: ## validate the rules directory
 	find $(ROOT_PATH)/rules -maxdepth 1 -name '*.yml' | while read file; \
 	do \
 		echo "Validating $${file}..."; \
-		node out/bundle.js --rules $(ROOT_PATH)/rules/salty-dog.yml --source $${file} --tag important; \
+		node out/bundle.js \
+			--config-path $(ROOT_PATH)/docs \
+			--config-name config-stderr.yml \
+			--rules $(ROOT_PATH)/rules/salty-dog.yml \
+			--source $${file} \
+			--tag important > /dev/null; \
 	done
 
 run-stream: ## validate stdin and write it to stdout, errors to stderr
 	@node out/bundle.js \
-		--config-path $(ROOT_PATH)/docs --config-name config-stderr.yml \
+		--config-path $(ROOT_PATH)/docs \
+		--config-name config-stderr.yml \
 		--dest - \
 		--format yaml \
 		--rules $(ROOT_PATH)/rules/kubernetes.yml \
