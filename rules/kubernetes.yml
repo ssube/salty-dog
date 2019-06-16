@@ -7,8 +7,6 @@ rules:
       - important
 
     select: '$.spec.template.spec.containers[*]'
-    filter:
-      type: object
 
     check:
       type: object
@@ -47,6 +45,8 @@ rules:
       - optional
 
     select: '$.spec.template.spec.containers[*].resources'
+
+    # filter low-cpu resource limits
     filter:
       type: object
       properties:
@@ -57,6 +57,7 @@ rules:
               type: string
               pattern: "[0-9]{1,3}m"
 
+    # ensure the limits aren't *too* low
     check:
       type: object
       properties:
@@ -68,12 +69,15 @@ rules:
               pattern: "[0-9]{3}m"
 
   - name: kubernetes-deployment-replicas
-    desc: deployments must specify a replica count
+    desc: deployments must specify a positive replica count
     level: info
     tags:
       - important
 
+    # select the root of the document
     select: '$'
+
+    # filter deployments
     filter:
       type: object
       properties:
@@ -81,6 +85,7 @@ rules:
           type: string
           const: Deployment
 
+    # ensure replicas are greater than 0
     check:
       type: object
       properties:
