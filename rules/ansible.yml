@@ -1,0 +1,58 @@
+rules:
+  - name: ansible-playbook
+    desc: ensure plays have important properties
+    level: info
+    tags:
+      - playbook
+    
+    select: '$'
+    filter:
+      type: array
+    
+    check:
+      type: array
+      items:
+        type: object
+        required: [name, hosts, roles, tags]
+        properties:
+          name:
+            type: string
+          hosts:
+            type: string
+          roles:
+            type: array
+            items:
+              type: object
+              required: [role]
+              properties:
+                role:
+                  type: string
+          tags:
+            type: array
+            items:
+              type: string
+
+  - name: ansible-role
+    desc: ensure roles have complete tasks
+    level: info
+    tags:
+      - role
+
+    select: '$'
+    filter:
+      type: array
+    
+    check:
+      type: array
+      items:
+        type: object
+        additionalProperties:
+          type: object
+        required: [name]
+        properties:
+          name:
+            type: string
+          environment:
+            type: object
+            additionalProperties:
+              type: string
