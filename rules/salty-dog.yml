@@ -4,11 +4,9 @@ rules:
     level: info
     tags:
       - important
+      - salty-dog
 
     select: '$.rules[*]'
-    filter:
-      type: object
-
     check:
       type: object
       additionalProperties: false

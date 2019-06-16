@@ -3,6 +3,7 @@ rules:
     desc: ensure plays have important properties
     level: info
     tags:
+      - ansible
       - playbook
     
     select: '$'
@@ -34,6 +35,7 @@ rules:
     desc: ensure roles have complete tasks
     level: info
     tags:
+      - ansible
       - role
 
     select: '$'

@@ -5,9 +5,9 @@ rules:
     tags:
       - cluster-health
       - important
+      - kubernetes
 
     select: '$.spec.template.spec.containers[*]'
-
     check:
       type: object
       additionalProperties: true
@@ -42,6 +42,7 @@ rules:
     desc: resource limits are too low
     level: debug
     tags:
+      - kubernetes
       - optional
 
     select: '$.spec.template.spec.containers[*].resources'
@@ -73,6 +74,7 @@ rules:
     level: info
     tags:
       - important
+      - kubernetes
 
     # select the root of the document
     select: '$'
