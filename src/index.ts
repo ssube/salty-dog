@@ -64,7 +64,7 @@ export async function main(argv: Array<string>): Promise<number> {
 
   const logger = createLogger(config.data.logger);
   logger.info(VERSION_INFO, 'version info');
-  logger.info({ args }, 'main arguments');
+  logger.info({ args: args.argv }, 'main arguments');
 
   // const schema = new Schema();
   const result = { errors: [], valid: true }; // schema.match(config);
