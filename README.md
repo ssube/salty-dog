@@ -40,6 +40,12 @@ This project is written in Typescript and requires `node` and `yarn` to build.
 
 ## Usage
 
+To run with Docker: `docker run ssube/salty-dog:master`
+
+To run after `yarn global add` or `npm i -g`: `salty-dog`
+
+To run after building: `node out/bundle.js`
+
 ### Validate
 
 `salty-dog` can validate JSON and YAML from files and streams, and emit it to a file or stream (with logs going

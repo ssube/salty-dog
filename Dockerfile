@@ -1,11 +1,9 @@
 FROM node:11-stretch
 
 COPY package.json /salty-dog/package.json
-COPY out/ /salty-dog/out
+COPY out/bundle.js /salty-dog/out/bundle.js
 
 WORKDIR /salty-dog
-
-RUN npm link
 
 ENV PATH "${PATH}:/usr/local/lib/node_modules"
 
