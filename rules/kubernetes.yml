@@ -24,11 +24,13 @@ rules:
                 cpu: &resources-cpu
                   oneOf:
                     - type: number
+                      minimum: 1
                     - type: string
                       pattern: "[1-9][0-9]*m"
                 memory: &resources-memory
                   oneOf:
                     - type: number
+                      minimum: 1
                     - type: string
                       pattern: "[1-9][0-9]*[KMG]i"
             requests:
