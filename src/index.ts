@@ -1,5 +1,5 @@
 import { createLogger } from 'bunyan';
-import { detailed, Options } from 'yargs-parser';
+import { Options, usage } from 'yargs';
 
 import { loadConfig } from 'src/config';
 import { YamlParser } from 'src/parser/YamlParser';
@@ -11,63 +11,75 @@ import { VisitorContext } from 'src/visitor/context';
 const CONFIG_ARGS_NAME = 'config-name';
 const CONFIG_ARGS_PATH = 'config-path';
 
-const MAIN_ARGS: Options = {
-  alias: {
-    'count': ['c'],
-    'dest': ['d'],
-    'format': ['f'],
-    'includeTag': ['t', 'tag'],
-    'mode': ['m'],
-    'source': ['s'],
-  },
-  array: [
-    CONFIG_ARGS_PATH,
-    'excludeLevel',
-    'excludeName',
-    'excludeTag',
-    'includeLevel',
-    'includeName',
-    'includeTag',
-    'rules',
-  ],
-  boolean: [
-    'coerce',
-    'count',
-  ],
-  count: ['v'],
-  default: {
-    [CONFIG_ARGS_NAME]: `.${VERSION_INFO.app.name}.yml`,
-    [CONFIG_ARGS_PATH]: [],
-    'coerce': false,
-    'count': false,
-    'dest': '-',
-    'excludeLevel': [],
-    'excludeName': [],
-    'excludeTag': [],
-    'format': 'yaml',
-    'includeLevel': [],
-    'includeName': [],
-    'includeTag': [],
-    'mode': 'check',
-    'rules': [],
-    'source': '-',
-  },
-  envPrefix: VERSION_INFO.app.name,
-  string: [
-    'mode',
-  ],
+const RULE_OPTION: Options = {
+  default: [],
+  type: 'array',
 };
+
+const MAIN_ARGS = usage(`Usage: $0 <mode> [options]`)
+  .option(CONFIG_ARGS_NAME, {
+    default: `.${VERSION_INFO.app.name}.yml`,
+    type: 'string',
+  })
+  .option(CONFIG_ARGS_PATH, {
+    default: [],
+    type: 'array',
+  })
+  .option('coerce', {
+    default: false,
+    type: 'boolean',
+  })
+  .option('count', {
+    alias: ['c'],
+    default: false,
+    type: 'boolean',
+  })
+  .option('dest', {
+    alias: ['d'],
+    default: '-',
+    type: 'string',
+  })
+  .option('format', {
+    alias: ['f'],
+    default: 'yaml',
+    type: 'string',
+  })
+  .option('mode', {
+    alias: ['m'],
+    default: 'check',
+    type: 'string',
+  })
+  .option('rules', {
+    alias: ['r'],
+    default: [],
+    type: 'array',
+  })
+  .option('source', {
+    alias: ['s'],
+    default: '-',
+    type: 'string',
+  })
+  .option('excludeLevel', RULE_OPTION)
+  .option('excludeName', RULE_OPTION)
+  .option('excludeTag', RULE_OPTION)
+  .option('includeLevel', RULE_OPTION)
+  .option('includeName', RULE_OPTION)
+  .option('includeTag', {
+    ...RULE_OPTION,
+    alias: ['t', 'tag'],
+  })
+  .help();
 
 const STATUS_SUCCESS = 0;
 const STATUS_ERROR = 1;
 
 export async function main(argv: Array<string>): Promise<number> {
-  const args = detailed(argv, MAIN_ARGS);
-  const config = await loadConfig(args.argv[CONFIG_ARGS_NAME], ...args.argv[CONFIG_ARGS_PATH]);
+  const args = MAIN_ARGS.argv;
+  const config = await loadConfig(args[CONFIG_ARGS_NAME], ...args[CONFIG_ARGS_PATH]);
 
   const logger = createLogger(config.data.logger);
   logger.info(VERSION_INFO, 'version info');
-  logger.info({ args: args.argv }, 'main arguments');
+  logger.info({ args }, 'main arguments');
 
   // const schema = new Schema();
   const result = { errors: [], valid: true }; // schema.match(config);
@@ -76,20 +88,20 @@ export async function main(argv: Array<string>): Promise<number> {
     return STATUS_ERROR;
   }
 
-  const rules = await loadRules(args.argv.rules);
-  const source = await loadSource(args.argv.source);
+  const rules = await loadRules(args.rules);
+  const source = await loadSource(args.source);
 
   const parser = new YamlParser();
   const data = parser.parse(source);
 
-  const activeRules = await resolveRules(rules, args.argv as any);
+  const activeRules = await resolveRules(rules, args as any);
   const ctx = new VisitorContext({
-    coerce: args.argv.coerce,
-    defaults: args.argv.mode === 'fix',
+    coerce: args.coerce,
+    defaults: args.mode === 'fix',
     logger,
   });
 
-  switch (args.argv.mode) {
+  switch (args.mode) {
     case 'check':
     case 'fix':
       for (const rule of activeRules) {
@@ -101,12 +113,12 @@ export async function main(argv: Array<string>): Promise<number> {
       }
       break;
     default:
-      ctx.error({ mode: args.argv.mode }, 'unsupported mode');
+      ctx.error({ mode: args.mode }, 'unsupported mode');
   }
 
   if (ctx.errors.length > 0) {
     logger.error({ errors: ctx.errors }, 'some rules failed');
-    if (args.argv.count) {
+    if (args.count) {
       return Math.min(ctx.errors.length, 255);
     } else {
       return STATUS_ERROR;
@@ -114,7 +126,7 @@ export async function main(argv: Array<string>): Promise<number> {
   } else {
     logger.info('all rules passed');
     const output = parser.dump(data);
-    await writeSource(args.argv.dest, output);
+    await writeSource(args.dest, output);
     return STATUS_SUCCESS;
   }
 }

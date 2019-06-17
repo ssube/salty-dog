@@ -50,7 +50,9 @@ export default {
 					'Schema',
 					'Type',
 				],
-				'node_modules/yargs-parser/index.js': ['detailed'],
+				'node_modules/yargs/index.js': [
+					'usage',
+				]
 			},
 		}),
     typescript({
