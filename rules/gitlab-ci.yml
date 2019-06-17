@@ -15,3 +15,49 @@ rules:
           type: array
           items:
             type: string
+
+  - name: gitlab-job-template
+    desc: template jobs should set the stage
+    level: info
+    tags:
+      - gitlab
+      - optional
+
+    select: '$'
+    check:
+      type: object
+      patternProperties:
+        "\\..+":
+          type: object
+          required: [stage]
+          properties:
+            stage:
+              type: string
+
+  - name: gitlab-job-script
+    desc: jobs must have a script
+    level: info
+    tags:
+      - gitlab
+      - important
+
+    select: '$'
+    check:
+      type: object
+      patternProperties:
+        "^(?!stages$|\\.)":
+          type: object
+          required: [script]
+          properties:
+            after_script:
+              type: array
+              items:
+                type: string
+            before_script:
+              type: array
+              items:
+                type: string
+            script:
+              type: array
+              items:
+                type: string
