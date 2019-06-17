@@ -46,6 +46,7 @@ const MAIN_ARGS = usage(`Usage: $0 <mode> [options]`)
   })
   .option('mode', {
     alias: ['m'],
+    choices: ['check', 'fix'],
     default: 'check',
     type: 'string',
   })
