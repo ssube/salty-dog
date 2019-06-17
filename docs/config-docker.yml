@@ -1,0 +1,7 @@
+data:
+  logger:
+    level: info
+    name: salty-dog
+    streams:
+      - level: info
+        path: /tmp/salty-dog.log

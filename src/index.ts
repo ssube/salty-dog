@@ -17,7 +17,7 @@ const RULE_OPTION: Options = {
   type: 'array',
 };
 
-const MAIN_ARGS = usage(`Usage: $0 <mode> [options]`)
+const MAIN_ARGS = usage(`Usage: salty-dog <mode> [options]`)
   .option(CONFIG_ARGS_NAME, {
     default: `.${VERSION_INFO.app.name}.yml`,
     group: 'Config:',
@@ -35,6 +35,7 @@ const MAIN_ARGS = usage(`Usage: $0 <mode> [options]`)
   .option('count', {
     alias: ['c'],
     default: false,
+    desc: 'Exit with error count',
     type: 'boolean',
   })
   .option('dest', {
@@ -56,6 +57,7 @@ const MAIN_ARGS = usage(`Usage: $0 <mode> [options]`)
   .option('rules', {
     alias: ['r'],
     default: [],
+    desc: 'Rules file',
     type: 'array',
   })
   .option('source', {

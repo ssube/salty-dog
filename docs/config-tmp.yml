@@ -1,9 +1,0 @@
-data:
-  logger:
-    level: debug
-    name: salty-dog
-    streams:
-      - level: warn
-        stream: !stream stderr
-      - level: debug
-        path: /tmp/salty-dog-debug.log

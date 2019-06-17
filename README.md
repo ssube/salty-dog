@@ -8,6 +8,7 @@ Or, as an acronym, JSON **s**chema **a**nalysis, **l**inting, and **t**ransforma
 - [SALTY DOG](#salty-dog)
   - [Build](#build)
   - [Usage](#usage)
+    - [Docker](#docker)
     - [Validate](#validate)
       - [Validate File](#validate-file)
       - [Validate URL](#validate-url)
@@ -56,6 +57,14 @@ To run with `make`, apply with `kubectl`, and format logs with `bunyan`:
 ingress.extensions/gitlab created (dry run)
 
 ```
+
+### Docker
+
+The Docker container is published for each branch and tag, using the slug (`.` replaced with `-`, mostly). The latest
+semi-stable image is `ssube/salty-dog:master`.
+
+Rules are located in `/rules` within the image. To add your own rules, mount them with
+`-v ${HOME}/your-rules:/user-rules:ro` and include with `--rules /user-rules/rules.yml`.
 
 ### Validate
 
