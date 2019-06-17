@@ -60,12 +60,12 @@ const MAIN_ARGS = usage(`Usage: $0 <mode> [options]`)
     default: '-',
     type: 'string',
   })
-  .option('excludeLevel', RULE_OPTION)
-  .option('excludeName', RULE_OPTION)
-  .option('excludeTag', RULE_OPTION)
-  .option('includeLevel', RULE_OPTION)
-  .option('includeName', RULE_OPTION)
-  .option('includeTag', {
+  .option('exclude-level', RULE_OPTION)
+  .option('exclude-name', RULE_OPTION)
+  .option('exclude-tag', RULE_OPTION)
+  .option('include-level', RULE_OPTION)
+  .option('include-name', RULE_OPTION)
+  .option('include-tag', {
     ...RULE_OPTION,
     alias: ['t', 'tag'],
   })
