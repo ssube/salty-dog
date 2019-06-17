@@ -13,16 +13,19 @@ const CONFIG_ARGS_PATH = 'config-path';
 
 const RULE_OPTION: Options = {
   default: [],
+  group: 'Rules:',
   type: 'array',
 };
 
 const MAIN_ARGS = usage(`Usage: $0 <mode> [options]`)
   .option(CONFIG_ARGS_NAME, {
     default: `.${VERSION_INFO.app.name}.yml`,
+    group: 'Config:',
     type: 'string',
   })
   .option(CONFIG_ARGS_PATH, {
     default: [],
+    group: 'Config:',
     type: 'array',
   })
   .option('coerce', {
