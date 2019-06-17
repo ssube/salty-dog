@@ -180,7 +180,7 @@ The application mode.
 Options:
 
 - `check` runs each rule and exits with an indicative status
-- `clean` runs each rule and updates the source data with any defaults or other changes before running the next rule
+- `fix` runs each rule and updates the source data with any defaults before running the next rule
 
 #### Rules
 

@@ -31,12 +31,14 @@ const MAIN_ARGS: Options = {
     'rules',
   ],
   boolean: [
+    'coerce',
     'count',
   ],
   count: ['v'],
   default: {
     [CONFIG_ARGS_NAME]: `.${VERSION_INFO.app.name}.yml`,
     [CONFIG_ARGS_PATH]: [],
+    'coerce': false,
     'count': false,
     'dest': '-',
     'excludeLevel': [],
@@ -81,10 +83,15 @@ export async function main(argv: Array<string>): Promise<number> {
   const data = parser.parse(source);
 
   const activeRules = await resolveRules(rules, args.argv as any);
-  const ctx = new VisitorContext(logger);
+  const ctx = new VisitorContext({
+    coerce: args.argv.coerce,
+    defaults: args.argv.mode === 'fix',
+    logger,
+  });
 
   switch (args.argv.mode) {
     case 'check':
+    case 'fix':
       for (const rule of activeRules) {
         if (rule.visit(ctx, data)) {
           logger.info({ rule }, 'passed rule');
@@ -94,8 +101,7 @@ export async function main(argv: Array<string>): Promise<number> {
       }
       break;
     default:
-      ctx.logger.error({ mode: args.argv.mode }, 'unsupported mode');
-      ctx.errors.push('unsupported mode');
+      ctx.error({ mode: args.argv.mode }, 'unsupported mode');
   }
 
   if (ctx.errors.length > 0) {

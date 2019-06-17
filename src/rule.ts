@@ -1,4 +1,3 @@
-import * as Ajv from 'ajv';
 import { JSONPath } from 'jsonpath-plus';
 import { cloneDeep, intersection, isNil } from 'lodash';
 import { LogLevel } from 'noicejs';
@@ -103,9 +102,8 @@ export class Rule implements RuleData, Visitor {
   }
 
   public async visit(ctx: VisitorContext, node: any): Promise<VisitorContext> {
-    const ajv = new ((Ajv as any).default)()
-    const check = ajv.compile(this.check);
-    const filter = this.compileFilter(ajv);
+    const check = ctx.ajv.compile(this.check);
+    const filter = this.compileFilter(ctx);
     const scopes = JSONPath({
       json: node,
       path: this.select,
@@ -122,8 +120,7 @@ export class Rule implements RuleData, Visitor {
         ctx.logger.debug({ item }, 'checking item')
         if (!check(item)) {
           ctx.logger.warn({
-            desc: this.desc,
-            errors: check.errors,
+            name: this.name,
             item,
           }, 'rule failed on item');
           ctx.errors.push(...check.errors);
@@ -137,11 +134,11 @@ export class Rule implements RuleData, Visitor {
     return ctx;
   }
 
-  protected compileFilter(ajv: any): any {
+  protected compileFilter(ctx: VisitorContext): any {
     if (isNil(this.filter)) {
       return () => true;
     } else {
-      return ajv.compile(this.filter);
+      return ctx.ajv.compile(this.filter);
     }
   }
 }
