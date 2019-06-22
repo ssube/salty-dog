@@ -103,10 +103,6 @@ export async function main(argv: Array<string>): Promise<number> {
     return STATUS_ERROR;
   }
 
-  const rules = await loadRules(args.rules);
-  const source = await loadSource(args.source);
-
-  const activeRules = await resolveRules(rules, args as any);
   const ctx = new VisitorContext({
     coerce: args.coerce,
     defaults: args.mode === 'fix',
@@ -114,7 +110,11 @@ export async function main(argv: Array<string>): Promise<number> {
   });
 
   const parser = new YamlParser();
+  const source = await loadSource(args.source);
   let data = parser.parse(source);
+
+  const rules = await loadRules(args.rules, ctx.ajv);
+  const activeRules = await resolveRules(rules, args as any);
 
   for (const rule of activeRules) {
     const workingCopy = cloneDeep(data);

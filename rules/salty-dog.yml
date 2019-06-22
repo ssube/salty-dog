@@ -1,3 +1,45 @@
+name: salty-dog-meta
+definitions:
+  rule:
+    type: object
+    additionalProperties: false
+    required:
+      # metadata
+      - name
+      - desc
+      - level
+      - tags
+      # data
+      - select
+      - check
+    properties:
+      name:
+        type: string
+        pattern: "[-a-z0-9]+"
+      desc:
+        type: string
+        minLength: 8
+        maxLength: 255
+      level:
+        type: string
+        enum:
+          - debug
+          - info
+          - warn
+          - error
+      tags:
+        type: array
+        items:
+          type: string
+          pattern: "[-:a-z0-9]+"
+      select:
+        type: string
+        minLength: 1
+      filter:
+        type: object
+      check:
+        type: object
+
 rules:
   - name: salty-dog-rule
     desc: rules must be complete
@@ -8,41 +50,31 @@ rules:
 
     select: '$.rules[*]'
     check:
+      $ref: "salty-dog-meta#/definitions/rule"
+      
+  - name: salty-dog-source
+    desc: source files must have rules
+    level: info
+    tags:
+      - important
+      - salty-dog
+
+    select: '$'
+    check:
       type: object
       additionalProperties: false
-      required:
-        # metadata
-        - name
-        - desc
-        - level
-        - tags
-        # data
-        - select
-        - check
+      required: [name, rules]
       properties:
+        definitions:
+          type: object
+          additionalProperties: false
+          patternProperties:
+            "[-a-z]+":
+              type: object
         name:
           type: string
-          pattern: "[-a-z0-9]+"
-        desc:
-          type: string
-          minLength: 8
-          maxLength: 255
-        level:
-          type: string
-          enum:
-            - debug
-            - info
-            - warn
-            - error
-        tags:
+        rules:
           type: array
+          minItems: 1
           items:
-            type: string
-            pattern: "[-:a-z0-9]+"
-        select:
-          type: string
-          minLength: 1
-        filter:
-          type: object
-        check:
-          type: object
+            $ref: "salty-dog-meta#/definitions/rule"

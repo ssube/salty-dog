@@ -123,7 +123,7 @@ run-rules: ## validate the rules directory
 			--config-name config-stderr.yml \
 			--rules $(ROOT_PATH)/rules/salty-dog.yml \
 			--source $${file} \
-			--tag important > /dev/null; \
+			--tag important > /dev/null || exit 1; \
 	done
 
 run-stream: ## validate stdin and write it to stdout, errors to stderr

@@ -28,7 +28,13 @@ export interface RuleSelector {
   includeTag: Array<string>;
 }
 
-export async function loadRules(paths: Array<string>): Promise<Array<Rule>> {
+export interface RuleSource {
+  definitions?: Array<any>;
+  name: string;
+  rules: Array<RuleData>;
+}
+
+export async function loadRules(paths: Array<string>, ajv: any): Promise<Array<Rule>> {
   const parser = new YamlParser();
   const rules = [];
 
@@ -37,7 +43,15 @@ export async function loadRules(paths: Array<string>): Promise<Array<Rule>> {
       encoding: 'utf-8',
     });
 
-    const data = parser.parse(contents);
+    const data = parser.parse(contents) as RuleSource;
+
+    if (!isNil(data.definitions)) {
+      ajv.addSchema({
+        '$id': data.name,
+        definitions: data.definitions,
+      });
+    }
+
     rules.push(...data.rules.map((data: any) => new Rule(data)));
   }
 

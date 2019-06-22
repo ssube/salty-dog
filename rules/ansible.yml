@@ -1,3 +1,4 @@
+name: salty-dog-ansible
 rules:
   - name: ansible-playbook
     desc: ensure plays have important properties

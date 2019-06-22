@@ -1,3 +1,4 @@
+name: salty-dog-kubernetes
 rules:
   - name: kubernetes-resources
     desc: containers must have complete resources specified

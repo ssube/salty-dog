@@ -1,3 +1,4 @@
+name: salty-dog-gitlab-ci
 rules:
   - name: gitlab-stages
     desc: should specify stages
