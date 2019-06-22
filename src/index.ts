@@ -1,4 +1,6 @@
 import { createLogger } from 'bunyan';
+import { diff } from 'deep-diff';
+import { cloneDeep } from 'lodash';
 import { Options, usage } from 'yargs';
 
 import { loadConfig } from 'src/config';
@@ -10,6 +12,8 @@ import { VisitorContext } from 'src/visitor/context';
 
 const CONFIG_ARGS_NAME = 'config-name';
 const CONFIG_ARGS_PATH = 'config-path';
+
+const MODES = ['check', 'fix'];
 
 const RULE_OPTION: Options = {
   default: [],
@@ -87,6 +91,11 @@ export async function main(argv: Array<string>): Promise<number> {
   logger.info(VERSION_INFO, 'version info');
   logger.info({ args }, 'main arguments');
 
+  // check mode
+  if (!MODES.includes(args.mode)) {
+    logger.error({ mode: args.mode }, 'unsupported mode');
+  }
+
   // const schema = new Schema();
   const result = { errors: [], valid: true }; // schema.match(config);
   if (!result.valid) {
@@ -97,9 +106,6 @@ export async function main(argv: Array<string>): Promise<number> {
   const rules = await loadRules(args.rules);
   const source = await loadSource(args.source);
 
-  const parser = new YamlParser();
-  const data = parser.parse(source);
-
   const activeRules = await resolveRules(rules, args as any);
   const ctx = new VisitorContext({
     coerce: args.coerce,
@@ -107,23 +113,29 @@ export async function main(argv: Array<string>): Promise<number> {
     logger,
   });
 
-  switch (args.mode) {
-    case 'check':
-    case 'fix':
-      for (const rule of activeRules) {
-        if (rule.visit(ctx, data)) {
-          logger.info({ rule }, 'passed rule');
-        } else {
-          logger.warn({ rule }, 'failed rule');
-        }
+  const parser = new YamlParser();
+  let data = parser.parse(source);
+
+  for (const rule of activeRules) {
+    const workingCopy = cloneDeep(data);
+    const ruleErrors = await rule.visit(ctx, workingCopy);
+
+    if (ruleErrors > 0) {
+      logger.warn({ rule }, 'rule failed');
+    } else {
+      const ruleDiff = diff(data, workingCopy);
+      if (Array.isArray(ruleDiff) && ruleDiff.length > 0) {
+        logger.info({ diff: ruleDiff, rule }, 'rule passed with modifications');
+
+        data = workingCopy;
+      } else {
+        logger.info({ rule }, 'rule passed');
       }
-      break;
-    default:
-      ctx.error({ mode: args.mode }, 'unsupported mode');
+    }
   }
 
   if (ctx.errors.length > 0) {
-    logger.error({ errors: ctx.errors }, 'some rules failed');
+    logger.error({ count: ctx.errors.length, errors: ctx.errors }, 'some rules failed');
     if (args.count) {
       return Math.min(ctx.errors.length, 255);
     } else {

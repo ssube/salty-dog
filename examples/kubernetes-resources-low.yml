@@ -7,7 +7,6 @@ spec:
         - name: test
           resources:
             limits:
-              cpu: 2m
               memory: 5Mi
             requests:
               cpu: 1m

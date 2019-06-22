@@ -101,7 +101,7 @@ export class Rule implements RuleData, Visitor {
     }
   }
 
-  public async visit(ctx: VisitorContext, node: any): Promise<VisitorContext> {
+  public async visit(ctx: VisitorContext, node: any): Promise<number> {
     const check = ctx.ajv.compile(this.check);
     const filter = this.compileFilter(ctx);
     const scopes = JSONPath({
@@ -111,7 +111,7 @@ export class Rule implements RuleData, Visitor {
 
     if (isNil(scopes) || scopes.length === 0) {
       ctx.logger.debug('no data selected');
-      return ctx;
+      return 0;
     }
 
     for (const item of scopes) {
@@ -119,19 +119,22 @@ export class Rule implements RuleData, Visitor {
       if (filter(item)) {
         ctx.logger.debug({ item }, 'checking item')
         if (!check(item)) {
+          const errors = Array.from(check.errors);
           ctx.logger.warn({
+            errors,
             name: this.name,
             item,
+            rule: this,
           }, 'rule failed on item');
-          ctx.errors.push(...check.errors);
-          return ctx;
+          ctx.errors.push(...errors);
+          return errors.length;
         }
       } else {
         ctx.logger.debug({ errors: filter.errors, item }, 'skipping item');
       }
     }
 
-    return ctx;
+    return 0;
   }
 
   protected compileFilter(ctx: VisitorContext): any {

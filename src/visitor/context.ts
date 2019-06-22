@@ -10,6 +10,8 @@ export interface VisitorContextOptions {
 export class VisitorContext {
   public readonly ajv: any;
   public readonly changes: Array<any>;
+  public readonly coerce: boolean;
+  public readonly defaults: boolean;
   public readonly errors: Array<any>;
   public readonly logger: Logger;
 
@@ -19,6 +21,8 @@ export class VisitorContext {
       useDefaults: options.defaults,
     });
     this.changes = [];
+    this.coerce = options.coerce;
+    this.defaults = options.defaults;
     this.errors = [];
     this.logger = options.logger;
   }

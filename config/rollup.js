@@ -35,6 +35,9 @@ export default {
 		}),
 		commonjs({
 			namedExports: {
+				'node_modules/deep-diff/index.js': [
+					'diff',
+				],
 				'node_modules/lodash/lodash.js': [
 					'cloneDeep',
 					'intersection',
