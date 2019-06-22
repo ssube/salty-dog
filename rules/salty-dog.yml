@@ -73,6 +73,7 @@ rules:
               type: object
         name:
           type: string
+          pattern: "[-a-z]+"
         rules:
           type: array
           minItems: 1
