@@ -1,13 +1,15 @@
 import * as Ajv from 'ajv';
 import { Logger } from 'noicejs';
 
+import { VisitorResult } from 'src/visitor/result';
+
 export interface VisitorContextOptions {
   coerce: boolean;
   defaults: boolean;
   logger: Logger;
 }
 
-export class VisitorContext {
+export class VisitorContext implements VisitorContextOptions, VisitorResult {
   public readonly ajv: any;
   public readonly changes: Array<any>;
   public readonly coerce: boolean;
@@ -30,5 +32,11 @@ export class VisitorContext {
   public error(options: any, msg: string) {
     this.logger.error(options, msg);
     this.errors.push(options || msg);
+  }
+
+  public mergeResult(other: VisitorResult): this {
+    this.changes.push(...other.changes);
+    this.errors.push(...other.errors);
+    return this;
   }
 }

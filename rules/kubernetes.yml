@@ -56,7 +56,7 @@ rules:
         limits:
           type: object
           properties:
-            cpu: &resources-cpu
+            cpu: *resources-cpu
 
     # ensure the limits aren't *too* low
     check:

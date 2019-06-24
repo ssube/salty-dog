@@ -36,6 +36,7 @@ export default {
 		commonjs({
 			namedExports: {
 				'node_modules/deep-diff/index.js': [
+					'applyDiff',
 					'diff',
 				],
 				'node_modules/lodash/lodash.js': [

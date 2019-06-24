@@ -1,5 +1,5 @@
 import { createLogger } from 'bunyan';
-import { diff } from 'deep-diff';
+import { applyDiff, diff } from 'deep-diff';
 import { cloneDeep } from 'lodash';
 import { Options, usage } from 'yargs';
 
@@ -117,19 +117,24 @@ export async function main(argv: Array<string>): Promise<number> {
   const activeRules = await resolveRules(rules, args as any);
 
   for (const rule of activeRules) {
-    const workingCopy = cloneDeep(data);
-    const ruleErrors = await rule.visit(ctx, workingCopy);
+    const items = await rule.pick(ctx, data);
+    for (const item of items) {
+      const itemCopy = cloneDeep(item);
+      const itemResult = await rule.visit(ctx, itemCopy);
 
-    if (ruleErrors > 0) {
-      logger.warn({ rule }, 'rule failed');
-    } else {
-      const ruleDiff = diff(data, workingCopy);
-      if (Array.isArray(ruleDiff) && ruleDiff.length > 0) {
-        logger.info({ diff: ruleDiff, rule }, 'rule passed with modifications');
+      if (itemResult.errors.length > 0) {
+        logger.warn({ count: itemResult.errors.length, rule }, 'rule failed');
 
-        data = workingCopy;
+        ctx.mergeResult(itemResult);
       } else {
-        logger.info({ rule }, 'rule passed');
+        const itemDiff = diff(item, itemCopy);
+        if (Array.isArray(itemDiff) && itemDiff.length > 0) {
+          logger.info({ diff: itemDiff, item, rule }, 'rule passed with modifications');
+
+	  applyDiff(item, itemDiff);
+        } else {
+          logger.info({ rule }, 'rule passed');
+        }
       }
     }
   }

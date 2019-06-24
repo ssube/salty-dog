@@ -6,6 +6,7 @@ import { YamlParser } from 'src/parser/YamlParser';
 import { readFileSync } from 'src/source';
 import { Visitor } from 'src/visitor';
 import { VisitorContext } from 'src/visitor/context';
+import { VisitorResult } from 'src/visitor/result';
 
 export interface RuleData {
   // metadata
@@ -92,7 +93,11 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
   return Array.from(activeRules);
 }
 
-export class Rule implements RuleData, Visitor {
+export interface RuleResult extends VisitorResult {
+  rule: Rule;
+} 
+
+export class Rule implements RuleData, Visitor<RuleResult> {
   public readonly check: any;
   public readonly desc: string;
   public readonly filter?: any;
@@ -115,40 +120,48 @@ export class Rule implements RuleData, Visitor {
     }
   }
 
-  public async visit(ctx: VisitorContext, node: any): Promise<number> {
-    const check = ctx.ajv.compile(this.check);
-    const filter = this.compileFilter(ctx);
+  public async pick(ctx: VisitorContext, root: any): Promise<Array<any>> {
     const scopes = JSONPath({
-      json: node,
+      json: root,
       path: this.select,
     });
 
     if (isNil(scopes) || scopes.length === 0) {
       ctx.logger.debug('no data selected');
-      return 0;
+      return [];
     }
 
-    for (const item of scopes) {
-      ctx.logger.debug({ item }, 'filtering item');
-      if (filter(item)) {
-        ctx.logger.debug({ item }, 'checking item')
-        if (!check(item)) {
-          const errors = Array.from(check.errors);
-          ctx.logger.warn({
-            errors,
-            name: this.name,
-            item,
-            rule: this,
-          }, 'rule failed on item');
-          ctx.errors.push(...errors);
-          return errors.length;
-        }
-      } else {
-        ctx.logger.debug({ errors: filter.errors, item }, 'skipping item');
+    return scopes;
+  }
+
+  public async visit(ctx: VisitorContext, node: any): Promise<RuleResult> {
+    ctx.logger.debug({ item: node, rule: this}, 'visiting node');
+
+    const check = ctx.ajv.compile(this.check);
+    const filter = this.compileFilter(ctx);
+    const result: RuleResult = {
+      changes: [],
+      errors: [],
+      rule: this,
+    };
+
+    if (filter(node)) {
+      ctx.logger.debug({ item: node }, 'checking item')
+      if (!check(node)) {
+        const errors = Array.from(check.errors);
+        ctx.logger.warn({
+          errors,
+          name: this.name,
+          item: node,
+          rule: this,
+        }, 'rule failed on item');
+        result.errors.push(...errors);
       }
+    } else {
+      ctx.logger.debug({ errors: filter.errors, item: node }, 'skipping item');
     }
 
-    return 0;
+    return result;
   }
 
   protected compileFilter(ctx: VisitorContext): any {
