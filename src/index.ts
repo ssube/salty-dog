@@ -131,7 +131,7 @@ export async function main(argv: Array<string>): Promise<number> {
         if (Array.isArray(itemDiff) && itemDiff.length > 0) {
           logger.info({ diff: itemDiff, item, rule }, 'rule passed with modifications');
 
-	  applyDiff(item, itemDiff);
+	  applyDiff(item, itemCopy);
         } else {
           logger.info({ rule }, 'rule passed');
         }
