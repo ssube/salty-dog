@@ -23,8 +23,11 @@ rules:
               required: [cpu, memory]
               properties:
                 cpu: &resources-cpu
-                  type: string
-                  default: 500m
+                  oneOf:
+                    - type: number
+                      minimum: 1
+                    - type: string
+                      pattern: "[1-9][0-9]*m"
                 memory: &resources-memory
                   oneOf:
                     - type: number
@@ -53,7 +56,7 @@ rules:
         limits:
           type: object
           properties:
-            cpu: *resources-cpu
+            cpu: &resources-cpu
 
     # ensure the limits aren't *too* low
     check:
@@ -63,8 +66,11 @@ rules:
           type: object
           properties:
             cpu:
-              type: string
-              default: 500m
+              oneOf:
+                - type: number
+                  minimum: 1
+                - type: string
+                  pattern: "[1-9][0-9]{2,}m"
 
   - name: kubernetes-deployment-replicas
     desc: deployments must specify a positive replica count
