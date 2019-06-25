@@ -1,6 +1,7 @@
 export const VERSION_INFO = {
   app: {
     name: '{{ APP_NAME }}',
+    version: '{{ APP_VERSION }}',
   },
   build: {
     job: '{{ BUILD_JOB }}',

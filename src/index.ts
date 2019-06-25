@@ -13,7 +13,7 @@ import { VisitorContext } from 'src/visitor/context';
 const CONFIG_ARGS_NAME = 'config-name';
 const CONFIG_ARGS_PATH = 'config-path';
 
-const MODES = ['check', 'fix'];
+const MODES = ['check', 'fix', 'list'];
 
 const RULE_OPTION: Options = {
   default: [],
@@ -54,7 +54,7 @@ const MAIN_ARGS = usage(`Usage: salty-dog <mode> [options]`)
   })
   .option('mode', {
     alias: ['m'],
-    choices: ['check', 'fix'],
+    choices: MODES,
     default: 'check',
     type: 'string',
   })
@@ -78,7 +78,8 @@ const MAIN_ARGS = usage(`Usage: salty-dog <mode> [options]`)
     ...RULE_OPTION,
     alias: ['t', 'tag'],
   })
-  .help();
+  .help()
+  .version(VERSION_INFO.app.version);
 
 const STATUS_SUCCESS = 0;
 const STATUS_ERROR = 1;
@@ -115,6 +116,11 @@ export async function main(argv: Array<string>): Promise<number> {
 
   const rules = await loadRules(args.rules, ctx.ajv);
   const activeRules = await resolveRules(rules, args as any);
+
+  if (args.mode === 'list') {
+    logger.info({rules: activeRules}, 'listing active rules');
+    return STATUS_SUCCESS;
+  }
 
   for (const data of docs) {
     for (const rule of activeRules) {

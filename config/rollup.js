@@ -23,6 +23,7 @@ export default {
 			delimiters: ['{{ ', ' }}'],
 			values: {
 				APP_NAME: metadata.name,
+				APP_VERSION: metadata.version,
 				BUILD_JOB: process.env['CI_JOB_ID'],
 				BUILD_RUNNER: process.env['CI_ENVIRONMENT_SLUG'],
 				GIT_BRANCH: process.env['CI_COMMIT_REF_SLUG'],
