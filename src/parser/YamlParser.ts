@@ -5,9 +5,14 @@ import { Parser } from 'src/parser';
 
 export class YamlParser implements Parser {
   dump(...data: Array<any>): string {
-    return safeDump(data, {
-      schema: CONFIG_SCHEMA,
-    });
+    const docs: Array<any> = [];
+    for (const doc of data) {
+      const part = safeDump(doc, {
+        schema: CONFIG_SCHEMA,
+      });
+      docs.push(part);
+    }
+    return docs.join('\n---\n\n');
   }
 
   parse(body: string): Array<any> {
