@@ -1,33 +1,125 @@
 # SALTY DOG
 
-YAML linter/validator.
+Rule-based YAML validator using JSON schemas. Capable of filtering elements to validate partial documents, inserting
+defaults, and other magic.
 
-Or, as an acronym, JSON **s**chema **a**nalysis, **l**inting, and **t**ransformation for **Y**AML, featuring
-**d**efaults, **o**ptional fields, and other **g**ood stuff.
+- [SALTY DOG](#SALTY-DOG)
+  - [Usage](#Usage)
+    - [Docker](#Docker)
+    - [Check Mode](#Check-Mode)
+    - [Fix Mode](#Fix-Mode)
+      - [Default Values](#Default-Values)
+      - [Coercing Values](#Coercing-Values)
+  - [Rules](#Rules)
+    - [Enabling Rules](#Enabling-Rules)
+    - [Validate Rules](#Validate-Rules)
+  - [Build](#Build)
 
-- [SALTY DOG](#salty-dog)
-  - [Build](#build)
-  - [Usage](#usage)
-    - [Docker](#docker)
-    - [Validate](#validate)
-      - [Validate File](#validate-file)
-      - [Validate URL](#validate-url)
-      - [Validate Rules](#validate-rules)
-    - [Options](#options)
-      - [Count](#count)
-      - [Dest](#dest)
-      - [Format](#format)
-      - [Exclude](#exclude)
-        - [Exclude Level](#exclude-level)
-        - [Exclude Name](#exclude-name)
-        - [Exclude Tag](#exclude-tag)
-      - [Include](#include)
-        - [Include Level](#include-level)
-        - [Include Name](#include-name)
-        - [Include Tag](#include-tag)
-      - [Mode](#mode)
-      - [Rules](#rules)
-      - [Source](#source)
+## Usage
+
+To run with Docker (**recommended**): `docker run -v ${HOME}:/root:ro --rm -i ssube/salty-dog:master`
+
+To download, validate, and apply a Kubernetes resource:
+
+```shell
+> curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml | salty-dog \
+    --rules rules/kubernetes.yml \
+    --source - \
+    --tag important | kubectl apply --dry-run -f -
+
+...
+{"name":"salty-dog","hostname":"cerberus","pid":7860,"level":30,"msg":"all rules passed","time":"2019-06-16T02:04:37.797Z","v":0}
+ingress.extensions/gitlab created (dry run
+```
+
+### Docker
+
+The latest semi-stable image is `ssube/salty-dog:master`.
+
+The Docker container is published for each branch and git tag, tagged with the version slug (`.` replaced with `-`,
+mostly).
+
+Rules are baked into the image in `/rules`. To use custom rules, mount them with `-v $(pwd)/rules:/rules:ro` and
+load with `--rules /rules/foo.yml`.
+
+### Check Mode
+
+By default, `salty-dog` will validate the structure and contents of the `--source` document. If all rules pass, the
+document will be printed to `--dest`.
+
+```shell
+> cat examples/kubernetes-resources-pass.yml | salty-dog \
+    --rules rules/kubernetes.yml \
+    --tag important
+
+...
+[2019-06-15T23:53:34.223Z]  INFO: salty-dog/19839 on cerberus: all rules passed
+
+> cat examples/kubernetes-resources-fail.yml | salty-dog \
+    --rules rules/kubernetes.yml \
+    --tag important
+
+...
+[2019-06-15T23:56:04.764Z] ERROR: salty-dog/22211 on cerberus: some rules failed (errors=1)
+
+```
+
+The `--source` and `--dest` default to stdin and stdout, respectively, but a path may be provided:
+
+```shell
+> salty-dog \
+    --rules rules/kubernetes.yml \
+    --tag important \
+    --source examples/kubernetes-resources-pass.yml \
+    --dest /tmp/kubernetes-resource.yml
+
+...
+[2019-06-15T23:53:34.223Z]  INFO: salty-dog/19839 on cerberus: all rules passed
+```
+
+### Fix Mode
+
+`salty-dog` can also add default values to missing properties with `--mode fix`. If a rule does not immediately pass
+with the `--source` document, but defaults are provided in the schema, the defaults will be inserted before printing to
+`--dest`.
+
+#### Default Values
+
+Properties that appear in the schema with a `default` provided will be added to each element as it is checked. Rules
+apply in order, as do their defaults.
+
+#### Coercing Values
+
+Properties that appear in the document with a different `type` than they have in the schema may be coerced, if the
+value is compatible with the schema type. [The full matrix of valid type coercions](https://ajv.js.org/coercion.html)
+is documented by Ajv.
+
+## Rules
+
+Rules combine a jsonpath expression and JSON schema to select and validate the document.
+
+The rule's `select` expression is used to select nodes that should be validated, which are `filter`ed, then `check`ed.
+
+The structure of rule files and the rules within them [are documented here](docs/rules.md).
+
+### Enabling Rules
+
+All rules are disabled by default and must be enabled by name or tag.
+
+To enable a single rule by name, `--include-name foo-rule`.
+
+To enable a group of rules by tag, `--include-tag foo`.
+
+### Validate Rules
+
+To validate the rules in the `rules/` directory using the meta-rules:
+
+```shell
+> make run-rules
+
+...
+{"name":"salty-dog","hostname":"cerberus","pid":29403,"level":30,"msg":"all rules passed","time":"2019-06-16T00:56:55.132Z","v":0}
+```
 
 ## Build
 
@@ -39,15 +131,9 @@ This project is written in Typescript and requires `node` and `yarn` to build.
 > make
 ```
 
-## Usage
+After building, run with: `node out/bundle.js`
 
-To run with Docker (**recommended**): `docker run -v ${HOME}:/root:ro --rm -i ssube/salty-dog:master`
-
-To run after `yarn global add` or `npm i -g`: `salty-dog`
-
-To run after building: `node out/bundle.js`
-
-To run with `make`, apply with `kubectl`, and format logs with `bunyan`:
+`make` targets are provided for some common arguments:
 
 ```shell
 > curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml | make run-stream 2> >(./node_modules/.bin/bunyan) > >(kubectl apply --dry-run -f -)
@@ -55,151 +141,4 @@ To run with `make`, apply with `kubectl`, and format logs with `bunyan`:
 ...
 [2019-06-16T03:23:56.645Z]  INFO: salty-dog/8015 on cerberus: all rules passed
 ingress.extensions/gitlab created (dry run)
-
 ```
-
-### Docker
-
-The Docker container is published for each branch and tag, using the slug (`.` replaced with `-`, mostly). The latest
-semi-stable image is `ssube/salty-dog:master`.
-
-Rules are located in `/rules` within the image. To add your own rules, mount them with
-`-v ${HOME}/your-rules:/user-rules:ro` and include with `--rules /user-rules/rules.yml`.
-
-### Validate
-
-`salty-dog` can validate JSON and YAML from files and streams, and emit it to a file or stream (with logs going
-elsewhere).
-
-#### Validate File
-
-To validate a file:
-
-```shell
-> salty-dog \
-    --rules rules/kubernetes.yml \
-    --source examples/kubernetes-resources-fail.yml \
-    --tag important
-
-...
-[2019-06-15T23:56:04.764Z] ERROR: salty-dog/22211 on cerberus: some rules failed (errors=1)
-
-> cat examples/kubernetes-resources-pass.yml | salty-dog \
-    --rules rules/kubernetes.yml \
-    --source - \
-    --tag important
-
-...
-[2019-06-15T23:53:34.223Z]  INFO: salty-dog/19839 on cerberus: all rules passed
-```
-
-#### Validate URL
-
-To validate a URL:
-
-```shell
-> curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml | salty-dog \
-    --rules rules/kubernetes.yml \
-    --source - \
-    --tag important | kubectl apply --dry-run -f -
-
-...
-{"name":"salty-dog","hostname":"cerberus","pid":7860,"level":30,"msg":"all rules passed","time":"2019-06-16T02:04:37.797Z","v":0}
-ingress.extensions/gitlab created (dry run)
-...
-```
-
-#### Validate Rules
-
-To validate the rules in the `rules/` directory using the meta-rules:
-
-```shell
-> make run-rules
-
-...
-{"name":"salty-dog","hostname":"cerberus","pid":29403,"level":30,"msg":"all rules passed","time":"2019-06-16T00:56:55.132Z","v":0}
-```
-
-### Options
-
-#### Count
-
-- Alias: `c`
-
-Exit with the error count (max of 255) rather than `0` or `1`.
-
-#### Dest
-
-- Alias: `d`
-- Default: `-`
-
-Path to write output data.
-
-Defaults to stdout (`-`).
-
-#### Format
-
-- Default: `yaml`
-
-Output format.
-
-Options:
-
-- `yaml`
-
-#### Exclude
-
-Excludes take priority over includes: a rule matching some of both will be excluded.
-
-##### Exclude Level
-
-Exclude rules by log level.
-
-##### Exclude Name
-
-Exclude rules by name.
-
-##### Exclude Tag
-
-Exclude rules by tag.
-
-#### Include
-
-##### Include Level
-
-Include rules by log level.
-
-##### Include Name
-
-Include rules by name.
-
-##### Include Tag
-
-- Alias: `t`, `tag`
-
-Include rules by tag.
-
-#### Mode
-
-- Alias: `m`
-- Default: `check`
-  
-The application mode.
-
-Options:
-
-- `check` runs each rule and exits with an indicative status
-- `fix` runs each rule and updates the source data with any defaults before running the next rule
-
-#### Rules
-
-The path to a file containing some `rules`.
-
-#### Source
-
-- Alias: `s`
-- Default: `-`
-
-The source file to validate.
-
-Defaults to stdin (`-`) to work with pipes: `cat file.yml | salty-dog --source -`
