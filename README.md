@@ -106,9 +106,11 @@ The structure of rule files and the rules within them [are documented here](docs
 
 ### Enabling Rules
 
-All rules are disabled by default and must be enabled by name or tag.
+All rules are disabled by default and must be enabled by name, level, or tag.
 
 To enable a single rule by name, `--include-name foo-rule`.
+
+To enable a group of rules by level, `--include-level warn`.
 
 To enable a group of rules by tag, `--include-tag foo`.
 
