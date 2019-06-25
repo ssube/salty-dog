@@ -35,7 +35,8 @@ ingress.extensions/gitlab created (dry run)
 
 ### Docker
 
-The latest semi-stable image is `ssube/salty-dog:master`.
+The latest semi-stable image is `ssube/salty-dog:master`. All
+[tags are listed here](https://cloud.docker.com/repository/docker/ssube/salty-dog/tags).
 
 The Docker container is published for each branch and git tag, tagged with the version slug (`.` replaced with `-`,
 mostly).
