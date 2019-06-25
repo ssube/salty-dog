@@ -84,6 +84,7 @@ build-node:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
     - make
+    - make run-rules
 
   artifacts:
     expire_in: 1 week
