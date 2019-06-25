@@ -17,7 +17,7 @@ defaults, and other magic.
 
 ## Usage
 
-To run with Docker (**recommended**): `docker run -v ${HOME}:/root:ro --rm -i ssube/salty-dog:master`
+To run with Docker (**recommended**): `docker run --rm ssube/salty-dog:master`
 
 To download, validate, and apply a Kubernetes resource:
 

@@ -1,0 +1,20 @@
+version: "2"
+
+exclude_patterns:
+  - docs/dev/style.md
+  - src/migration/
+  - vendor/
+
+plugins:
+  duplication:
+    enabled: true
+    config:
+      languages:
+        typescript:
+          mass_threshold: 225 # avoid increasing, increments of 5
+  fixme:
+    enabled: true
+  markdownlint:
+    enabled: true
+  shellcheck:
+    enabled: true
