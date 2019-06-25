@@ -40,13 +40,14 @@ export function completePaths(name: string, extras: Array<string>): Array<string
 }
 
 export async function loadConfig(name: string, ...extras: Array<string>): Promise<any> {
-  const parser = new YamlParser();
   const paths = completePaths(name, extras);
 
   for (const p of paths) {
     const data = await readConfig(p);
     if (!isNil(data)) {
-      return parser.parse(data);
+      const parser = new YamlParser();
+      const [head] = parser.parse(data);
+      return head;
     }
   }
 

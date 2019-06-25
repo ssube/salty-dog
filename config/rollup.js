@@ -51,6 +51,7 @@ export default {
 					'SAFE_SCHEMA',
 					'safeDump',
 					'safeLoad',
+					'safeLoadAll',
 					'Schema',
 					'Type',
 				],

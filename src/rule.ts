@@ -44,16 +44,18 @@ export async function loadRules(paths: Array<string>, ajv: any): Promise<Array<R
       encoding: 'utf-8',
     });
 
-    const data = parser.parse(contents) as RuleSource;
+    const docs = parser.parse(contents) as Array<RuleSource>;
 
-    if (!isNil(data.definitions)) {
-      ajv.addSchema({
-        '$id': data.name,
-        definitions: data.definitions,
-      });
+    for (const data of docs) {
+      if (!isNil(data.definitions)) {
+        ajv.addSchema({
+          '$id': data.name,
+          definitions: data.definitions,
+        });
+      }
+
+      rules.push(...data.rules.map((data: any) => new Rule(data)));
     }
-
-    rules.push(...data.rules.map((data: any) => new Rule(data)));
   }
 
   return rules;

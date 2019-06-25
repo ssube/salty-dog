@@ -1,4 +1,4 @@
 export interface Parser {
-  dump(data: any): string;
-  parse(body: string): any;
+  dump(...data: Array<any>): string;
+  parse(body: string): Array<any>;
 }

@@ -1,18 +1,20 @@
-import { safeDump, safeLoad } from 'js-yaml';
+import { safeDump, safeLoadAll } from 'js-yaml';
 
 import { CONFIG_SCHEMA } from 'src/config/schema';
 import { Parser } from 'src/parser';
 
 export class YamlParser implements Parser {
-  dump(data: any): string {
+  dump(...data: Array<any>): string {
     return safeDump(data, {
       schema: CONFIG_SCHEMA,
     });
   }
 
-  parse(body: string): any {
-    return safeLoad(body, {
+  parse(body: string): Array<any> {
+    const docs: Array<any> = [];
+    safeLoadAll(body, (doc: any) => docs.push(doc), {
       schema: CONFIG_SCHEMA,
     });
+    return docs;
   }
 }

@@ -111,29 +111,31 @@ export async function main(argv: Array<string>): Promise<number> {
 
   const parser = new YamlParser();
   const source = await loadSource(args.source);
-  let data = parser.parse(source);
+  let docs = parser.parse(source);
 
   const rules = await loadRules(args.rules, ctx.ajv);
   const activeRules = await resolveRules(rules, args as any);
 
-  for (const rule of activeRules) {
-    const items = await rule.pick(ctx, data);
-    for (const item of items) {
-      const itemCopy = cloneDeep(item);
-      const itemResult = await rule.visit(ctx, itemCopy);
+  for (const data of docs) {
+    for (const rule of activeRules) {
+      const items = await rule.pick(ctx, data);
+      for (const item of items) {
+        const itemCopy = cloneDeep(item);
+        const itemResult = await rule.visit(ctx, itemCopy);
 
-      if (itemResult.errors.length > 0) {
-        logger.warn({ count: itemResult.errors.length, rule }, 'rule failed');
+        if (itemResult.errors.length > 0) {
+          logger.warn({ count: itemResult.errors.length, rule }, 'rule failed');
 
-        ctx.mergeResult(itemResult);
-      } else {
-        const itemDiff = diff(item, itemCopy);
-        if (Array.isArray(itemDiff) && itemDiff.length > 0) {
-          logger.info({ diff: itemDiff, item, rule }, 'rule passed with modifications');
-
-	  applyDiff(item, itemCopy);
+          ctx.mergeResult(itemResult);
         } else {
-          logger.info({ rule }, 'rule passed');
+          const itemDiff = diff(item, itemCopy);
+          if (Array.isArray(itemDiff) && itemDiff.length > 0) {
+            logger.info({ diff: itemDiff, item, rule }, 'rule passed with modifications');
+
+            applyDiff(item, itemCopy);
+          } else {
+            logger.info({ rule }, 'rule passed');
+          }
         }
       }
     }
@@ -148,7 +150,7 @@ export async function main(argv: Array<string>): Promise<number> {
     }
   } else {
     logger.info('all rules passed');
-    const output = parser.dump(data);
+    const output = parser.dump(...docs);
     await writeSource(args.dest, output);
     return STATUS_SUCCESS;
   }

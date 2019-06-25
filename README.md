@@ -29,7 +29,7 @@ To download, validate, and apply a Kubernetes resource:
 
 ...
 {"name":"salty-dog","hostname":"cerberus","pid":7860,"level":30,"msg":"all rules passed","time":"2019-06-16T02:04:37.797Z","v":0}
-ingress.extensions/gitlab created (dry run
+ingress.extensions/gitlab created (dry run)
 ```
 
 ### Docker
