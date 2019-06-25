@@ -118,7 +118,7 @@ export async function main(argv: Array<string>): Promise<number> {
   const activeRules = await resolveRules(rules, args as any);
 
   if (args.mode === 'list') {
-    logger.info({rules: activeRules}, 'listing active rules');
+    logger.info({ rules: activeRules }, 'listing active rules');
     return STATUS_SUCCESS;
   }
 
@@ -136,11 +136,15 @@ export async function main(argv: Array<string>): Promise<number> {
         } else {
           const itemDiff = diff(item, itemCopy);
           if (Array.isArray(itemDiff) && itemDiff.length > 0) {
-            logger.info({ diff: itemDiff, item, rule }, 'rule passed with modifications');
+            logger.info({
+              diff: itemDiff,
+              item,
+              rule: rule.name,
+            }, 'rule passed with modifications');
 
             applyDiff(item, itemCopy);
           } else {
-            logger.info({ rule }, 'rule passed');
+            logger.info({ rule: rule.name }, 'rule passed');
           }
         }
       }

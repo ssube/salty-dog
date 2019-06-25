@@ -22,7 +22,8 @@ To run with Docker (**recommended**): `docker run --rm ssube/salty-dog:master`
 To download, validate, and apply a Kubernetes resource:
 
 ```shell
-> curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml | salty-dog \
+> curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml |\
+    salty-dog \
     --rules rules/kubernetes.yml \
     --source - \
     --tag important | kubectl apply --dry-run -f -
@@ -39,8 +40,8 @@ The latest semi-stable image is `ssube/salty-dog:master`.
 The Docker container is published for each branch and git tag, tagged with the version slug (`.` replaced with `-`,
 mostly).
 
-Rules are baked into the image in `/rules`. To use custom rules, mount them with `-v $(pwd)/rules:/rules:ro` and
-load with `--rules /rules/foo.yml`.
+Rules are baked into the image in `/salty-dog/rules`. To use custom rules, mount them with
+`-v $(pwd)/rules:/salty-dog/rules:ro` and load with `--rules /rules/foo.yml`.
 
 ### Check Mode
 
