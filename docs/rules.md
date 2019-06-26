@@ -172,7 +172,8 @@ rules:
 
 Schema used to filter selected nodes.
 
-If a node was `select`ed but but does not match this schema, it will be skipped and the rule will check the next node.
+If a node was `select`ed but but does not match this schema, it will be skipped and the rule will move on to the next
+node.
 
 Uses [ajv syntax](https://ajv.js.org/keywords.html) in an object.
 
