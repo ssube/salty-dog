@@ -9,41 +9,35 @@ rules:
 
     # this is not the ideal selector for this rule, but tags are located at $.dashboard.tags, while notification
     # channels are nested under $.dashboard.panels[*].alert.notifications[*].uid
-    select: '$'
+    select: '$.dashboard'
 
     filter:
       type: object
       properties:
-        dashboard:
-          type: object
-          properties:
-            tags:
-              type: array
-              items:
-                type: string
-              contains:
-                pattern: production
+        tags:
+          type: array
+          items:
+            type: string
+          contains:
+            pattern: production
 
     check:
       type: object
       properties:
-        dashboard:
-          type: object
-          properties:
-            panels:
-              type: array
-              items:
+        panels:
+          type: array
+          items:
+            type: object
+            properties:
+              alert:
                 type: object
                 properties:
-                  alert:
-                    type: object
-                    properties:
-                      notifications:
-                        type: array
-                        items:
-                          type: object
-                          required: [uid]
-                          properties:
-                            uid:
-                              type: string
-                              pattern: production
+                  notifications:
+                    type: array
+                    items:
+                      type: object
+                      required: [uid]
+                      properties:
+                        uid:
+                          type: string
+                          pattern: production
