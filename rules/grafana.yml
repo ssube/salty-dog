@@ -1,0 +1,48 @@
+name: grafana
+rules:
+  - name: production dashboards should have production alerts
+    desc: dashboards with the production tag must use notification channels with production in the name
+    level: info
+    tags:
+      - grafana
+      - dashboard
+
+    select: '$'
+
+    filter:
+      type: object
+      properties:
+        dashboard:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                type: string
+              contains:
+                pattern: production
+
+    check:
+      type: object
+      properties:
+        dashboard:
+          type: object
+          properties:
+            panels:
+              type: array
+              items:
+                type: object
+                properties:
+                  alert:
+                    type: object
+                    properties:
+                      notifications:
+                        type: array
+                        items:
+                          type: object
+                          required: [uid]
+                          additionalProperties: false
+                          properties:
+                            uid:
+                              type: string
+                              pattern: production
