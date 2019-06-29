@@ -35,6 +35,25 @@ export interface RuleSource {
   rules: Array<RuleData>;
 }
 
+export function ensureArray<T>(val: Array<T> | undefined): Array<T> {
+  if (isNil(val)) {
+    return [];
+  } else {
+    return Array.from(val);
+  }
+}
+
+export function makeSelector(options: Partial<RuleSelector>) {
+  return {
+    excludeLevel: ensureArray(options.excludeLevel),
+    excludeName: ensureArray(options.excludeName),
+    excludeTag: ensureArray(options.excludeTag),
+    includeLevel: ensureArray(options.includeLevel),
+    includeName: ensureArray(options.includeName),
+    includeTag: ensureArray(options.includeTag),
+  };
+}
+
 export async function loadRules(paths: Array<string>, ajv: any): Promise<Array<Rule>> {
   const parser = new YamlParser();
   const rules = [];
