@@ -5,33 +5,33 @@ Rules apply a schema fragment to a set of nodes selected from the original data.
 This is a descriptive standard for rules. The enforced meta-rules for rules [are located here](../rules/salty-dog.yml).
 
 - [Rules](#Rules)
-  - [File](#File)
-    - [Schema](#Schema)
-      - [Env](#Env)
-      - [Include](#Include)
-      - [Regexp](#Regexp)
-      - [Stream](#Stream)
-    - [Name](#Name)
-    - [Definitions](#Definitions)
-    - [Rules](#Rules-1)
-      - [Name](#Name-1)
-      - [Desc](#Desc)
-      - [Level](#Level)
-      - [Tags](#Tags)
-      - [Select](#Select)
-      - [Filter](#Filter)
-      - [Check](#Check)
-  - [Module](#Module)
+  - [From File](#From-File)
+    - [YAML Schema](#YAML-Schema)
+      - [Env Type](#Env-Type)
+      - [Include Type](#Include-Type)
+      - [Regexp Type](#Regexp-Type)
+      - [Stream Type](#Stream-Type)
+    - [File Name](#File-Name)
+    - [Schema Definitions](#Schema-Definitions)
+    - [Rule Definitions](#Rule-Definitions)
+      - [Rule Name](#Rule-Name)
+      - [Rule Description](#Rule-Description)
+      - [Rule Level](#Rule-Level)
+      - [Rule Tags](#Rule-Tags)
+      - [Rule Selector](#Rule-Selector)
+      - [Rule Filter](#Rule-Filter)
+      - [Rule Check](#Rule-Check)
+  - [From Module](#From-Module)
 
-## File
+## From File
 
 Rules may be loaded from YAML or JSON files, using any extension.
 
-### Schema
+### YAML Schema
 
 The default YAML schema has been extended with some custom types.
 
-#### Env
+#### Env Type
 
 An environment variable by name.
 
@@ -41,14 +41,14 @@ This can be used in CI environments to compare resources against the current job
 foo: !env CI_COMMIT_SHA
 ```
 
-#### Include
+#### Include Type
 
 Include another file as a child of this key. The file must be a single document.
 
 Relative paths are resolved from `__dirname`, but no path sanitization is done to prevent `../`. Include paths should
 not be taken from user input.
 
-#### Regexp
+#### Regexp Type
 
 A regular expression in a string.
 
@@ -58,7 +58,7 @@ Uses standard JS syntax. Flags are supported.
 foo: !regexp /a.*b/gu
 ```
 
-#### Stream
+#### Stream Type
 
 A process stream by name (key in `process`).
 
@@ -71,13 +71,17 @@ logger:
       stream: !stream stderr
 ```
 
-### Name
+### File Name
 
 A unique name, used for logging and as the schema `$id` for definitions.
 
 This _should_ be truly unique, but _must_ be unique within the set of `--rules` loaded.
 
-### Definitions
+```yaml
+name: foo-rules
+```
+
+### Schema Definitions
 
 A dict of schema definitions in objects with string keys.
 
@@ -99,11 +103,20 @@ rules:
           $ref: "foo#/definitions/bar"
 ```
 
-### Rules
+### Rule Definitions
 
 A list of rules.
 
-#### Name
+```yaml
+name: foo
+
+rules:
+  - name: foobar
+    check:
+      type: object
+```
+
+#### Rule Name
 
 The rule name, used for logging and inclusion.
 
@@ -114,7 +127,7 @@ rules:
   - name: foo
 ```
 
-#### Desc
+#### Rule Description
 
 The rule description, used for error messages.
 
@@ -126,7 +139,7 @@ rules:
     desc: foos must not overfoo
 ```
 
-#### Level
+#### Rule Level
 
 The rule's log level, used for inclusion.
 
@@ -140,7 +153,7 @@ rules:
     level: debug
 ```
 
-#### Tags
+#### Rule Tags
 
 A list of tags for the rule, used for inclusion.
 
@@ -153,7 +166,7 @@ rules:
       - definitely-not-bar
 ```
 
-#### Select
+#### Rule Selector
 
 JSON path used to select nodes from the data.
 
@@ -168,7 +181,7 @@ rules:
     select: '$.spec.template.spec.containers[*]'
 ```
 
-#### Filter
+#### Rule Filter
 
 Schema used to filter selected nodes.
 
@@ -186,7 +199,7 @@ rules:
       required: [bar]
 ```
 
-#### Check
+#### Rule Check
 
 Schema used to check selected nodes.
 
@@ -201,6 +214,6 @@ rules:
       type: string
 ```
 
-## Module
+## From Module
 
 **TODO:** load rules from `require`d modules

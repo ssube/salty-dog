@@ -2,6 +2,15 @@
 
 Rule-based YAML validator using JSON schemas.
 
+- [Salty Dog](#Salty-Dog)
+  - [Rules](#Rules)
+  - [Usage](#Usage)
+    - [Docker](#Docker)
+      - [Interactive](#Interactive)
+    - [Node](#Node)
+      - [Global](#Global)
+      - [Local](#Local)
+
 ## Rules
 
 Rules can be loaded from YAML files or Node modules and [are documented here](./rules.md).
