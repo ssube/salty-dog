@@ -1,6 +1,6 @@
 {
   "name": "salty-dog",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "YAML linter, transformer, and validator",
   "main": "out/bundle.js",
   "bin": {
@@ -22,13 +22,14 @@
     "@types/js-yaml": "^3.12.1",
     "@types/lodash": "^4.14.134",
     "@types/mocha": "^5.2.7",
+    "@types/sinon": "^7.0.13",
     "@types/yargs": "^13.0.0",
     "ajv": "^6.10.0",
     "bunyan": "^1.8.12",
     "chai": "^4.2.0",
     "deep-diff": "^1.0.2",
-    "jsonpath-plus": "^0.20.1",
     "js-yaml": "^3.13.1",
+    "jsonpath-plus": "^0.20.1",
     "lodash": "^4.17.11",
     "mocha": "^6.1.4",
     "noicejs": "^2.5.2",
