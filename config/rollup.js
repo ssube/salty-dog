@@ -1,6 +1,8 @@
+import fs from 'fs';
+
 import commonjs from 'rollup-plugin-commonjs';
 import json from 'rollup-plugin-json';
-import multiEntry from "rollup-plugin-multi-entry";
+import multiEntry from 'rollup-plugin-multi-entry';
 import replace from 'rollup-plugin-replace';
 import resolve from 'rollup-plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript2';
@@ -17,6 +19,11 @@ const bundle = {
 		file: 'out/bundle.js',
 		format: 'cjs',
 		sourcemap: true,
+		banner: () => {
+			const shebang = '#! /usr/bin/env node';
+			const license = fs.readFileSync('LICENSE.md', 'utf-8').split('\n').map(ln => ` * ${ln}`);
+			return [shebang, '/**', ...license, ' **/'].join('\n');
+		},
 	},
 	plugins: [
 		json(),
