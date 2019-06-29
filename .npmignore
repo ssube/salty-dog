@@ -24,3 +24,4 @@ package-lock.json
 renovate.json
 tsconfig.json
 yarn-*
+yarn.lock

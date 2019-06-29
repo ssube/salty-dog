@@ -17,7 +17,11 @@ multiple documents per stream or file, inserting defaults, and other magic.
 
 ## Usage
 
-To run with Docker (**recommended**): `docker run --rm ssube/salty-dog:master`
+`salty-dog` is distributed as a package or container.
+
+While the container is the preferred way of running `salty-dog`, it has a serious limitation: `docker run` combines
+`stdout` and `stderr`, making it impossible to separate logs and the output document. Writing either the logs or dest
+to a file works around this.
 
 To download, validate, and apply a Kubernetes resource:
 
@@ -34,6 +38,8 @@ ingress.extensions/gitlab created (dry run)
 ```
 
 ### Docker
+
+To run with Docker: `docker run --rm ssube/salty-dog:master`
 
 The latest semi-stable image is `ssube/salty-dog:master`. All
 [tags are listed here](https://cloud.docker.com/repository/docker/ssube/salty-dog/tags).
