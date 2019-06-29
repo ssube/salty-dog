@@ -2,6 +2,60 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/ssube/salty-dog/compare/v0.3.0...v0.4.0) (2019-06-29)
+
+
+### Bug Fixes
+
+* **build:** correct runner in version info ([e1d5144](https://github.com/ssube/salty-dog/commit/e1d5144))
+* **build:** validate rules during build ([0129221](https://github.com/ssube/salty-dog/commit/0129221))
+* **docker:** move rules to app dir, tweak layer order ([b6fe129](https://github.com/ssube/salty-dog/commit/b6fe129))
+* **rules:** check numeric cpu limits ([aec3ea9](https://github.com/ssube/salty-dog/commit/aec3ea9))
+* **rules:** ensure low CPU limits are non-0 ([97d5c7a](https://github.com/ssube/salty-dog/commit/97d5c7a))
+* **rules:** remove test default ([e02cd67](https://github.com/ssube/salty-dog/commit/e02cd67))
+* **rules:** validate source names ([4112a1d](https://github.com/ssube/salty-dog/commit/4112a1d))
+* **scripts:** use project path for status ([cd3be38](https://github.com/ssube/salty-dog/commit/cd3be38))
+* apply schema changes to data ([03b3bfa](https://github.com/ssube/salty-dog/commit/03b3bfa))
+* delimit output documents ([79c7e71](https://github.com/ssube/salty-dog/commit/79c7e71))
+* docker examples, container output, misc lint ([670e45a](https://github.com/ssube/salty-dog/commit/670e45a))
+* list modes in help ([1f1faf8](https://github.com/ssube/salty-dog/commit/1f1faf8))
+* use consistent option names in source ([c09d135](https://github.com/ssube/salty-dog/commit/c09d135))
+
+
+### Build System
+
+* add tests ([35781f8](https://github.com/ssube/salty-dog/commit/35781f8))
+* omit cache from npm bundle ([c753d30](https://github.com/ssube/salty-dog/commit/c753d30))
+* update image to node 11 ([e7df382](https://github.com/ssube/salty-dog/commit/e7df382))
+
+
+### Features
+
+* rule selector helper ([a630571](https://github.com/ssube/salty-dog/commit/a630571))
+* **rules:** add example grafana rule ([f2579d4](https://github.com/ssube/salty-dog/commit/f2579d4))
+* add cli help (fixes [#7](https://github.com/ssube/salty-dog/issues/7)) ([721f85f](https://github.com/ssube/salty-dog/commit/721f85f))
+* add rules to image, doc ([e358857](https://github.com/ssube/salty-dog/commit/e358857))
+* display diff when rule modifies data (fixes [#3](https://github.com/ssube/salty-dog/issues/3)) ([6f15d1c](https://github.com/ssube/salty-dog/commit/6f15d1c))
+* fix mode and type coercion ([719954e](https://github.com/ssube/salty-dog/commit/719954e))
+* group config & rules in help ([da42749](https://github.com/ssube/salty-dog/commit/da42749))
+* list mode, fix version option ([8efbd99](https://github.com/ssube/salty-dog/commit/8efbd99))
+* load definitions from rules (fixes [#2](https://github.com/ssube/salty-dog/issues/2)) ([9eb41fc](https://github.com/ssube/salty-dog/commit/9eb41fc))
+* support multiple documents per source ([#11](https://github.com/ssube/salty-dog/issues/11)) ([2bd60c8](https://github.com/ssube/salty-dog/commit/2bd60c8))
+
+
+### Tests
+
+* **rule:** begin testing resolver ([caca3fc](https://github.com/ssube/salty-dog/commit/caca3fc))
+* add em ([1931659](https://github.com/ssube/salty-dog/commit/1931659))
+
+
+### BREAKING CHANGES
+
+* adds a required `name` property (string) at the
+top level of each `--rules` file, used as the schema name
+
+
+
 ## 0.3.0 (2019-06-16)
 
 
