@@ -83,7 +83,7 @@ build-node:
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
-    - make
+    - make bundle test
     - make run-rules
 
   artifacts:

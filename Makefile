@@ -79,6 +79,9 @@ build: bundle
 bundle: node_modules
 	$(NODE_BIN)/rollup --config $(CONFIG_PATH)/rollup.js
 
+test: bundle
+	$(NODE_BIN)/mocha $(TARGET_PATH)/test.js
+
 yarn-install: ## install dependencies from package and lock file
 	yarn
 
