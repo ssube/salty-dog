@@ -26,7 +26,8 @@
     "strictPropertyInitialization": true,
     "target": "es2017",
     "types": [
-      "jsonpath-plus"
+      "jsonpath-plus",
+      "mocha"
     ],
     "typeRoots": [
       "../node_modules/@types",

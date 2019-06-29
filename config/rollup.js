@@ -1,5 +1,6 @@
 import commonjs from 'rollup-plugin-commonjs';
 import json from 'rollup-plugin-json';
+import multiEntry from "rollup-plugin-multi-entry";
 import replace from 'rollup-plugin-replace';
 import resolve from 'rollup-plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript2';
@@ -10,7 +11,7 @@ const metadata = require('../package.json');
 // `npm run dev` -> `production` is false
 const production = !process.env.ROLLUP_WATCH;
 
-export default {
+const bundle = {
 	input: 'src/index.ts',
 	output: {
 		file: 'out/bundle.js',
@@ -36,6 +37,9 @@ export default {
 		}),
 		commonjs({
 			namedExports: {
+				'node_modules/chai/index.js': [
+					'expect',
+				],
 				'node_modules/deep-diff/index.js': [
 					'applyDiff',
 					'diff',
@@ -46,7 +50,9 @@ export default {
 					'isNil',
 					'isString',
 				],
-				'node_modules/noicejs/out/main-bundle.js': ['BaseError'],
+				'node_modules/noicejs/out/main-bundle.js': [
+					'BaseError',
+				],
 				'node_modules/js-yaml/index.js': [
 					'DEFAULT_SAFE_SCHEMA',
 					'SAFE_SCHEMA',
@@ -58,7 +64,7 @@ export default {
 				],
 				'node_modules/yargs/index.js': [
 					'usage',
-				]
+				],
 			},
 		}),
     typescript({
@@ -67,3 +73,23 @@ export default {
 		}),
 	],
 };
+
+export default [
+	bundle,
+	{
+		...bundle,
+		input: [
+      'test/harness.ts',
+      'test/**/Test*.ts',
+    ],
+		output: {
+			file: 'out/test.js',
+			format: 'cjs',
+			sourcemap: true,
+		},
+		plugins: [
+			multiEntry(),
+			...bundle.plugins,
+		]
+	},
+];
