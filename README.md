@@ -41,11 +41,12 @@ or dest to a file works around this.
 To download, validate, and apply a Kubernetes resource:
 
 ```shell
-> curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml |\
+> curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml | \
     salty-dog \
-    --rules rules/kubernetes.yml \
-    --source - \
-    --tag important | kubectl apply --dry-run -f -
+      --rules rules/kubernetes.yml \
+      --source - \
+      --tag important | \
+    kubectl apply --dry-run -f -
 
 ...
 {"name":"salty-dog","hostname":"cerberus","pid":7860,"level":30,"msg":"all rules passed","time":"2019-06-16T02:04:37.797Z","v":0}
@@ -60,6 +61,7 @@ ingress.extensions/gitlab created (dry run)
 [![Open issue count](https://img.shields.io/github/issues-raw/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/issues?q=is%3Aopen+is%3Aissue)
 [![Closed issue count](https://img.shields.io/github/issues-closed-raw/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/issues?q=is%3Aissue+is%3Aclosed)
 
+[![Renovate badge](https://badges.renovateapi.com/github/ssube/salty-dog)](https://renovatebot.com)
 [![Known vulnerabilities](https://snyk.io/test/github/ssube/salty-dog/badge.svg)](https://snyk.io/test/github/ssube/salty-dog)
 [![Dependency status](https://img.shields.io/david/ssube/salty-dog.svg)](https://david-dm.org/ssube/salty-dog)
 [![Dev dependency status](https://img.shields.io/david/dev/ssube/salty-dog.svg)](https://david-dm.org/ssube/salty-dog?type=dev)
@@ -94,7 +96,8 @@ After building, run with: `node out/index.js`
 `make` targets are provided for some common arguments:
 
 ```shell
-> curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml | make run-stream 2> >(./node_modules/.bin/bunyan) > >(kubectl apply --dry-run -f -)
+> curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml | \
+    make run-stream 2> >($(yarn bin)/bunyan) > >(kubectl apply --dry-run -f -)
 
 ...
 [2019-06-16T03:23:56.645Z]  INFO: salty-dog/8015 on cerberus: all rules passed
