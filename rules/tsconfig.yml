@@ -1,6 +1,20 @@
 name: salty-dog-tsconfig
 rules:
-  - name: strict
+  - name: allow-errors
+    desc: do not suppress errors
+    level: info
+    tags:
+      - tsconfig
+      - errors
+
+    select: '$.compilerOptions'
+    check:
+      not:
+        anyOf:
+          - required: [suppressExcessPropertyErrors]
+          - required: [suppressImplicitAnyIndexErrors]
+
+  - name: redundant-strict
     desc: omit redundant strict mode options
     level: info
     tags:
