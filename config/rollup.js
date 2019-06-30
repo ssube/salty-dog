@@ -26,6 +26,10 @@ const bundle = {
 			return 'test'
 		}
 
+		if (id.includes('/src/index')) {
+			return 'index';
+		}
+
 		if (id.includes('/src/')) {
 			return 'main';
 		}
@@ -33,7 +37,7 @@ const bundle = {
 	output: {
 		dir: 'out/',
 		chunkFileNames: '[name].js',
-		entryFileNames: 'index.js',
+		entryFileNames: 'entry-[name].js',
 		format: 'cjs',
 		sourcemap: true,
 		banner: () => {

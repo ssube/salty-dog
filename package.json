@@ -2,9 +2,9 @@
   "name": "salty-dog",
   "version": "0.4.1",
   "description": "YAML linter, transformer, and validator",
-  "main": "out/main.js",
+  "main": "out/index.js",
   "bin": {
-    "salty-dog": "out/main.js"
+    "salty-dog": "out/index.js"
   },
   "directories": {
     "doc": "docs",
