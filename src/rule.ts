@@ -198,7 +198,7 @@ export class Rule implements RuleData, Visitor<RuleResult> {
     };
 
     if (filter(node)) {
-      ctx.logger.debug({ item: node }, 'checking item')
+      ctx.logger.debug({ item: node }, 'checking item');
       if (!check(node)) {
         const errors = Array.from(check.errors);
         ctx.logger.warn({

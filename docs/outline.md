@@ -42,7 +42,7 @@ Original rough outline document.
 
 - should have schema and be validated
 - support all arguments (except config file)
-- TODO: parent config
+- parent config
 
 ## Run
 
