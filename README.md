@@ -4,24 +4,37 @@ Rule-based YAML validator using JSON schemas. Capable of filtering elements to v
 multiple documents per stream or file, inserting defaults, and other magic.
 
 - [SALTY DOG](#SALTY-DOG)
+  - [Getting Started](#Getting-Started)
+  - [Status](#Status)
+  - [Releases](#Releases)
   - [Usage](#Usage)
     - [Docker](#Docker)
+    - [Node](#Node)
+      - [Global](#Global)
+      - [Project](#Project)
+    - [Modes](#Modes)
     - [Check Mode](#Check-Mode)
     - [Fix Mode](#Fix-Mode)
       - [Default Values](#Default-Values)
       - [Coercing Values](#Coercing-Values)
+    - [List Mode](#List-Mode)
   - [Rules](#Rules)
     - [Enabling Rules](#Enabling-Rules)
     - [Validate Rules](#Validate-Rules)
   - [Build](#Build)
 
-## Usage
+## Getting Started
 
-`salty-dog` is distributed as a package or container.
+`salty-dog` is distributed as a package or container, and can be installed or pulled:
 
-While the container is the preferred way of running `salty-dog`, it has a serious limitation: `docker run` combines
-`stdout` and `stderr`, making it impossible to separate logs and the output document. Writing either the logs or dest
-to a file works around this.
+```shell
+> docker pull ssube/salty-dog:master
+> yarn global add salty-dog
+```
+
+**Note:** while the container is the preferred way of running `salty-dog`, it has a serious limitation: `docker run`
+combines `stdout` and `stderr`, making it impossible to separate logs and the output document. Writing either the logs
+or dest to a file works around this.
 
 To download, validate, and apply a Kubernetes resource:
 
@@ -36,6 +49,35 @@ To download, validate, and apply a Kubernetes resource:
 {"name":"salty-dog","hostname":"cerberus","pid":7860,"level":30,"msg":"all rules passed","time":"2019-06-16T02:04:37.797Z","v":0}
 ingress.extensions/gitlab created (dry run)
 ```
+## Status
+
+[![Pipeline status](https://img.shields.io/gitlab/pipeline/ssube/salty-dog.svg?gitlab_url=https%3A%2F%2Fgit.apextoaster.com&logo=gitlab)](https://git.apextoaster.com/ssube/salty-dog/commits/master)
+[![MIT license](https://img.shields.io/github/license/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/blob/master/LICENSE.md)
+
+[![Open bug count](https://img.shields.io/github/issues-raw/ssube/salty-dog/type-bug.svg)](https://github.com/ssube/salty-dog/issues?q=is%3Aopen+is%3Aissue+label%3Atype%2Fbug)
+[![Open issue count](https://img.shields.io/github/issues-raw/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/issues?q=is%3Aopen+is%3Aissue)
+[![Closed issue count](https://img.shields.io/github/issues-closed-raw/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/issues?q=is%3Aissue+is%3Aclosed)
+
+[![Known vulnerabilities](https://snyk.io/test/github/ssube/salty-dog/badge.svg)](https://snyk.io/test/github/ssube/salty-dog)
+[![Dependency status](https://img.shields.io/david/ssube/salty-dog.svg)](https://david-dm.org/ssube/salty-dog)
+[![Dev dependency status](https://img.shields.io/david/dev/ssube/salty-dog.svg)](https://david-dm.org/ssube/salty-dog?type=dev)
+
+[![Maintainability score](https://api.codeclimate.com/v1/badges/5d4326d6f68a2fa137cd/maintainability)](https://codeclimate.com/github/ssube/salty-dog/maintainability)
+[![Technical debt ratio](https://img.shields.io/codeclimate/tech-debt/ssube/salty-dog.svg)](https://codeclimate.com/github/ssube/salty-dog/trends/technical_debt)
+[![Quality issues](https://img.shields.io/codeclimate/issues/ssube/salty-dog.svg)](https://codeclimate.com/github/ssube/salty-dog/issues)
+
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/ssube/salty-dog.svg?logo=lgtm)](https://lgtm.com/projects/g/ssube/salty-dog/context:javascript)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/ssube/salty-dog.svg)](https://lgtm.com/projects/g/ssube/salty-dog/alerts/)
+
+## Releases
+
+[![Github release version](https://img.shields.io/github/tag/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/releases)
+[![Commits since release](https://img.shields.io/github/commits-since/ssube/salty-dog/v0.4.1.svg)](https://github.com/ssube/salty-dog/compare/v0.4.1...master)
+
+[![npm release version](https://img.shields.io/npm/v/salty-dog.svg)](https://www.npmjs.com/package/salty-dog)
+[![Docker image size](https://images.microbadger.com/badges/image/ssube/salty-dog:master.svg)](https://microbadger.com/images/ssube/salty-dog:master)
+
+## Usage
 
 ### Docker
 
@@ -49,6 +91,35 @@ mostly).
 
 Rules are baked into the image in `/salty-dog/rules`. To use custom rules, mount them with
 `-v $(pwd)/rules:/salty-dog/rules:ro` and load with `--rules /rules/foo.yml`.
+
+### Node
+
+#### Global
+
+To install with Yarn as a global CLI tool: `yarn global add salty-dog`
+
+To run with Node:
+
+```shell
+> export PATH="${PATH}:$(yarn global bin)"
+> salty-dog --help
+```
+
+#### Project
+
+To install with Yarn for a single project: `yarn add -D salty-dog`
+
+To run with Node:
+
+```shell
+> export PATH="${PATH}:$(yarn bin)"
+> salty-dog --help
+```
+
+### Modes
+
+`salty-dog` can run in a few different modes: `check` mode will report errors, `fix` mode will attempt to modify the
+input document, and `list` mode will print the active set of rules.
 
 ### Check Mode
 
@@ -101,6 +172,28 @@ apply in order, as do their defaults.
 Properties that appear in the document with a different `type` than they have in the schema may be coerced, if the
 value is compatible with the schema type. [The full matrix of valid type coercions](https://ajv.js.org/coercion.html)
 is documented by Ajv.
+
+### List Mode
+
+`salty-dog` can list the active set of rules, to help debug tags and inclusion.
+
+```shell
+> salty-dog \
+    --rules rules/kubernetes.yml \
+    --tag important \
+    --mode list
+
+...
+[2019-06-30T18:39:11.930Z]  INFO: salty-dog/26330 on cerberus: listing active rules
+    rules: [
+      {
+        "desc": "resource limits are too low",
+        "level": "debug",
+        "name": "kubernetes-resources-minimum-cpu",
+
+...
+    ]
+```
 
 ## Rules
 
