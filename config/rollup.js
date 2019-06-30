@@ -8,24 +8,40 @@ import resolve from 'rollup-plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript2';
 
 const metadata = require('../package.json');
-
-// `npm run build` -> `production` is true
-// `npm run dev` -> `production` is false
-const production = !process.env.ROLLUP_WATCH;
+const shebang = '#! /usr/bin/env node';
+const license = fs.readFileSync('LICENSE.md', 'utf-8').split('\n').map(ln => ` * ${ln}`);
 
 const bundle = {
-	input: 'src/index.ts',
+	input: [
+		'src/index.ts',
+		'test/harness.ts',
+		'test/**/Test*.ts',
+	],
+	manualChunks(id) {
+		if (id.includes('/node_modules/')) {
+			return 'vendor';
+		}
+
+		if (id.includes('/test/')) {
+			return 'test'
+		}
+
+		if (id.includes('/src/')) {
+			return 'main';
+		}
+	},
 	output: {
-		file: 'out/bundle.js',
+		dir: 'out/',
+		chunkFileNames: '[name].js',
+		entryFileNames: 'index.js',
 		format: 'cjs',
 		sourcemap: true,
 		banner: () => {
-			const shebang = '#! /usr/bin/env node';
-			const license = fs.readFileSync('LICENSE.md', 'utf-8').split('\n').map(ln => ` * ${ln}`);
 			return [shebang, '/**', ...license, ' **/'].join('\n');
 		},
 	},
 	plugins: [
+		multiEntry(),
 		json(),
 		replace({
 			delimiters: ['{{ ', ' }}'],
@@ -83,20 +99,4 @@ const bundle = {
 
 export default [
 	bundle,
-	{
-		...bundle,
-		input: [
-      'test/harness.ts',
-      'test/**/Test*.ts',
-    ],
-		output: {
-			file: 'out/test.js',
-			format: 'cjs',
-			sourcemap: true,
-		},
-		plugins: [
-			multiEntry(),
-			...bundle.plugins,
-		]
-	},
 ];
