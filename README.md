@@ -1,7 +1,7 @@
 # SALTY DOG
 
-Rule-based YAML validator using JSON schemas. Capable of filtering elements to validate partial documents, supports
-multiple documents per stream or file, inserting defaults, and other magic.
+Rule-based JSON/YAML validator using JSON schemas. Capable of filtering elements to validate partial documents,
+supports multiple documents per stream or file, inserting defaults, and other magic.
 
 - [SALTY DOG](#SALTY-DOG)
   - [Getting Started](#Getting-Started)

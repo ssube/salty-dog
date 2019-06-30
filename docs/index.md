@@ -1,6 +1,6 @@
 # Salty Dog
 
-Rule-based YAML validator using JSON schemas.
+Rule-based JSON/YAML validator using JSON schemas.
 
 - [Salty Dog](#Salty-Dog)
   - [Rules](#Rules)
