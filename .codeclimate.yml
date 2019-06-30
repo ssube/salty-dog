@@ -1,8 +1,7 @@
 version: "2"
 
 exclude_patterns:
-  - docs/dev/style.md
-  - src/migration/
+  - CHANGELOG.md
   - vendor/
 
 plugins:

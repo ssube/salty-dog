@@ -52,6 +52,7 @@ To download, validate, and apply a Kubernetes resource:
 {"name":"salty-dog","hostname":"cerberus","pid":7860,"level":30,"msg":"all rules passed","time":"2019-06-16T02:04:37.797Z","v":0}
 ingress.extensions/gitlab created (dry run)
 ```
+
 ## Status
 
 [![Pipeline status](https://img.shields.io/gitlab/pipeline/ssube/salty-dog.svg?gitlab_url=https%3A%2F%2Fgit.apextoaster.com&logo=gitlab)](https://git.apextoaster.com/ssube/salty-dog/commits/master)
