@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 import commonjs from 'rollup-plugin-commonjs';
 import json from 'rollup-plugin-json';
 import multiEntry from 'rollup-plugin-multi-entry';
@@ -9,7 +7,6 @@ import typescript from 'rollup-plugin-typescript2';
 
 const metadata = require('../package.json');
 const shebang = '#! /usr/bin/env node';
-const license = fs.readFileSync('LICENSE.md', 'utf-8').split('\n').map(ln => ` * ${ln}`);
 
 const bundle = {
 	input: [
@@ -41,7 +38,7 @@ const bundle = {
 		format: 'cjs',
 		sourcemap: true,
 		banner: () => {
-			return [shebang, '/**', ...license, ' **/'].join('\n');
+			return shebang + '\n\n';
 		},
 	},
 	plugins: [
