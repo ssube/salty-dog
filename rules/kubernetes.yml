@@ -4,9 +4,8 @@ rules:
     desc: containers must have complete resources specified
     level: info
     tags:
-      - cluster-health
-      - important
       - kubernetes
+      - resources
 
     select: '$.spec.template.spec.containers[*]'
     check:
@@ -46,7 +45,7 @@ rules:
     level: debug
     tags:
       - kubernetes
-      - optional
+      - resources
 
     select: '$.spec.template.spec.containers[*].resources'
     # filter containers with cpu limits
@@ -76,8 +75,9 @@ rules:
     desc: deployments must specify a positive replica count
     level: info
     tags:
-      - important
       - kubernetes
+      - apps
+      - deployment
 
     # select the root of the document
     select: '$'
@@ -100,3 +100,26 @@ rules:
             replica:
               type: number
               minimum: 1
+
+  - name: kubernetes-labels
+    desc: all resources should have labels
+    level: info
+    tags:
+      - kubernetes
+      - labels
+
+    select: '$'
+    check:
+      type: object
+      required: [metadata]
+      properties:
+        metadata:
+          type: object
+          required: [labels]
+          properties:
+            labels:
+              type: object
+              additionalProperties: false
+              patternProperties:
+                "^[-.a-z0-9]{1,63}$":
+                  type: string
