@@ -1,5 +1,9 @@
 import { expect } from 'chai';
-import { Rule, resolveRules, makeSelector } from 'src/rule';
+import { ConsoleLogger } from 'noicejs';
+import { mock } from 'sinon';
+
+import { makeSelector, resolveRules, Rule, visitRules } from 'src/rule';
+import { VisitorContext } from 'src/visitor/context';
 
 const TEST_RULES = [new Rule({
   name: 'foo',
@@ -93,4 +97,68 @@ describe('rule resolver', () => {
       expect(rules[0]).to.equal(TEST_RULES[0]);
     });
   });
+});
+
+describe('rule visitor', () => {
+  it('should only call visit for selected items', async () => {
+    const ctx = new VisitorContext({
+      coerce: false,
+      defaults: false,
+      logger: new ConsoleLogger(),
+    });
+    const data = {};
+    const rule = new Rule({
+      name: 'foo',
+      desc: '',
+      level: 'info',
+      tags: [],
+      select: '$',
+      check: {},
+    });
+
+    const mockRule = mock(rule);
+    mockRule.expects('visit').never();
+
+    const pickStub = mockRule.expects('pick').once().withArgs(ctx, data);
+    pickStub.onFirstCall().returns(Promise.resolve([]));
+    pickStub.throws();
+
+    await visitRules(ctx, [rule], {});
+
+    mockRule.verify();
+    expect(ctx.errors.length).to.equal(0);
+  });
+
+  it('should call visit for each selected item', async () => {
+    const ctx = new VisitorContext({
+      coerce: false,
+      defaults: false,
+      logger: new ConsoleLogger(),
+    });
+    const data = {};
+    const rule = new Rule({
+      name: 'foo',
+      desc: '',
+      level: 'info',
+      tags: [],
+      select: '$',
+      check: {},
+    });
+
+    const mockRule = mock(rule);
+
+    const pickStub = mockRule.expects('pick').once().withArgs(ctx, data);
+    pickStub.onFirstCall().returns(Promise.resolve([data]));
+    pickStub.throws();
+
+    const visitStub = mockRule.expects('visit').once().withArgs(ctx, data);
+    visitStub.onFirstCall().returns(Promise.resolve(ctx));
+    visitStub.throws();
+
+    await visitRules(ctx, [rule], {});
+
+    mockRule.verify();
+    expect(ctx.errors.length).to.equal(0);
+  })
+
 });

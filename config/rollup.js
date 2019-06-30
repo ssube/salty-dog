@@ -76,6 +76,7 @@ const bundle = {
 				],
 				'node_modules/noicejs/out/main-bundle.js': [
 					'BaseError',
+					'ConsoleLogger',
 				],
 				'node_modules/js-yaml/index.js': [
 					'DEFAULT_SAFE_SCHEMA',
