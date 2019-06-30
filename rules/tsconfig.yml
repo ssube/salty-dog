@@ -33,9 +33,9 @@ rules:
     check:
       not:
         anyOf:
+          - required: [alwaysStrict]
           - required: [noImplicitAny]
           - required: [noImplicitThis]
-          - required: [alwaysStrict]
           - required: [strictBindCallApply]
           - required: [strictNullChecks]
           - required: [strictFunctionTypes]
@@ -57,7 +57,7 @@ rules:
           type: array
         target:
           type: string
-          pattern: "^es[0-9]+$"
+          pattern: "^es([0-9]+|next)$"
 
     check:
       allOf:
