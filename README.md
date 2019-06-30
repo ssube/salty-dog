@@ -7,28 +7,30 @@ multiple documents per stream or file, inserting defaults, and other magic.
   - [Getting Started](#Getting-Started)
   - [Status](#Status)
   - [Releases](#Releases)
-  - [Usage](#Usage)
+  - [Build](#Build)
+  - [Install](#Install)
     - [Docker](#Docker)
     - [Node](#Node)
       - [Global](#Global)
       - [Project](#Project)
+  - [Usage](#Usage)
     - [Modes](#Modes)
-    - [Check Mode](#Check-Mode)
-    - [Fix Mode](#Fix-Mode)
-      - [Default Values](#Default-Values)
-      - [Coercing Values](#Coercing-Values)
-    - [List Mode](#List-Mode)
-  - [Rules](#Rules)
-    - [Enabling Rules](#Enabling-Rules)
-    - [Validate Rules](#Validate-Rules)
-  - [Build](#Build)
+      - [Check Mode](#Check-Mode)
+      - [Fix Mode](#Fix-Mode)
+        - [Default Values](#Default-Values)
+        - [Coercing Values](#Coercing-Values)
+      - [List Mode](#List-Mode)
+    - [Rules](#Rules)
+      - [Enabling Rules](#Enabling-Rules)
+      - [Validate Rules](#Validate-Rules)
 
 ## Getting Started
 
-`salty-dog` is distributed as a package or container, and can be installed or pulled:
+`salty-dog` is distributed as a package and container, and can be installed or pulled:
 
 ```shell
 > docker pull ssube/salty-dog:master
+> yarn add -D salty-dog
 > yarn global add salty-dog
 ```
 
@@ -77,7 +79,29 @@ ingress.extensions/gitlab created (dry run)
 [![npm release version](https://img.shields.io/npm/v/salty-dog.svg)](https://www.npmjs.com/package/salty-dog)
 [![Docker image size](https://images.microbadger.com/badges/image/ssube/salty-dog:master.svg)](https://microbadger.com/images/ssube/salty-dog:master)
 
-## Usage
+## Build
+
+This project is written in Typescript and requires `node` and `yarn` to build.
+
+```shell
+> git clone git@github.com:ssube/salty-dog.git
+> cd salty-dog
+> make
+```
+
+After building, run with: `node out/index.js`
+
+`make` targets are provided for some common arguments:
+
+```shell
+> curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml | make run-stream 2> >(./node_modules/.bin/bunyan) > >(kubectl apply --dry-run -f -)
+
+...
+[2019-06-16T03:23:56.645Z]  INFO: salty-dog/8015 on cerberus: all rules passed
+ingress.extensions/gitlab created (dry run)
+```
+
+## Install
 
 ### Docker
 
@@ -116,12 +140,14 @@ To run with Node:
 > salty-dog --help
 ```
 
+## Usage
+
 ### Modes
 
 `salty-dog` can run in a few different modes: `check` mode will report errors, `fix` mode will attempt to modify the
 input document, and `list` mode will print the active set of rules.
 
-### Check Mode
+#### Check Mode
 
 By default, `salty-dog` will validate the structure and contents of the `--source` document. If all rules pass, the
 document will be printed to `--dest`.
@@ -156,24 +182,24 @@ The `--source` and `--dest` default to stdin and stdout, respectively, but a pat
 [2019-06-15T23:53:34.223Z]  INFO: salty-dog/19839 on cerberus: all rules passed
 ```
 
-### Fix Mode
+#### Fix Mode
 
 `salty-dog` can also add default values to missing properties with `--mode fix`. If a rule does not immediately pass
 with the `--source` document, but defaults are provided in the schema, the defaults will be inserted before printing to
 `--dest`.
 
-#### Default Values
+##### Default Values
 
 Properties that appear in the schema with a `default` provided will be added to each element as it is checked. Rules
 apply in order, as do their defaults.
 
-#### Coercing Values
+##### Coercing Values
 
 Properties that appear in the document with a different `type` than they have in the schema may be coerced, if the
 value is compatible with the schema type. [The full matrix of valid type coercions](https://ajv.js.org/coercion.html)
 is documented by Ajv.
 
-### List Mode
+#### List Mode
 
 `salty-dog` can list the active set of rules, to help debug tags and inclusion.
 
@@ -195,7 +221,7 @@ is documented by Ajv.
     ]
 ```
 
-## Rules
+### Rules
 
 Rules combine a jsonpath expression and JSON schema to select and validate the document.
 
@@ -203,7 +229,7 @@ The rule's `select` expression is used to select nodes that should be validated,
 
 The structure of rule files and the rules within them [are documented here](docs/rules.md).
 
-### Enabling Rules
+#### Enabling Rules
 
 All rules are disabled by default and must be enabled by name, level, or tag.
 
@@ -213,7 +239,7 @@ To enable a group of rules by level, `--include-level warn`.
 
 To enable a group of rules by tag, `--include-tag foo`.
 
-### Validate Rules
+#### Validate Rules
 
 To validate the rules in the `rules/` directory using the meta-rules:
 
@@ -222,26 +248,4 @@ To validate the rules in the `rules/` directory using the meta-rules:
 
 ...
 {"name":"salty-dog","hostname":"cerberus","pid":29403,"level":30,"msg":"all rules passed","time":"2019-06-16T00:56:55.132Z","v":0}
-```
-
-## Build
-
-This project is written in Typescript and requires `node` and `yarn` to build.
-
-```shell
-> git clone git@github.com:ssube/salty-dog.git
-> cd salty-dog
-> make
-```
-
-After building, run with: `node out/index.js`
-
-`make` targets are provided for some common arguments:
-
-```shell
-> curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml | make run-stream 2> >(./node_modules/.bin/bunyan) > >(kubectl apply --dry-run -f -)
-
-...
-[2019-06-16T03:23:56.645Z]  INFO: salty-dog/8015 on cerberus: all rules passed
-ingress.extensions/gitlab created (dry run)
 ```
