@@ -1,8 +1,8 @@
 {
   "name": "salty-dog",
   "version": "0.4.1",
-  "description": "YAML linter, transformer, and validator",
-  "main": "out/index.js",
+  "description": "Rule-based YAML validator using JSON schemas",
+  "main": "out/main.js",
   "bin": {
     "salty-dog": "out/index.js"
   },
