@@ -9,18 +9,21 @@ const metadata = require('../package.json');
 const shebang = '#! /usr/bin/env node';
 
 const bundle = {
+	external: [
+		'dtrace-provider',
+	],
 	input: [
 		'src/index.ts',
 		'test/harness.ts',
 		'test/**/Test*.ts',
 	],
 	manualChunks(id) {
-		if (id.includes('/node_modules/')) {
-			return 'vendor';
+		if (id.includes('/test/') /* || id.includes('/chai/') */ || id.includes('/sinon/')) {
+			return 'test'
 		}
 
-		if (id.includes('/test/')) {
-			return 'test'
+		if (id.includes('/node_modules/')) {
+			return 'vendor';
 		}
 
 		if (id.includes('/src/index')) {

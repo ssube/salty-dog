@@ -159,6 +159,5 @@ describe('rule visitor', () => {
 
     mockRule.verify();
     expect(ctx.errors.length).to.equal(0);
-  })
-
+  });
 });
