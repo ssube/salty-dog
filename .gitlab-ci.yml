@@ -89,9 +89,7 @@ build-node:
   artifacts:
     expire_in: 1 week
     paths:
-      - out/docs
-      - out/bundle.*
-      - out/version.json
+      - out/
   cache:
     key: "${CI_COMMIT_REF_SLUG}"
     policy: pull-push
