@@ -1,0 +1,107 @@
+name: salty-dog-tsconfig
+rules:
+  - name: strict
+    desc: omit redundant strict mode options
+    level: info
+    tags:
+      - tsconfig
+      - strict
+
+    select: '$.compilerOptions'
+    filter:
+      type: object
+      required: [strict]
+      properties:
+        strict:
+          type: boolean
+          const: true
+
+    check:
+      not:
+        anyOf:
+          - required: [noImplicitAny]
+          - required: [noImplicitThis]
+          - required: [alwaysStrict]
+          - required: [strictBindCallApply]
+          - required: [strictNullChecks]
+          - required: [strictFunctionTypes]
+          - required: [strictPropertyInitialization]
+
+  - name: target-lib
+    desc: ensure the target and lib match
+    level: info
+    tags:
+      - tsconfig
+      - target
+
+    select: '$.compilerOptions'
+    filter:
+      type: object
+      required: [lib, target]
+      properties:
+        lib:
+          type: array
+        target:
+          type: string
+          pattern: "^es[0-9]+$"
+
+    check:
+      allOf:
+        - type: object
+          required: [lib, target]
+          properties:
+            lib:
+              type: array
+              items:
+                type: string
+            target:
+              type: string
+        - oneOf:
+            - properties:
+                lib:
+                  contains:
+                    type: string
+                    const: esnext
+                target:
+                  type: string
+                  const: esnext
+            - properties:
+                lib:
+                  contains:
+                    type: string
+                    const: es2017
+                target:
+                  type: string
+                  const: es2017
+            - properties:
+                lib:
+                  contains:
+                    type: string
+                    const: es2016
+                target:
+                  type: string
+                  const: es2016
+            - properties:
+                lib:
+                  contains:
+                    type: string
+                    enum: [es2015, es6]
+                target:
+                  type: string
+                  enum: [es2015, es6]
+            - properties:
+                lib:
+                  contains:
+                    type: string
+                    const: es5
+                target:
+                  type: string
+                  const: es5
+            - properties:
+                lib:
+                  contains:
+                    type: string
+                    const: es3
+                target:
+                  type: string
+                  const: es3
