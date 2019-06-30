@@ -1,11 +1,9 @@
 import { createLogger } from 'bunyan';
-import { applyDiff, diff } from 'deep-diff';
-import { cloneDeep } from 'lodash';
 import { Options, usage } from 'yargs';
 
 import { loadConfig } from 'src/config';
 import { YamlParser } from 'src/parser/YamlParser';
-import { loadRules, resolveRules } from 'src/rule';
+import { loadRules, resolveRules, visitRules } from 'src/rule';
 import { loadSource, writeSource } from 'src/source';
 import { VERSION_INFO } from 'src/version';
 import { VisitorContext } from 'src/visitor/context';
@@ -21,7 +19,7 @@ const RULE_OPTION: Options = {
   type: 'array',
 };
 
-const MAIN_ARGS = usage(`Usage: salty-dog <mode> [options]`)
+const MAIN_ARGS = usage(`Usage: salty-dog [-m mode] [options]`)
   .option(CONFIG_ARGS_NAME, {
     default: `.${VERSION_INFO.app.name}.yml`,
     group: 'Config:',
@@ -95,6 +93,7 @@ export async function main(argv: Array<string>): Promise<number> {
   // check mode
   if (!MODES.includes(args.mode)) {
     logger.error({ mode: args.mode }, 'unsupported mode');
+    return STATUS_ERROR;
   }
 
   // const schema = new Schema();
@@ -123,32 +122,7 @@ export async function main(argv: Array<string>): Promise<number> {
   }
 
   for (const data of docs) {
-    for (const rule of activeRules) {
-      const items = await rule.pick(ctx, data);
-      for (const item of items) {
-        const itemCopy = cloneDeep(item);
-        const itemResult = await rule.visit(ctx, itemCopy);
-
-        if (itemResult.errors.length > 0) {
-          logger.warn({ count: itemResult.errors.length, rule }, 'rule failed');
-
-          ctx.mergeResult(itemResult);
-        } else {
-          const itemDiff = diff(item, itemCopy);
-          if (Array.isArray(itemDiff) && itemDiff.length > 0) {
-            logger.info({
-              diff: itemDiff,
-              item,
-              rule: rule.name,
-            }, 'rule passed with modifications');
-
-            applyDiff(item, itemCopy);
-          } else {
-            logger.info({ rule: rule.name }, 'rule passed');
-          }
-        }
-      }
-    }
+    await visitRules(ctx, activeRules, data);
   }
 
   if (ctx.errors.length > 0) {

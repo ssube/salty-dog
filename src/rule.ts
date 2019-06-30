@@ -1,3 +1,4 @@
+import { applyDiff, diff } from 'deep-diff';
 import { JSONPath } from 'jsonpath-plus';
 import { cloneDeep, intersection, isNil } from 'lodash';
 import { LogLevel } from 'noicejs';
@@ -114,9 +115,39 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
   return Array.from(activeRules);
 }
 
+export async function visitRules(ctx: VisitorContext, rules: Array<Rule>, data: any): Promise<VisitorContext> {
+  for (const rule of rules) {
+    const items = await rule.pick(ctx, data);
+    for (const item of items) {
+      const itemCopy = cloneDeep(item);
+      const itemResult = await rule.visit(ctx, itemCopy);
+
+      if (itemResult.errors.length > 0) {
+        ctx.logger.warn({ count: itemResult.errors.length, rule }, 'rule failed');
+        ctx.mergeResult(itemResult);
+      } else {
+        const itemDiff = diff(item, itemCopy);
+        if (Array.isArray(itemDiff) && itemDiff.length > 0) {
+          ctx.logger.info({
+            diff: itemDiff,
+            item,
+            rule: rule.name,
+          }, 'rule passed with modifications');
+
+          applyDiff(item, itemCopy);
+        } else {
+          ctx.logger.info({ rule: rule.name }, 'rule passed');
+        }
+      }
+    }
+  }
+
+  return ctx;
+}
+
 export interface RuleResult extends VisitorResult {
   rule: Rule;
-} 
+}
 
 export class Rule implements RuleData, Visitor<RuleResult> {
   public readonly check: any;
@@ -156,7 +187,7 @@ export class Rule implements RuleData, Visitor<RuleResult> {
   }
 
   public async visit(ctx: VisitorContext, node: any): Promise<RuleResult> {
-    ctx.logger.debug({ item: node, rule: this}, 'visiting node');
+    ctx.logger.debug({ item: node, rule: this }, 'visiting node');
 
     const check = ctx.ajv.compile(this.check);
     const filter = this.compileFilter(ctx);
