@@ -79,16 +79,22 @@ todo:
 
 # build targets
 build: ## builds, bundles, and tests the application
-build: bundle
+build: build-bundle
 
-bundle: node_modules
+build-bundle: node_modules
 	$(NODE_BIN)/rollup --config $(CONFIG_PATH)/rollup.js
 
-test: bundle
+build-image: build-bundle
+	docker build $(ROOT_PATH)
+
+test: build-bundle
 	$(NODE_BIN)/mocha $(TARGET_PATH)/test.js
 
 yarn-install: ## install dependencies from package and lock file
 	yarn
+
+yarn-global: ## install bundle as a global tool
+	yarn global add file:$(ROOT_PATH)
 
 yarn-update: ## check yarn for outdated packages
 	yarn upgrade-interactive --latest
@@ -122,6 +128,9 @@ upload-codecov:
 	codecov --disable=gcov --file=$(TARGET_PATH)/coverage/lcov.info --token=$(shell echo "${CODECOV_SECRET}" | base64 -d)
 
 # run targets
+run-help: ## print the help
+	@node out/index.js --help
+
 run-rules: ## validate the rules directory
 	find $(ROOT_PATH)/rules -maxdepth 1 -name '*.yml' | while read file; \
 	do \
