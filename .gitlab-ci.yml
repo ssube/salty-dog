@@ -89,12 +89,14 @@ build-node:
   artifacts:
     expire_in: 1 week
     paths:
-      - out/
+      - out/*.js
+      - out/*.js.map
   cache:
     key: "${CI_COMMIT_REF_SLUG}"
     policy: pull-push
     paths:
       - node_modules
+      - out/cache
 
 build-image:
   <<: [*build-docker]
