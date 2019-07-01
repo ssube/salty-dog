@@ -1,3 +1,5 @@
+# test rules kubernetes
+# test tags kubernetes
 # test exit-status 0
 
 metadata:
