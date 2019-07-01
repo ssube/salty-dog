@@ -83,7 +83,7 @@ build-node:
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
-    - make clean-target bundle test
+    - make clean-target build test
     - make run-rules
 
   artifacts:
