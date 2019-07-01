@@ -7,7 +7,6 @@ rules:
       - gitlab
       - optional
 
-    select: '$'
     check:
       type: object
       required: [stages]
@@ -24,7 +23,6 @@ rules:
       - gitlab
       - optional
 
-    select: '$'
     check:
       type: object
       patternProperties:
@@ -42,7 +40,6 @@ rules:
       - gitlab
       - important
 
-    select: '$'
     check:
       type: object
       patternProperties:

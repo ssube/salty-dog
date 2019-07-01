@@ -162,7 +162,7 @@ export class Rule implements RuleData, Visitor<RuleResult> {
     this.desc = data.desc;
     this.level = data.level;
     this.name = data.name;
-    this.select = data.select;
+    this.select = data.select || '$';
     this.tags = Array.from(data.tags);
 
     // copy schema objects

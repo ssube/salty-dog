@@ -10,7 +10,6 @@ definitions:
       - level
       - tags
       # data
-      - select
       - check
     properties:
       name:
@@ -34,6 +33,7 @@ definitions:
           pattern: "[-:a-z0-9]+"
       select:
         type: string
+        default: '$'
         minLength: 1
       filter:
         type: object
@@ -59,7 +59,6 @@ rules:
       - important
       - salty-dog
 
-    select: '$'
     check:
       type: object
       additionalProperties: false

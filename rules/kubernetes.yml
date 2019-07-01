@@ -108,7 +108,6 @@ rules:
       - kubernetes
       - labels
 
-    select: '$'
     check:
       type: object
       required: [metadata]

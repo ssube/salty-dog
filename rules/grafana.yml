@@ -69,8 +69,6 @@ rules:
       - grafana
       - dashboard
 
-    # this is not the ideal selector for this rule, but tags are located at $.dashboard.tags, while notification
-    # channels are nested under $.dashboard.panels[*].alert.notifications[*].uid
     select: '$.dashboard'
 
     filter:

@@ -7,7 +7,6 @@ rules:
       - ansible
       - playbook
     
-    select: '$'
     check:
       type: array
       items:
@@ -38,7 +37,6 @@ rules:
       - ansible
       - role
 
-    select: '$'
     check:
       type: array
       items:
