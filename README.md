@@ -92,7 +92,12 @@ This project is written in Typescript and requires `node` and `yarn` to build.
 > make
 ```
 
-After building, run with: `node out/index.js`
+After building, run with `node out/index.js` or install run as `salty-dog`:
+
+```shell
+> cd salty-dog
+> yarn global add file:$PWD
+```
 
 `make` targets are provided for some common arguments:
 
