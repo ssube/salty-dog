@@ -9,7 +9,9 @@ This document covers the project workflow, commit and merge messages, and how to
       - [Terminal Status](#Terminal-Status)
       - [Transitions](#Transitions)
     - [Types](#Types)
-  - [Branches](#Branches)
+  - [Git](#Git)
+    - [Branches](#Branches)
+    - [Remotes](#Remotes)
   - [Issues](#Issues)
     - [Issue Labels](#Issue-Labels)
 
@@ -111,9 +113,19 @@ Do not close the issue until the corresponding branches have been merged and rel
   - dependency updates
   - typically handled by Renovate
 
-## Branches
+## Git
+
+### Branches
 
 Branches should be named after the primary issue they address, with the issue type and number: `type/#-issue-title`
+
+### Remotes
+
+Copies of the repo exist on both Github and Gitlab. While they are mirrored, the sync is occasional; pushing to both
+will immediately trigger a pipeline.
+
+**Note:** the `origin` remote must point to Github or `standard-release` does not generate commit links in the
+changelog
 
 ## Issues
 

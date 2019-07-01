@@ -7,36 +7,36 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
-* make -v an alias for --version 5f5b993
-* **build:** actually fix mdl config 675b200
-* **build:** add rpt2 cache to cache rather than artifacts 0996390
-* **build:** artifact all output 9eacea6
-* **build:** attempt to fix mdl config 24ebc9e
-* **build:** clean up output directory between builds 30ea7d6
-* **build:** move sinon to vendor chunk d02b223
-* **build:** run generic build target c41d9d0
-* **build:** split index into its own chunk 8351fff
-* **container:** set up as cli tool within container ef2a9c9
-* **rules/tsconfig:** correctly enforce lib/target for esnext 62d58fe
+* make -v an alias for --version ([5f5b993](https://github.com/ssube/salty-dog/commit/5f5b993))
+* **build:** actually fix mdl config ([675b200](https://github.com/ssube/salty-dog/commit/675b200))
+* **build:** add rpt2 cache to cache rather than artifacts ([0996390](https://github.com/ssube/salty-dog/commit/0996390))
+* **build:** artifact all output ([9eacea6](https://github.com/ssube/salty-dog/commit/9eacea6))
+* **build:** attempt to fix mdl config ([24ebc9e](https://github.com/ssube/salty-dog/commit/24ebc9e))
+* **build:** clean up output directory between builds ([30ea7d6](https://github.com/ssube/salty-dog/commit/30ea7d6))
+* **build:** move sinon to vendor chunk ([d02b223](https://github.com/ssube/salty-dog/commit/d02b223))
+* **build:** run generic build target ([c41d9d0](https://github.com/ssube/salty-dog/commit/c41d9d0))
+* **build:** split index into its own chunk ([8351fff](https://github.com/ssube/salty-dog/commit/8351fff))
+* **container:** set up as cli tool within container ([ef2a9c9](https://github.com/ssube/salty-dog/commit/ef2a9c9))
+* **rules/tsconfig:** correctly enforce lib/target for esnext ([62d58fe](https://github.com/ssube/salty-dog/commit/62d58fe))
 
 
 ### Build System
 
-* image build and global install targets 8368271
-* remove license from chunks ac86e69
-* remove redundant tsconfig options 37c0dbb
-* **package:** set module entry point to main bundle 7e2d20e
-* split vendor chunk 96d15bb
+* image build and global install targets ([8368271](https://github.com/ssube/salty-dog/commit/8368271))
+* remove license from chunks ([ac86e69](https://github.com/ssube/salty-dog/commit/ac86e69))
+* remove redundant tsconfig options ([37c0dbb](https://github.com/ssube/salty-dog/commit/37c0dbb))
+* **package:** set module entry point to main bundle ([7e2d20e](https://github.com/ssube/salty-dog/commit/7e2d20e))
+* split vendor chunk ([96d15bb](https://github.com/ssube/salty-dog/commit/96d15bb))
 
 
 ### Features
 
-* **rules:** add tsconfig rules 27843c6
-* **rules:** kubernetes rule to require labels aa350cc
-* **rules/tsconfig:** check for suppressed errors d11f3d6
-* **test:** begin testing visitor 31d1977
-* configure renovate for semantic commits fbcc143
-* extend renovate presets 2d0b7ad
+* **rules:** add tsconfig rules ([27843c6](https://github.com/ssube/salty-dog/commit/27843c6))
+* **rules:** kubernetes rule to require labels ([aa350cc](https://github.com/ssube/salty-dog/commit/aa350cc))
+* **rules/tsconfig:** check for suppressed errors ([d11f3d6](https://github.com/ssube/salty-dog/commit/d11f3d6))
+* **test:** begin testing visitor ([31d1977](https://github.com/ssube/salty-dog/commit/31d1977))
+* configure renovate for semantic commits ([fbcc143](https://github.com/ssube/salty-dog/commit/fbcc143))
+* extend renovate presets ([2d0b7ad](https://github.com/ssube/salty-dog/commit/2d0b7ad))
 
 
 
