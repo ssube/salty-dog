@@ -1,5 +1,8 @@
+# test exit-status 0
+
 metadata:
   name: example
+  labels: {}
 spec:
   template:
     spec:
