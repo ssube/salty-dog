@@ -45,7 +45,7 @@ To download, validate, and apply a Kubernetes resource:
     salty-dog \
       --rules rules/kubernetes.yml \
       --source - \
-      --tag important | \
+      --tag kubernetes | \
     kubectl apply --dry-run -f -
 
 ...
@@ -164,14 +164,14 @@ document will be printed to `--dest`.
 ```shell
 > cat examples/kubernetes-resources-pass.yml | salty-dog \
     --rules rules/kubernetes.yml \
-    --tag important
+    --tag kubernetes
 
 ...
 [2019-06-15T23:53:34.223Z]  INFO: salty-dog/19839 on cerberus: all rules passed
 
 > cat examples/kubernetes-resources-fail.yml | salty-dog \
     --rules rules/kubernetes.yml \
-    --tag important
+    --tag kubernetes
 
 ...
 [2019-06-15T23:56:04.764Z] ERROR: salty-dog/22211 on cerberus: some rules failed (errors=1)
@@ -183,7 +183,7 @@ The `--source` and `--dest` default to stdin and stdout, respectively, but a pat
 ```shell
 > salty-dog \
     --rules rules/kubernetes.yml \
-    --tag important \
+    --tag kubernetes \
     --source examples/kubernetes-resources-pass.yml \
     --dest /tmp/kubernetes-resource.yml
 
@@ -215,7 +215,7 @@ is documented by Ajv.
 ```shell
 > salty-dog \
     --rules rules/kubernetes.yml \
-    --tag important \
+    --tag kubernetes \
     --mode list
 
 ...

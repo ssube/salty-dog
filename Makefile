@@ -131,7 +131,7 @@ run-rules: ## validate the rules directory
 			--config-name config-stderr.yml \
 			--rules $(ROOT_PATH)/rules/salty-dog.yml \
 			--source $${file} \
-			--tag important > /dev/null || exit 1; \
+			--tag salty-dog > /dev/null || exit 1; \
 	done
 
 run-stream: ## validate stdin and write it to stdout, errors to stderr
@@ -142,5 +142,4 @@ run-stream: ## validate stdin and write it to stdout, errors to stderr
 		--format yaml \
 		--rules $(ROOT_PATH)/rules/kubernetes.yml \
 		--source - \
-		--tag important \
-		--tag optional
+		--tag kubernetes
