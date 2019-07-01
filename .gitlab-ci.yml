@@ -56,7 +56,7 @@ stages:
   variables: &vars-docker
     DOCKER_DRIVER: overlay2
     DOCKER_HOST: tcp://localhost:2375
-    IMAGE_TAG: ssube/salty-dog:$CI_COMMIT_REF_SLUG
+    IMAGE_TAG: ssube/salty-dog:${CI_COMMIT_TAG:-${CI_COMMIT_REF_SLUG}}
 
 .build-node: &build-node
   image: apextoaster/node:11.15
