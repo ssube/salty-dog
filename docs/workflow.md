@@ -9,6 +9,7 @@ This document covers the project workflow, commit and merge messages, and how to
       - [Terminal Status](#Terminal-Status)
       - [Transitions](#Transitions)
     - [Types](#Types)
+  - [Branches](#Branches)
   - [Issues](#Issues)
     - [Issue Labels](#Issue-Labels)
 
@@ -109,6 +110,10 @@ Do not close the issue until the corresponding branches have been merged and rel
 - update
   - dependency updates
   - typically handled by Renovate
+
+## Branches
+
+Branches should be named after the primary issue they address, with the issue type and number: `type/#-issue-title`
 
 ## Issues
 
