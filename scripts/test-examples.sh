@@ -1,5 +1,7 @@
-# for each file in examples
-EXAMPLES="$(find examples -name '*.yml')"
+#! /bin/bash
+
+EXAMPLES="$(find ./examples -name '*.yml')"
+echo "Found examples: ${EXAMPLES}"
 
 while read  -r example;
 do
@@ -22,7 +24,7 @@ do
   echo "Expected errors: ${EXPECTED_ERRORS}"
   echo "Expected status: ${EXPECTED_STATUS}"
 
-  node out/index.js --rules rules/${USE_RULES}.yml --tag ${USE_TAGS} --source ${example}
+  node out/index.js --rules "rules/${USE_RULES}.yml" --tag ${USE_TAGS} --source ${example}
 
   ACTUAL_STATUS=$?
 
@@ -32,8 +34,3 @@ do
     exit 1
   fi
 done <<< "${EXAMPLES}"
-# read pragmas:
-#   rules
-#   tags
-
-# run

@@ -1,5 +1,10 @@
+# test rules kubernetes
+# test tags kubernetes
+# test exit-status 1
+
 metadata:
   name: example
+  labels: {}
 spec:
   template:
     spec:

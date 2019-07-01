@@ -87,8 +87,14 @@ build-bundle: node_modules
 build-image: build-bundle
 	docker build $(ROOT_PATH)
 
-test: build-bundle
+test: test-mocha test-examples
+
+test-mocha: ## run small (unit) tests
+test-mocha: build-bundle
 	$(NODE_BIN)/mocha $(TARGET_PATH)/test.js
+
+test-examples: ## run medium (feature) tests
+	$(SCRIPT_PATH)/test-examples.sh
 
 yarn-install: ## install dependencies from package and lock file
 	yarn
