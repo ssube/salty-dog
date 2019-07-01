@@ -44,8 +44,13 @@ export RUNNER_VERSION  := $(CI_RUNNER_VERSION)
 
 all: build
 
-clean: ## clean up the target directory
+clean: ## clean up everything added by the default target
+clean: clean-deps clean-target
+
+clean-deps: ## clean up the node_modules directory
 	rm -rf node_modules
+
+clean-target: ## clean up the target directory
 	rm -rf $(TARGET_PATH)
 
 configure: ## create the target directory and other files not in git
