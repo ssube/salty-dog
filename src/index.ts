@@ -77,7 +77,8 @@ const MAIN_ARGS = usage(`Usage: salty-dog [-m mode] [options]`)
     alias: ['t', 'tag'],
   })
   .help()
-  .version(VERSION_INFO.app.version);
+  .version(VERSION_INFO.app.version)
+  .alias('version', 'v');
 
 const STATUS_SUCCESS = 0;
 const STATUS_ERROR = 1;
