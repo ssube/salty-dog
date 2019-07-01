@@ -119,8 +119,7 @@ To run with Docker: `docker run --rm ssube/salty-dog:master`
 The latest semi-stable image is `ssube/salty-dog:master`. All
 [tags are listed here](https://cloud.docker.com/repository/docker/ssube/salty-dog/tags).
 
-The Docker container is published for each branch and git tag, tagged with the version slug (`.` replaced with `-`,
-mostly).
+The Docker container is published for each branch and git tag, tagged with the git tag (or branch slug).
 
 Rules are baked into the image in `/salty-dog/rules`. To use custom rules, mount them with
 `-v $(pwd)/rules:/salty-dog/rules:ro` and load with `--rules /rules/foo.yml`.
