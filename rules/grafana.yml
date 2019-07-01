@@ -1,6 +1,26 @@
 name: grafana
 rules:
-  - name: production dashboards should have production alerts
+  - name: single-env
+    desc: dashboards must have a single environment tag
+    level: info
+    tags:
+      - grafana
+      - dashboard
+      - env
+
+    select: '$.dashboard'
+    check:
+      type: object
+      properties:
+        tags:
+          type: array
+          oneOf:
+            - contains:
+                const: production
+            - contains:
+                const: staging
+
+  - name: production-alerts
     desc: dashboards with the production tag must use notification channels with production in the name
     level: info
     tags:
@@ -19,7 +39,7 @@ rules:
           items:
             type: string
           contains:
-            pattern: production
+            const: production
 
     check:
       type: object
@@ -41,3 +61,46 @@ rules:
                         uid:
                           type: string
                           pattern: production
+
+  - name: staging-alerts
+    desc: dashboards with the staging tag must not use notification channels with production in the name
+    level: info
+    tags:
+      - grafana
+      - dashboard
+
+    # this is not the ideal selector for this rule, but tags are located at $.dashboard.tags, while notification
+    # channels are nested under $.dashboard.panels[*].alert.notifications[*].uid
+    select: '$.dashboard'
+
+    filter:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+          contains:
+            const: staging
+
+    check:
+      type: object
+      properties:
+        panels:
+          type: array
+          items:
+            type: object
+            properties:
+              alert:
+                type: object
+                properties:
+                  notifications:
+                    type: array
+                    items:
+                      type: object
+                      required: [uid]
+                      properties:
+                        uid:
+                          type: string
+                          not:
+                            pattern: production
