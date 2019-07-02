@@ -27,12 +27,12 @@ do
     --config-path ./docs \
     --config-name config-stderr.yml \
     --rules "rules/${USE_RULES}.yml" \
-    --tag ${USE_TAGS} \
-    --source ${example}
+    --tag "${USE_TAGS}" \
+    --source "${example}"
 
   ACTUAL_STATUS=$?
 
-  if [[ ${ACTUAL_STATUS} != ${EXPECTED_STATUS} ]];
+  if [[ "${ACTUAL_STATUS}" != "${EXPECTED_STATUS}" ]];
   then
     echo "Exit status does not match! (expected ${EXPECTED_STATUS}, got ${ACTUAL_STATUS})"
     exit 1

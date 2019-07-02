@@ -252,7 +252,7 @@ To enable a group of rules by tag, `--include-tag foo`.
 To validate the rules in the `rules/` directory using the meta-rules:
 
 ```shell
-> make run-rules
+> make test-rules
 
 ...
 {"name":"salty-dog","hostname":"cerberus","pid":29403,"level":30,"msg":"all rules passed","time":"2019-06-16T00:56:55.132Z","v":0}

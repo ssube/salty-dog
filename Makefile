@@ -87,14 +87,27 @@ build-bundle: node_modules
 build-image: build-bundle
 	docker build $(ROOT_PATH)
 
-test: test-mocha test-examples
-
-test-mocha: ## run small (unit) tests
-test-mocha: build-bundle
-	$(NODE_BIN)/mocha $(TARGET_PATH)/test.js
+test: test-bundle test-rules test-examples
 
 test-examples: ## run medium (feature) tests
 	$(SCRIPT_PATH)/test-examples.sh
+
+test-bundle: ## run small (unit) tests
+test-bundle: build-bundle
+	$(NODE_BIN)/mocha $(TARGET_PATH)/test.js
+
+test-rules: ## validate the rules directory
+test-rules: build-bundle
+	find $(ROOT_PATH)/rules -maxdepth 1 -name '*.yml' | while read file; \
+	do \
+		echo "Validating $${file}..."; \
+		node out/index.js \
+			--config-path $(ROOT_PATH)/docs \
+			--config-name config-stderr.yml \
+			--rules $(ROOT_PATH)/rules/salty-dog.yml \
+			--source $${file} \
+			--tag salty-dog > /dev/null || exit 1; \
+	done
 
 yarn-install: ## install dependencies from package and lock file
 	yarn
@@ -136,18 +149,6 @@ upload-codecov:
 # run targets
 run-help: ## print the help
 	@node out/index.js --help
-
-run-rules: ## validate the rules directory
-	find $(ROOT_PATH)/rules -maxdepth 1 -name '*.yml' | while read file; \
-	do \
-		echo "Validating $${file}..."; \
-		node out/index.js \
-			--config-path $(ROOT_PATH)/docs \
-			--config-name config-stderr.yml \
-			--rules $(ROOT_PATH)/rules/salty-dog.yml \
-			--source $${file} \
-			--tag salty-dog > /dev/null || exit 1; \
-	done
 
 run-stream: ## validate stdin and write it to stdout, errors to stderr
 	@node out/index.js \
