@@ -18,8 +18,10 @@ export interface Args {
 
 /**
  * Wrap yargs to exit after completion.
+ *
+ * @TODO: fix it to use argv, not sure if yargs can do that
  */
-export function parseArgs(): Args {
+export function parseArgs(argv: Array<string>) {
   let mode = 'check';
 
   const args = usage(`Usage: salty-dog <mode> [options]`)
@@ -34,10 +36,15 @@ export function parseArgs(): Args {
       command: ['fix'],
       describe: 'validate the source document and insert defaults',
       builder: (yargs: any) => {
-        return yargs.option('coerce', {
-          default: false,
-          type: 'boolean',
-        });
+        return yargs
+          .option('coerce', {
+            default: false,
+            type: 'boolean',
+          })
+          .option('defaults', {
+            default: true,
+            type: 'boolean',
+          });
       },
       handler: (argv: any) => {
         mode = 'fix';

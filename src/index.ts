@@ -14,7 +14,7 @@ const STATUS_SUCCESS = 0;
 const STATUS_ERROR = 1;
 
 export async function main(argv: Array<string>): Promise<number> {
-  const { args, mode } = parseArgs();
+  const { args, mode } = parseArgs(argv);
   const config = await loadConfig(args[CONFIG_ARGS_NAME], ...args[CONFIG_ARGS_PATH]);
 
   const logger = createLogger(config.data.logger);
@@ -27,18 +27,11 @@ export async function main(argv: Array<string>): Promise<number> {
     return STATUS_ERROR;
   }
 
-  // const schema = new Schema();
-  const result = { errors: [], valid: true }; // schema.match(config);
-  if (!result.valid) {
-    logger.error({ errors: result.errors }, 'config failed to validate');
-    return STATUS_ERROR;
-  }
-
-  const coerce = Reflect.has(args, 'coerce') ? Reflect.get(args, 'coerce') : false;
   const ctx = new VisitorContext({
-    coerce,
-    defaults: mode === 'fix',
+    coerce: args.coerce,
+    defaults: args.defaults,
     logger,
+    mutate: mode === 'fix',
   });
 
   const rules = await loadRules(args.rules, ctx.ajv);

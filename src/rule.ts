@@ -134,7 +134,9 @@ export async function visitRules(ctx: VisitorContext, rules: Array<Rule>, data: 
             rule: rule.name,
           }, 'rule passed with modifications');
 
-          applyDiff(item, itemCopy);
+          if (ctx.mutate) {
+            applyDiff(item, itemCopy);
+          }
         } else {
           ctx.logger.info({ rule: rule.name }, 'rule passed');
         }
