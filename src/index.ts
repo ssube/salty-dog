@@ -1,5 +1,5 @@
 import { createLogger } from 'bunyan';
-import { Options, usage } from 'yargs';
+import { Options, showCompletionScript, usage } from 'yargs';
 
 import { loadConfig } from 'src/config';
 import { YamlParser } from 'src/parser/YamlParser';
@@ -53,6 +53,13 @@ export async function main(argv: Array<string>): Promise<number> {
         mode = 'list';
       },
     })
+    .command({
+      command: ['complete'],
+      describe: 'generate tab completion script for bash or zsh',
+      handler: (argv) => {
+        mode = 'complete';
+      },
+    })
     .option(CONFIG_ARGS_NAME, {
       default: `.${VERSION_INFO.app.name}.yml`,
       group: 'Config:',
@@ -99,14 +106,17 @@ export async function main(argv: Array<string>): Promise<number> {
       ...RULE_OPTION,
       alias: ['t', 'tag'],
     })
-    .completion('completion', 'generate command completion for bash or zsh')
     .help()
     .version(VERSION_INFO.app.version)
     .alias('version', 'v')
     .argv;
 
-  const config = await loadConfig(args[CONFIG_ARGS_NAME], ...args[CONFIG_ARGS_PATH]);
+  if (mode === 'complete') {
+    showCompletionScript();
+    return STATUS_SUCCESS;
+  }
 
+  const config = await loadConfig(args[CONFIG_ARGS_NAME], ...args[CONFIG_ARGS_PATH]);
   const logger = createLogger(config.data.logger);
   logger.info(VERSION_INFO, 'version info');
   logger.info({ args }, 'main arguments');
@@ -131,10 +141,6 @@ export async function main(argv: Array<string>): Promise<number> {
     logger,
   });
 
-  const parser = new YamlParser();
-  const source = await loadSource(args.source);
-  let docs = parser.parse(source);
-
   const rules = await loadRules(args.rules, ctx.ajv);
   const activeRules = await resolveRules(rules, args as any);
 
@@ -142,6 +148,10 @@ export async function main(argv: Array<string>): Promise<number> {
     logger.info({ rules: activeRules }, 'listing active rules');
     return STATUS_SUCCESS;
   }
+
+  const parser = new YamlParser();
+  const source = await loadSource(args.source);
+  let docs = parser.parse(source);
 
   for (const data of docs) {
     await visitRules(ctx, activeRules, data);

@@ -91,6 +91,7 @@ const bundle = {
 					'Type',
 				],
 				'node_modules/yargs/index.js': [
+					'showCompletionScript',
 					'usage',
 				],
 			},
