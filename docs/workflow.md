@@ -24,18 +24,17 @@ tying them all together.
 
 - build
   - `.gitlab-ci.yml`
+  - `Dockerfile`
   - `Makefile`
   - `*.mk`
+  - `package.json`
 - config
   - `src/config/*`
-- container
-  - `Dockerfile`
 - docs
   - `docs/*`
+  - `README.md`
 - examples
   - `examples/*`
-- package
-  - `package.json`
 - parser
   - `src/parser/*`
 - rules

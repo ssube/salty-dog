@@ -16,6 +16,7 @@ const STATUS_ERROR = 1;
 export async function main(argv: Array<string>): Promise<number> {
   const { args, mode } = parseArgs();
   const config = await loadConfig(args[CONFIG_ARGS_NAME], ...args[CONFIG_ARGS_PATH]);
+
   const logger = createLogger(config.data.logger);
   logger.info(VERSION_INFO, 'version info');
   logger.info({ args }, 'main arguments');
