@@ -1,8 +1,6 @@
-import { Options, showCompletionScript } from 'yargs';
+import { Options, showCompletionScript, usage } from 'yargs';
 
 import { VERSION_INFO } from 'src/version';
-
-const yargs = require('yargs/yargs');
 
 export const CONFIG_ARGS_NAME = 'config-name';
 export const CONFIG_ARGS_PATH = 'config-path';
@@ -24,8 +22,7 @@ export interface Args {
 export function parseArgs(): Args {
   let mode = 'check';
 
-  const args = yargs(process.argv.slice(2))
-    .usage(`Usage: salty-dog <mode> [options]`)
+  const args = usage(`Usage: salty-dog <mode> [options]`)
     .command({
       command: ['check', '*'],
       describe: 'validate the source documents',
