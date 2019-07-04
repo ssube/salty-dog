@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0](https://github.com/ssube/salty-dog/compare/v0.5.0...v0.6.0) (2019-07-04)
+
+
+### Bug Fixes
+
+* **docs:** remove container and package scopes ([fff8155](https://github.com/ssube/salty-dog/commit/fff8155))
+* print completion or rules before attempting to load source ([8b9d84e](https://github.com/ssube/salty-dog/commit/8b9d84e))
+* wrap yargs and exit after completion ([8b8d669](https://github.com/ssube/salty-dog/commit/8b8d669))
+* **build:** test rules during other tests ([3e3cc7d](https://github.com/ssube/salty-dog/commit/3e3cc7d))
+* **container:** use git tags as-is ([a72597d](https://github.com/ssube/salty-dog/commit/a72597d))
+* **test:** use ref config for example tests ([25d967b](https://github.com/ssube/salty-dog/commit/25d967b))
+
+
+### Build System
+
+* split jobs to fix image tagging ([c438a8b](https://github.com/ssube/salty-dog/commit/c438a8b))
+
+
+### Features
+
+* add command completion ([39c0e4b](https://github.com/ssube/salty-dog/commit/39c0e4b))
+* **test:** add pragmas to examples, add example tests to build ([b7d0b43](https://github.com/ssube/salty-dog/commit/b7d0b43))
+* **test:** rules and tags pragmas ([cce8671](https://github.com/ssube/salty-dog/commit/cce8671))
+* **test:** start adding pragma-based tests to examples ([0c7d442](https://github.com/ssube/salty-dog/commit/0c7d442))
+* add default rule selector ([15933ba](https://github.com/ssube/salty-dog/commit/15933ba))
+* **rules/grafana:** add rule to ensure single env, add staging alert rule ([229a0c8](https://github.com/ssube/salty-dog/commit/229a0c8))
+
+
+### BREAKING CHANGES
+
+* the `--mode` option has been replaced by a positional
+command, but the options and defaults are unchanged.
+
+
+
 ## [0.5.0](///compare/v0.4.1...v0.5.0) (2019-07-01)
 
 
