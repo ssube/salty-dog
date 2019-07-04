@@ -192,9 +192,16 @@ The `--source` and `--dest` default to stdin and stdout, respectively, but a pat
 
 #### Fix Mode
 
-`salty-dog` can also add default values to missing properties with `--mode fix`. If a rule does not immediately pass
+`salty-dog` can also add default values to missing properties in `fix` mode. If a rule does not immediately pass
 with the `--source` document, but defaults are provided in the schema, the defaults will be inserted before printing to
 `--dest`.
+
+```shell
+> salty-dog fix \
+    --source examples/kubernetes-resources-some.yml \
+    --rules rules/kubernetes.yml \
+    --tag kubernetes
+```
 
 ##### Default Values
 
@@ -209,13 +216,13 @@ is documented by Ajv.
 
 #### List Mode
 
-`salty-dog` can list the active set of rules, to help debug tags and inclusion.
+`salty-dog` can list the active set of rules, to help debug tags and inclusion. Both `--source` and `--dest` are
+ignored in `list` mode.
 
 ```shell
-> salty-dog \
+> salty-dog list \
     --rules rules/kubernetes.yml \
-    --tag kubernetes \
-    --mode list
+    --tag kubernetes
 
 ...
 [2019-06-30T18:39:11.930Z]  INFO: salty-dog/26330 on cerberus: listing active rules
