@@ -8,6 +8,7 @@ describe('visitor context', () => {
       coerce: false,
       defaults: false,
       logger: new ConsoleLogger(),
+      mutate: false,
     });
 
     const nextCtx = firstCtx.mergeResult({

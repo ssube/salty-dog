@@ -105,6 +105,7 @@ describe('rule visitor', () => {
       coerce: false,
       defaults: false,
       logger: new ConsoleLogger(),
+      mutate: false,
     });
     const data = {};
     const rule = new Rule({
@@ -134,6 +135,7 @@ describe('rule visitor', () => {
       coerce: false,
       defaults: false,
       logger: new ConsoleLogger(),
+      mutate: false,
     });
     const data = {};
     const rule = new Rule({
