@@ -36,9 +36,9 @@ stages:
   allow_failure: false
 
 .build-docker: &build-docker
-  image: docker:stable
+  image: docker:18.09.7
   services:
-    - docker:stable-dind
+    - docker:18.09.7-dind
   tags:
     - platform:k8s
     - runner:shared
