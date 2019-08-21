@@ -46,7 +46,7 @@
     "deep-diff": "1.0.2",
     "js-yaml": "3.13.1",
     "jsonpath-plus": "1.0.0",
-    "lodash": "4.17.14",
+    "lodash": "4.17.15",
     "mocha": "6.1.4",
     "noicejs": "2.5.2",
     "rollup": "1.17.0",
