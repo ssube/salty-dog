@@ -3,26 +3,27 @@
 Rule-based JSON/YAML validator using JSON schemas. Capable of filtering elements to validate partial documents,
 supports multiple documents per stream or file, inserting defaults, and other magic.
 
-- [SALTY DOG](#SALTY-DOG)
-  - [Getting Started](#Getting-Started)
-  - [Status](#Status)
-  - [Releases](#Releases)
-  - [Build](#Build)
-  - [Install](#Install)
-    - [Docker](#Docker)
-    - [Node](#Node)
-      - [Global](#Global)
-      - [Project](#Project)
-  - [Usage](#Usage)
-    - [Modes](#Modes)
-      - [Check Mode](#Check-Mode)
-      - [Fix Mode](#Fix-Mode)
-        - [Default Values](#Default-Values)
-        - [Coercing Values](#Coercing-Values)
-      - [List Mode](#List-Mode)
-    - [Rules](#Rules)
-      - [Enabling Rules](#Enabling-Rules)
-      - [Validate Rules](#Validate-Rules)
+- [SALTY DOG](#salty-dog)
+  - [Getting Started](#getting-started)
+  - [Status](#status)
+  - [Releases](#releases)
+  - [Build](#build)
+  - [Install](#install)
+    - [Docker](#docker)
+    - [Node](#node)
+      - [Global](#global)
+      - [Project](#project)
+  - [Usage](#usage)
+    - [Modes](#modes)
+      - [Check Mode](#check-mode)
+      - [Fix Mode](#fix-mode)
+        - [Default Values](#default-values)
+        - [Coercing Values](#coercing-values)
+      - [List Mode](#list-mode)
+    - [Rules](#rules)
+      - [Enabling Rules](#enabling-rules)
+      - [Validate Rules](#validate-rules)
+  - [License](#license)
 
 ## Getting Started
 
@@ -56,7 +57,6 @@ ingress.extensions/gitlab created (dry run)
 ## Status
 
 [![Pipeline status](https://img.shields.io/gitlab/pipeline/ssube/salty-dog.svg?gitlab_url=https%3A%2F%2Fgit.apextoaster.com&logo=gitlab)](https://git.apextoaster.com/ssube/salty-dog/commits/master)
-[![MIT license](https://img.shields.io/github/license/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/blob/master/LICENSE.md)
 
 [![Open bug count](https://img.shields.io/github/issues-raw/ssube/salty-dog/type-bug.svg)](https://github.com/ssube/salty-dog/issues?q=is%3Aopen+is%3Aissue+label%3Atype%2Fbug)
 [![Open issue count](https://img.shields.io/github/issues-raw/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/issues?q=is%3Aopen+is%3Aissue)
@@ -73,6 +73,8 @@ ingress.extensions/gitlab created (dry run)
 
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/ssube/salty-dog.svg?logo=lgtm)](https://lgtm.com/projects/g/ssube/salty-dog/context:javascript)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/ssube/salty-dog.svg)](https://lgtm.com/projects/g/ssube/salty-dog/alerts/)
+[![MIT license](https://img.shields.io/github/license/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/blob/master/LICENSE.md)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fssube%2Fsalty-dog.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fssube%2Fsalty-dog?ref=badge_shield)
 
 ## Releases
 
@@ -263,4 +265,6 @@ To validate the rules in the `rules/` directory using the meta-rules:
 
 ...
 {"name":"salty-dog","hostname":"cerberus","pid":29403,"level":30,"msg":"all rules passed","time":"2019-06-16T00:56:55.132Z","v":0}
-```
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fssube%2Fsalty-dog.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fssube%2Fsalty-dog?ref=badge_large)```
