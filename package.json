@@ -58,7 +58,7 @@
     "rollup-plugin-typescript2": "0.22.1",
     "sinon": "7.4.1",
     "standard-version": "7.0.0",
-    "tslint": "5.18.0",
+    "tslint": "5.19.0",
     "typescript": "3.5.3",
     "yargs": "14.0.0"
   },
