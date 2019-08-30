@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import { ConsoleLogger } from 'noicejs';
 import { mock } from 'sinon';
 
-import { makeSelector, resolveRules, Rule, visitRules } from 'src/rule';
-import { VisitorContext } from 'src/visitor/context';
+import { makeSelector, resolveRules, Rule, visitRules } from '../src/rule';
+import { VisitorContext } from '../src/visitor/context';
 
 const TEST_RULES = [new Rule({
   name: 'foo',

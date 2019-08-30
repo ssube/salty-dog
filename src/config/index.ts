@@ -1,11 +1,11 @@
 import { isNil, isString } from 'lodash';
 import { join } from 'path';
 
-import { CONFIG_ENV, CONFIG_SCHEMA } from 'src/config/schema';
-import { includeSchema } from 'src/config/type/Include';
-import { NotFoundError } from 'src/error/NotFoundError';
-import { YamlParser } from 'src/parser/YamlParser';
-import { readFileSync } from 'src/source';
+import { CONFIG_ENV, CONFIG_SCHEMA } from './schema';
+import { includeSchema } from './type/Include';
+import { NotFoundError } from '../error/NotFoundError';
+import { YamlParser } from '../parser/YamlParser';
+import { readFileSync } from '../source';
 
 includeSchema.schema = CONFIG_SCHEMA;
 

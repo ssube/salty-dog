@@ -1,6 +1,6 @@
 import { Type as YamlType } from 'js-yaml';
 
-import { NotFoundError } from 'src/error/NotFoundError';
+import { NotFoundError } from '../../error/NotFoundError';
 
 const ALLOWED_STREAMS = new Set([
   'stdout',

@@ -1,7 +1,7 @@
 import { safeDump, safeLoadAll } from 'js-yaml';
 
-import { CONFIG_SCHEMA } from 'src/config/schema';
-import { Parser } from 'src/parser';
+import { CONFIG_SCHEMA } from '../config/schema';
+import { Parser } from '../parser';
 
 export class YamlParser implements Parser {
   dump(...data: Array<any>): string {

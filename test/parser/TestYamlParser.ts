@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { mock } from 'sinon';
-import { YamlParser } from 'src/parser/YamlParser';
+
+import { YamlParser } from '../../src/parser/YamlParser';
 
 describe('yaml parser', () => {
   describe('dump documents', () => {

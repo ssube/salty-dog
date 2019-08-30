@@ -1,6 +1,7 @@
 import { expect } from 'chai';
-import { VisitorContext } from 'src/visitor/context';
 import { ConsoleLogger } from 'noicejs';
+
+import { VisitorContext } from '../../src/visitor/context';
 
 describe('visitor context', () => {
   it('should merge results', () => {

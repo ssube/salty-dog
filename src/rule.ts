@@ -3,11 +3,11 @@ import { JSONPath } from 'jsonpath-plus';
 import { cloneDeep, intersection, isNil } from 'lodash';
 import { LogLevel } from 'noicejs';
 
-import { YamlParser } from 'src/parser/YamlParser';
-import { readFileSync } from 'src/source';
-import { Visitor } from 'src/visitor';
-import { VisitorContext } from 'src/visitor/context';
-import { VisitorResult } from 'src/visitor/result';
+import { YamlParser } from './parser/YamlParser';
+import { readFileSync } from './source';
+import { Visitor } from './visitor';
+import { VisitorContext } from './visitor/context';
+import { VisitorResult } from './visitor/result';
 
 export interface RuleData {
   // metadata

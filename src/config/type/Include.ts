@@ -3,7 +3,7 @@ import { SAFE_SCHEMA, safeLoad, Type as YamlType } from 'js-yaml';
 import { BaseError } from 'noicejs';
 import { join } from 'path';
 
-import { NotFoundError } from 'src/error/NotFoundError';
+import { NotFoundError } from '../../error/NotFoundError';
 
 // work around the circular dependency by setting the schema later
 export const includeSchema = {

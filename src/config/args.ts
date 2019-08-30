@@ -1,6 +1,6 @@
 import { Options, showCompletionScript, usage } from 'yargs';
 
-import { VERSION_INFO } from 'src/version';
+import { VERSION_INFO } from '../version';
 
 export const CONFIG_ARGS_NAME = 'config-name';
 export const CONFIG_ARGS_PATH = 'config-path';

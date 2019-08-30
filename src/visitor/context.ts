@@ -1,7 +1,7 @@
 import * as Ajv from 'ajv';
 import { Logger } from 'noicejs';
 
-import { VisitorResult } from 'src/visitor/result';
+import { VisitorResult } from './result';
 
 export interface VisitorContextOptions {
   coerce: boolean;

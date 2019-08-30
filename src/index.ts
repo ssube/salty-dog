@@ -1,14 +1,20 @@
 import { createLogger } from 'bunyan';
 
-import { loadConfig } from 'src/config';
-import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, parseArgs } from 'src/config/args';
-import { YamlParser } from 'src/parser/YamlParser';
-import { loadRules, resolveRules, visitRules } from 'src/rule';
-import { loadSource, writeSource } from 'src/source';
-import { VERSION_INFO } from 'src/version';
-import { VisitorContext } from 'src/visitor/context';
+import { loadConfig } from './config';
+import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, parseArgs } from './config/args';
+import { YamlParser } from './parser/YamlParser';
+import { loadRules, resolveRules, visitRules } from './rule';
+import { loadSource, writeSource } from './source';
+import { VERSION_INFO } from './version';
+import { VisitorContext } from './visitor/context';
 
-const MODES = ['check', 'fix', 'list'];
+enum MODES {
+  check = 'check',
+  fix = 'fix',
+  list = 'list',
+}
+
+const MODES_LIST: Array<string> = [MODES.check, MODES.fix, MODES.list];
 
 const STATUS_SUCCESS = 0;
 const STATUS_ERROR = 1;
@@ -22,7 +28,7 @@ export async function main(argv: Array<string>): Promise<number> {
   logger.info({ args }, 'main arguments');
 
   // check mode
-  if (!MODES.includes(mode)) {
+  if (!MODES_LIST.includes(mode)) {
     logger.error({ mode }, 'unsupported mode');
     return STATUS_ERROR;
   }
