@@ -1,9 +1,10 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "allowJs": true,
+    "allowJs": false,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "../",
+    "declaration": true,
+    "declarationMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
@@ -12,12 +13,15 @@
       "es2017",
       "esnext.asynciterable"
     ],
-    "module": "esnext",
+    "module": "es6",
     "moduleResolution": "node",
+    "noImplicitAny": true,
     "noImplicitReturns": true,
-    "paths": {},
+    "noImplicitThis": true,
+    "outDir": "../out",
     "sourceMap": true,
     "strict": true,
+    "strictNullChecks": true,
     "target": "es2017",
     "types": [
       "jsonpath-plus",
@@ -30,7 +34,7 @@
     ]
   },
   "exclude": [
-    "node_modules"
+    "../node_modules"
   ],
   "include": [
     "../src/**/*",
