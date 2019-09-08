@@ -1,4 +1,4 @@
-import Ajv from 'ajv';
+import * as Ajv from 'ajv';
 import { Logger } from 'noicejs';
 
 import { VisitorResult } from './result';
