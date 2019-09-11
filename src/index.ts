@@ -6,7 +6,7 @@ import { YamlParser } from './parser/YamlParser';
 import { loadRules, resolveRules, visitRules } from './rule';
 import { loadSource, writeSource } from './source';
 import { VERSION_INFO } from './version';
-import { VisitorContext } from './visitor/context';
+import { VisitorContext } from './visitor/VisitorContext';
 
 enum MODES {
   check = 'check',
@@ -34,13 +34,15 @@ export async function main(argv: Array<string>): Promise<number> {
   }
 
   const ctx = new VisitorContext({
-    coerce: args.coerce,
-    defaults: args.defaults,
+    innerOptions: {
+      coerce: args.coerce,
+      defaults: args.defaults,
+      mutate: mode === 'fix',
+    },
     logger,
-    mutate: mode === 'fix',
   });
 
-  const rules = await loadRules(args.rules, ctx.ajv);
+  const rules = await loadRules(args.rules, ctx);
   const activeRules = await resolveRules(rules, args as any);
 
   if (mode === 'list') {
@@ -50,7 +52,7 @@ export async function main(argv: Array<string>): Promise<number> {
 
   const parser = new YamlParser();
   const source = await loadSource(args.source);
-  let docs = parser.parse(source);
+  const docs = parser.parse(source);
 
   for (const data of docs) {
     await visitRules(ctx, activeRules, data);
