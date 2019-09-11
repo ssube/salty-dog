@@ -76,6 +76,7 @@ const bundle = {
 					'intersection',
 					'isNil',
 					'isString',
+					'kebabCase',
 				],
 				'node_modules/noicejs/out/main-bundle.js': [
 					'BaseError',

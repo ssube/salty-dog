@@ -74,7 +74,7 @@ export async function loadRules(paths: Array<string>, ctx: VisitorContext): Prom
         ctx.addSchema(data.name, data.definitions);
       }
 
-      rules.push(...data.rules.map((data: any) => new Rule(data)));
+      rules.push(...data.rules.map((data: RuleData) => new Rule(data)));
     }
   }
 
