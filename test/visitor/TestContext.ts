@@ -1,15 +1,17 @@
 import { expect } from 'chai';
 import { ConsoleLogger } from 'noicejs';
 
-import { VisitorContext } from '../../src/visitor/context';
+import { VisitorContext } from '../../src/visitor/VisitorContext';
 
 describe('visitor context', () => {
   it('should merge results', () => {
     const firstCtx = new VisitorContext({
-      coerce: false,
-      defaults: false,
+      innerOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
       logger: new ConsoleLogger(),
-      mutate: false,
     });
 
     const nextCtx = firstCtx.mergeResult({

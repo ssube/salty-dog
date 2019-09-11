@@ -1,13 +1,16 @@
+import { ValidateFunction } from 'ajv';
 import { applyDiff, diff } from 'deep-diff';
 import { JSONPath } from 'jsonpath-plus';
-import { cloneDeep, intersection, isNil } from 'lodash';
+import { cloneDeep, Dictionary, intersection, isNil } from 'lodash';
 import { LogLevel } from 'noicejs';
 
 import { YamlParser } from './parser/YamlParser';
 import { readFileSync } from './source';
+import { friendlyError } from './utils/ajv';
 import { Visitor } from './visitor';
-import { VisitorContext } from './visitor/context';
-import { VisitorResult } from './visitor/result';
+import { VisitorContext } from './visitor/VisitorContext';
+import { VisitorError } from './visitor/VisitorError';
+import { VisitorResult } from './visitor/VisitorResult';
 
 export interface RuleData {
   // metadata
@@ -31,7 +34,7 @@ export interface RuleSelector {
 }
 
 export interface RuleSource {
-  definitions?: Array<any>;
+  definitions?: Dictionary<any>;
   name: string;
   rules: Array<RuleData>;
 }
@@ -55,7 +58,7 @@ export function makeSelector(options: Partial<RuleSelector>) {
   };
 }
 
-export async function loadRules(paths: Array<string>, ajv: any): Promise<Array<Rule>> {
+export async function loadRules(paths: Array<string>, ctx: VisitorContext): Promise<Array<Rule>> {
   const parser = new YamlParser();
   const rules = [];
 
@@ -68,10 +71,7 @@ export async function loadRules(paths: Array<string>, ajv: any): Promise<Array<R
 
     for (const data of docs) {
       if (!isNil(data.definitions)) {
-        ajv.addSchema({
-          '$id': data.name,
-          definitions: data.definitions,
-        });
+        ctx.addSchema(data.name, data.definitions);
       }
 
       rules.push(...data.rules.map((data: any) => new Rule(data)));
@@ -134,7 +134,7 @@ export async function visitRules(ctx: VisitorContext, rules: Array<Rule>, data: 
             rule: rule.name,
           }, 'rule passed with modifications');
 
-          if (ctx.mutate) {
+          if (ctx.innerOptions.mutate) {
             applyDiff(item, itemCopy);
           }
         } else {
@@ -191,25 +191,20 @@ export class Rule implements RuleData, Visitor<RuleResult> {
   public async visit(ctx: VisitorContext, node: any): Promise<RuleResult> {
     ctx.logger.debug({ item: node, rule: this }, 'visiting node');
 
-    const check = ctx.ajv.compile(this.check);
+    const check = ctx.compile(this.check);
     const filter = this.compileFilter(ctx);
+    const errors: Array<VisitorError> = [];
     const result: RuleResult = {
       changes: [],
-      errors: [],
+      errors,
       rule: this,
     };
 
     if (filter(node)) {
       ctx.logger.debug({ item: node }, 'checking item');
-      if (!check(node)) {
+      if (!check(node) && check.errors && check.errors.length) {
         const errors = Array.from(check.errors);
-        ctx.logger.warn({
-          errors,
-          name: this.name,
-          item: node,
-          rule: this,
-        }, 'rule failed on item');
-        result.errors.push(...errors);
+        ctx.error(...errors.map(friendlyError));
       }
     } else {
       ctx.logger.debug({ errors: filter.errors, item: node }, 'skipping item');
@@ -218,11 +213,11 @@ export class Rule implements RuleData, Visitor<RuleResult> {
     return result;
   }
 
-  protected compileFilter(ctx: VisitorContext): any {
+  protected compileFilter(ctx: VisitorContext): ValidateFunction {
     if (isNil(this.filter)) {
       return () => true;
     } else {
-      return ctx.ajv.compile(this.filter);
+      return ctx.compile(this.filter);
     }
   }
 }

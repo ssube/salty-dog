@@ -1,5 +1,5 @@
-import { VisitorContext } from './context';
-import { VisitorResult } from './result';
+import { VisitorContext } from './VisitorContext';
+import { VisitorResult } from './VisitorResult';
 
 export interface Visitor<TResult extends VisitorResult> {
   /**

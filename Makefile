@@ -42,7 +42,7 @@ RELEASE_OPTS ?= --commit-all
 export NODE_VERSION		:= $(shell node -v)
 export RUNNER_VERSION  := $(CI_RUNNER_VERSION)
 
-all: build
+all: build test
 	@echo Success!
 
 clean: ## clean up everything added by the default target

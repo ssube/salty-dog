@@ -3,7 +3,7 @@ import { ConsoleLogger } from 'noicejs';
 import { mock } from 'sinon';
 
 import { makeSelector, resolveRules, Rule, visitRules } from '../src/rule';
-import { VisitorContext } from '../src/visitor/context';
+import { VisitorContext } from '../src/visitor/VisitorContext';
 
 const TEST_RULES = [new Rule({
   name: 'foo',
@@ -102,10 +102,12 @@ describe('rule resolver', () => {
 describe('rule visitor', () => {
   it('should only call visit for selected items', async () => {
     const ctx = new VisitorContext({
-      coerce: false,
-      defaults: false,
       logger: new ConsoleLogger(),
-      mutate: false,
+      innerOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      }
     });
     const data = {};
     const rule = new Rule({
@@ -132,10 +134,12 @@ describe('rule visitor', () => {
 
   it('should call visit for each selected item', async () => {
     const ctx = new VisitorContext({
-      coerce: false,
-      defaults: false,
+      innerOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
       logger: new ConsoleLogger(),
-      mutate: false,
     });
     const data = {};
     const rule = new Rule({
