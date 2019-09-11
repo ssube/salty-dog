@@ -69,5 +69,8 @@
   "dependencies": {},
   "nyc": {
     "extends": "@istanbuljs/nyc-config-typescript"
+  },
+  "resolutions": {
+    "lodash": "4.17.15"
   }
 }
