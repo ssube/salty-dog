@@ -6,26 +6,26 @@ import { makeSelector, resolveRules, Rule, visitRules } from '../src/rule';
 import { VisitorContext } from '../src/visitor/VisitorContext';
 
 const TEST_RULES = [new Rule({
-  name: 'foo',
+  check: {},
   desc: '',
   level: 'info',
+  name: 'foo',
+  select: '$',
   tags: ['all', 'foo'],
-  check: {},
-  select: '$',
 }), new Rule({
+  check: {},
+  desc: '',
+  level: 'warn',
   name: 'bar',
-  desc: '',
-  level: 'warn',
-  tags: ['all', 'test'],
-  check: {},
   select: '$',
+  tags: ['all', 'test'],
 }), new Rule({
-  name: 'bin',
+  check: {},
   desc: '',
   level: 'warn',
-  tags: ['all', 'test'],
-  check: {},
+  name: 'bin',
   select: '$',
+  tags: ['all', 'test'],
 })];
 
 describe('rule resolver', () => {
@@ -102,21 +102,21 @@ describe('rule resolver', () => {
 describe('rule visitor', () => {
   it('should only call visit for selected items', async () => {
     const ctx = new VisitorContext({
-      logger: new ConsoleLogger(),
       innerOptions: {
         coerce: false,
         defaults: false,
         mutate: false,
-      }
+      },
+      logger: new ConsoleLogger(),
     });
     const data = {};
     const rule = new Rule({
-      name: 'foo',
+      check: {},
       desc: '',
       level: 'info',
-      tags: [],
+      name: 'foo',
       select: '$',
-      check: {},
+      tags: [],
     });
 
     const mockRule = mock(rule);
@@ -143,12 +143,12 @@ describe('rule visitor', () => {
     });
     const data = {};
     const rule = new Rule({
-      name: 'foo',
+      check: {},
       desc: '',
       level: 'info',
-      tags: [],
+      name: 'foo',
       select: '$',
-      check: {},
+      tags: [],
     });
 
     const mockRule = mock(rule);

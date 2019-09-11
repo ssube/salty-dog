@@ -1,5 +1,6 @@
 import { Options, showCompletionScript, usage } from 'yargs';
 
+import { RuleSelector } from '../rule';
 import { VERSION_INFO } from '../version';
 
 export const CONFIG_ARGS_NAME = 'config-name';
@@ -16,25 +17,40 @@ export interface Args {
   mode: string;
 }
 
+export interface ParsedArgs extends RuleSelector {
+  [CONFIG_ARGS_NAME]: string;
+  [CONFIG_ARGS_PATH]: string;
+  coerce: boolean;
+  count: boolean;
+  defaults: boolean;
+  dest: string;
+  mode: string;
+  rules: Array<string>;
+  source: string;
+}
+
+export interface ParseResults {
+  args: ParsedArgs;
+  mode: string;
+}
+
 /**
  * Wrap yargs to exit after completion.
  *
  * @TODO: fix it to use argv, not sure if yargs can do that
  */
-export function parseArgs(argv: Array<string>) {
+export function parseArgs(argv: Array<string>): ParseResults {
   let mode = 'check';
 
-  const args = usage(`Usage: salty-dog <mode> [options]`)
+  const parser = usage(`Usage: salty-dog <mode> [options]`)
     .command({
       command: ['check', '*'],
       describe: 'validate the source documents',
-      handler: (argv: any) => {
+      handler: (argi: any) => {
         mode = 'check';
       },
     })
     .command({
-      command: ['fix'],
-      describe: 'validate the source document and insert defaults',
       builder: (yargs: any) => {
         return yargs
           .option('coerce', {
@@ -46,21 +62,23 @@ export function parseArgs(argv: Array<string>) {
             type: 'boolean',
           });
       },
-      handler: (argv: any) => {
+      command: ['fix'],
+      describe: 'validate the source document and insert defaults',
+      handler: (argi: any) => {
         mode = 'fix';
       },
     })
     .command({
       command: ['list'],
       describe: 'list active rules',
-      handler: (argv: any) => {
+      handler: (argi: any) => {
         mode = 'list';
       },
     })
     .command({
       command: ['complete'],
       describe: 'generate tab completion script for bash or zsh',
-      handler: (argv: any) => {
+      handler: (argi: any) => {
         mode = 'complete';
       },
     })
@@ -112,8 +130,11 @@ export function parseArgs(argv: Array<string>) {
     })
     .help()
     .version(VERSION_INFO.app.version)
-    .alias('version', 'v')
-    .argv;
+    .alias('version', 'v');
+
+  // @TODO: this should not need a cast but argv's type only has the last option (include-tag)
+  // @tslint:disable-next-line:no-any
+  const args = parser.argv as any;
 
   if (mode === 'complete') {
     showCompletionScript();

@@ -1,12 +1,12 @@
 import { ValidateFunction } from 'ajv';
 import { applyDiff, diff } from 'deep-diff';
 import { JSONPath } from 'jsonpath-plus';
-import { cloneDeep, Dictionary, intersection, isNil } from 'lodash';
+import { cloneDeep, defaultTo, Dictionary, intersection, isNil } from 'lodash';
 import { LogLevel } from 'noicejs';
 
 import { YamlParser } from './parser/YamlParser';
 import { readFileSync } from './source';
-import { isNilOrEmpty } from './utils';
+import { ensureArray, isNilOrEmpty } from './utils';
 import { friendlyError } from './utils/ajv';
 import { Visitor } from './visitor';
 import { VisitorContext } from './visitor/VisitorContext';
@@ -40,11 +40,77 @@ export interface RuleSource {
   rules: Array<RuleData>;
 }
 
-export function ensureArray<T>(val: Array<T> | undefined): Array<T> {
-  if (isNil(val)) {
-    return [];
-  } else {
-    return Array.from(val);
+export interface RuleResult extends VisitorResult {
+  rule: Rule;
+}
+
+export class Rule implements RuleData, Visitor<RuleResult> {
+  public readonly check: ValidateFunction;
+  public readonly desc: string;
+  public readonly filter?: ValidateFunction;
+  public readonly level: LogLevel;
+  public readonly name: string;
+  public readonly select: string;
+  public readonly tags: Array<string>;
+
+  constructor(data: RuleData) {
+    this.desc = data.desc;
+    this.level = data.level;
+    this.name = data.name;
+    this.select = defaultTo(data.select, '$');
+    this.tags = Array.from(data.tags);
+
+    // copy schema objects
+    this.check = cloneDeep(data.check);
+    if (!isNil(data.filter)) {
+      this.filter = cloneDeep(data.filter);
+    }
+  }
+
+  public async pick(ctx: VisitorContext, root: any): Promise<Array<any>> {
+    const scopes = JSONPath({
+      json: root,
+      path: this.select,
+    });
+
+    if (isNil(scopes) || scopes.length === 0) {
+      ctx.logger.debug('no data selected');
+      return [];
+    }
+
+    return scopes;
+  }
+
+  public async visit(ctx: VisitorContext, node: any): Promise<RuleResult> {
+    ctx.logger.debug({ item: node, rule: this }, 'visiting node');
+
+    const check = ctx.compile(this.check);
+    const filter = this.compileFilter(ctx);
+    const errors: Array<VisitorError> = [];
+    const result: RuleResult = {
+      changes: [],
+      errors,
+      rule: this,
+    };
+
+    if (filter(node)) {
+      ctx.logger.debug({ item: node }, 'checking item');
+      if (!check(node) && !isNil(check.errors) && check.errors.length > 0) {
+        ctx.error(...Array.from(check.errors).map(friendlyError));
+      }
+    } else {
+      ctx.logger.debug({ errors: filter.errors, item: node }, 'skipping item');
+    }
+
+    return result;
+  }
+
+  protected compileFilter(ctx: VisitorContext): ValidateFunction {
+    if (isNil(this.filter)) {
+      return () => true;
+    } else {
+      return ctx.compile(this.filter);
+    }
   }
 }
 
@@ -75,7 +141,7 @@ export async function loadRules(paths: Array<string>, ctx: VisitorContext): Prom
         ctx.addSchema(data.name, data.definitions);
       }
 
-      rules.push(...data.rules.map((data: RuleData) => new Rule(data)));
+      rules.push(...data.rules.map((it: RuleData) => new Rule(it)));
     }
   }
 
@@ -148,79 +214,4 @@ export async function visitRules(ctx: VisitorContext, rules: Array<Rule>, data: 
   }
 
   return ctx;
-}
-
-export interface RuleResult extends VisitorResult {
-  rule: Rule;
-}
-
-export class Rule implements RuleData, Visitor<RuleResult> {
-  public readonly check: ValidateFunction;
-  public readonly desc: string;
-  public readonly filter?: ValidateFunction;
-  public readonly level: LogLevel;
-  public readonly name: string;
-  public readonly select: string;
-  public readonly tags: string[];
-
-  constructor(data: RuleData) {
-    this.desc = data.desc;
-    this.level = data.level;
-    this.name = data.name;
-    this.select = data.select || '$';
-    this.tags = Array.from(data.tags);
-
-    // copy schema objects
-    this.check = cloneDeep(data.check);
-    if (!isNil(data.filter)) {
-      this.filter = cloneDeep(data.filter);
-    }
-  }
-
-  public async pick(ctx: VisitorContext, root: any): Promise<Array<any>> {
-    const scopes = JSONPath({
-      json: root,
-      path: this.select,
-    });
-
-    if (isNil(scopes) || scopes.length === 0) {
-      ctx.logger.debug('no data selected');
-      return [];
-    }
-
-    return scopes;
-  }
-
-  public async visit(ctx: VisitorContext, node: any): Promise<RuleResult> {
-    ctx.logger.debug({ item: node, rule: this }, 'visiting node');
-
-    const check = ctx.compile(this.check);
-    const filter = this.compileFilter(ctx);
-    const errors: Array<VisitorError> = [];
-    const result: RuleResult = {
-      changes: [],
-      errors,
-      rule: this,
-    };
-
-    if (filter(node)) {
-      ctx.logger.debug({ item: node }, 'checking item');
-      if (!check(node) && check.errors && check.errors.length) {
-        const errors = Array.from(check.errors);
-        ctx.error(...errors.map(friendlyError));
-      }
-    } else {
-      ctx.logger.debug({ errors: filter.errors, item: node }, 'skipping item');
-    }
-
-    return result;
-  }
-
-  protected compileFilter(ctx: VisitorContext): ValidateFunction {
-    if (isNil(this.filter)) {
-      return () => true;
-    } else {
-      return ctx.compile(this.filter);
-    }
-  }
 }

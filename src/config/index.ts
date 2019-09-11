@@ -1,13 +1,25 @@
+import { Stream } from 'bunyan';
 import { isNil, isString } from 'lodash';
+import { LogLevel } from 'noicejs';
 import { join } from 'path';
 
-import { CONFIG_ENV, CONFIG_SCHEMA } from './schema';
-import { includeSchema } from './type/Include';
 import { NotFoundError } from '../error/NotFoundError';
 import { YamlParser } from '../parser/YamlParser';
 import { readFileSync } from '../source';
+import { CONFIG_ENV, CONFIG_SCHEMA } from './schema';
+import { includeSchema } from './type/Include';
 
 includeSchema.schema = CONFIG_SCHEMA;
+
+export interface ConfigData {
+  data: {
+    logger: {
+      level: LogLevel;
+      name: string;
+      streams: Array<Stream>;
+    };
+  };
+}
 
 /**
  * With the given name, generate all potential config paths in their complete, absolute form.
@@ -39,7 +51,7 @@ export function completePaths(name: string, extras: Array<string>): Array<string
   return paths;
 }
 
-export async function loadConfig(name: string, ...extras: Array<string>): Promise<any> {
+export async function loadConfig(name: string, ...extras: Array<string>): Promise<ConfigData> {
   const paths = completePaths(name, extras);
 
   for (const p of paths) {

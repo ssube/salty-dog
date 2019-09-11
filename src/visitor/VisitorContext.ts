@@ -20,20 +20,20 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
   public readonly innerOptions: RuleOptions;
 
   protected readonly ajv: Ajv.Ajv;
-  protected readonly _changes: Array<any>;
-  protected readonly _errors: Array<VisitorError>;
+  protected readonly changeBuffer: Array<any>;
+  protected readonly errorBuffer: Array<VisitorError>;
 
   public get changes(): ReadonlyArray<any> {
-    return this._changes;
+    return this.changeBuffer;
   }
 
   public get errors(): ReadonlyArray<VisitorError> {
-    return this._errors;
+    return this.errorBuffer;
   }
 
   constructor(options: VisitorContextOptions) {
-    this._changes = [];
-    this._errors = [];
+    this.changeBuffer = [];
+    this.errorBuffer = [];
 
     this.ajv = new Ajv({
       coerceTypes: options.innerOptions.coerce,
@@ -49,12 +49,12 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
       logWithLevel(this.logger, err.level, err.data, err.msg);
     }
 
-    this._errors.push(...errors);
+    this.errorBuffer.push(...errors);
   }
 
   public mergeResult(other: VisitorResult): this {
-    this._changes.push(...other.changes);
-    this._errors.push(...other.errors);
+    this.changeBuffer.push(...other.changes);
+    this.errorBuffer.push(...other.errors);
     return this;
   }
 
@@ -69,7 +69,7 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
     });
 
     this.ajv.addSchema({
-      '$id': name,
+      $id: name,
       definitions: schema,
     });
   }

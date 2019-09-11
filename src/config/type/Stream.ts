@@ -20,4 +20,3 @@ export const streamType = new YamlType('!stream', {
     return Reflect.get(process, name);
   },
 });
-

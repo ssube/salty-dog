@@ -18,6 +18,7 @@ const MODES_LIST: Array<string> = [MODES.check, MODES.fix, MODES.list];
 
 const STATUS_SUCCESS = 0;
 const STATUS_ERROR = 1;
+const STATUS_MAX = 255;
 
 export async function main(argv: Array<string>): Promise<number> {
   const { args, mode } = parseArgs(argv);
@@ -43,7 +44,7 @@ export async function main(argv: Array<string>): Promise<number> {
   });
 
   const rules = await loadRules(args.rules, ctx);
-  const activeRules = await resolveRules(rules, args as any);
+  const activeRules = await resolveRules(rules, args);
 
   if (mode === 'list') {
     logger.info({ rules: activeRules }, 'listing active rules');
@@ -61,7 +62,7 @@ export async function main(argv: Array<string>): Promise<number> {
   if (ctx.errors.length > 0) {
     logger.error({ count: ctx.errors.length, errors: ctx.errors }, 'some rules failed');
     if (args.count) {
-      return Math.min(ctx.errors.length, 255);
+      return Math.min(ctx.errors.length, STATUS_MAX);
     } else {
       return STATUS_ERROR;
     }

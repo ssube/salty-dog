@@ -5,10 +5,10 @@ import { YamlParser } from '../../src/parser/YamlParser';
 describe('yaml parser', () => {
   describe('dump documents', () => {
     it('should dump multiple documents', () => {
-    const parser = new YamlParser();
-    const data = parser.dump({}, {});
+      const parser = new YamlParser();
+      const data = parser.dump({}, {});
 
-    expect(data).to.contain('---');
+      expect(data).to.contain('---');
     });
   });
 
@@ -20,7 +20,7 @@ foo: {}
 ---
 bar: {}
       `);
-      
+
       expect(Array.isArray(data)).to.equal(true);
       expect(data.length).to.equal(2);
     });
