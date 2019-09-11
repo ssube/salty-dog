@@ -6,6 +6,7 @@ import { LogLevel } from 'noicejs';
 
 import { YamlParser } from './parser/YamlParser';
 import { readFileSync } from './source';
+import { isNilOrEmpty } from './utils';
 import { friendlyError } from './utils/ajv';
 import { Visitor } from './visitor';
 import { VisitorContext } from './visitor/VisitorContext';
@@ -122,24 +123,26 @@ export async function visitRules(ctx: VisitorContext, rules: Array<Rule>, data: 
       const itemCopy = cloneDeep(item);
       const itemResult = await rule.visit(ctx, itemCopy);
 
-      if (itemResult.errors.length > 0) {
+      if (itemResult.errors.length === 0) {
         ctx.logger.warn({ count: itemResult.errors.length, rule }, 'rule failed');
         ctx.mergeResult(itemResult);
-      } else {
-        const itemDiff = diff(item, itemCopy);
-        if (Array.isArray(itemDiff) && itemDiff.length > 0) {
-          ctx.logger.info({
-            diff: itemDiff,
-            item,
-            rule: rule.name,
-          }, 'rule passed with modifications');
+        continue;
+      }
 
-          if (ctx.innerOptions.mutate) {
-            applyDiff(item, itemCopy);
-          }
-        } else {
-          ctx.logger.info({ rule: rule.name }, 'rule passed');
-        }
+      const itemDiff = diff(item, itemCopy);
+      if (isNilOrEmpty(itemDiff)) {
+        ctx.logger.info({ rule: rule.name }, 'rule passed');
+        continue;
+      }
+
+      ctx.logger.info({
+        diff: itemDiff,
+        item,
+        rule: rule.name,
+      }, 'rule passed with modifications');
+
+      if (ctx.innerOptions.mutate) {
+        applyDiff(item, itemCopy);
       }
     }
   }
