@@ -3,6 +3,7 @@ import json from 'rollup-plugin-json';
 import multiEntry from 'rollup-plugin-multi-entry';
 import replace from 'rollup-plugin-replace';
 import resolve from 'rollup-plugin-node-resolve';
+import tslint from 'rollup-plugin-tslint';
 import typescript from 'rollup-plugin-typescript2';
 
 const metadata = require('../package.json');
@@ -73,6 +74,7 @@ const bundle = {
 				],
 				'node_modules/lodash/lodash.js': [
 					'cloneDeep',
+					'defaultTo',
 					'intersection',
 					'isNil',
 					'isString',
@@ -97,6 +99,10 @@ const bundle = {
 					'usage',
 				],
 			},
+		}),
+		tslint({
+			configuration: './config/tslint.json',
+			throwOnError: true,
 		}),
     typescript({
 			cacheRoot: 'out/cache/rts2',
