@@ -95,7 +95,9 @@ test-examples: ## run medium (feature) tests
 
 test-bundle: ## run small (unit) tests
 test-bundle: build-bundle
-	$(NODE_BIN)/nyc --reporter=lcov --reporter=text-summary --report-dir="$(TARGET_PATH)/coverage" --exclude-after-remap $(NODE_BIN)/mocha $(TARGET_PATH)/test.js
+	$(NODE_BIN)/nyc --report-dir="$(TARGET_PATH)/coverage" --exclude-after-remap \
+		--reporter=html --reporter=lcov --reporter=text-summary \
+		$(NODE_BIN)/mocha $(TARGET_PATH)/test.js
 
 test-rules: ## validate the rules directory
 test-rules: build-bundle
