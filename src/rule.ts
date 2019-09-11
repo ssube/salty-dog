@@ -152,9 +152,9 @@ export interface RuleResult extends VisitorResult {
 }
 
 export class Rule implements RuleData, Visitor<RuleResult> {
-  public readonly check: any;
+  public readonly check: ValidateFunction;
   public readonly desc: string;
-  public readonly filter?: any;
+  public readonly filter?: ValidateFunction;
   public readonly level: LogLevel;
   public readonly name: string;
   public readonly select: string;
