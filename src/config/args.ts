@@ -3,6 +3,8 @@ import { Options, showCompletionScript, usage } from 'yargs';
 import { RuleSelector } from '../rule';
 import { VERSION_INFO } from '../version';
 
+/* tslint:disable:no-any */
+
 export const CONFIG_ARGS_NAME = 'config-name';
 export const CONFIG_ARGS_PATH = 'config-path';
 

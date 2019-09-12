@@ -13,6 +13,8 @@ import { VisitorContext } from './visitor/VisitorContext';
 import { VisitorError } from './visitor/VisitorError';
 import { VisitorResult } from './visitor/VisitorResult';
 
+/* tslint:disable:no-any */
+
 export interface RuleData {
   // metadata
   desc: string;
