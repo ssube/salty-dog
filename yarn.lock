@@ -174,10 +174,10 @@
   resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-3.12.1.tgz#5c6f4a1eabca84792fbd916f0cb40847f123c656"
   integrity sha512-SGGAhXLHDx+PK4YLNcNGa6goPf9XRWQNAUUbffkwVGGXIxmDKWyGGL4inzq2sPmExu431Ekb9aEMn9BkPqEYFA==
 
-"@types/lodash@4.14.138":
-  version "4.14.138"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.138.tgz#34f52640d7358230308344e579c15b378d91989e"
-  integrity sha512-A4uJgHz4hakwNBdHNPdxOTkYmXNgmUAKLbXZ7PKGslgeV0Mb8P3BlbYfPovExek1qnod4pDfRbxuzcVs3dlFLg==
+"@types/lodash@4.14.139":
+  version "4.14.139"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.139.tgz#b7b8a00d014a7debb29dc2dae4f91d3d3c6d5ab3"
+  integrity sha512-Z6pbDYaWpluqcF8+6qgv6STPEl0jIlyQmpYGwTrzhgwqok8ltBh/p7GAmYnz81wUhxQRhEr8MBpQrB4fQ/hwIA==
 
 "@types/mocha@5.2.7":
   version "5.2.7"
