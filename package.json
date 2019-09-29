@@ -49,7 +49,7 @@
     "js-yaml": "3.13.1",
     "jsonpath-plus": "1.1.0",
     "lodash": "4.17.15",
-    "mocha": "6.2.0",
+    "mocha": "6.2.1",
     "noicejs": "2.5.2",
     "nyc": "14.1.1",
     "rollup": "1.22.0",
