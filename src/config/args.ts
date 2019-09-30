@@ -85,7 +85,7 @@ export function parseArgs(argv: Array<string>): ParseResults {
       },
     })
     .option(CONFIG_ARGS_NAME, {
-      default: `.${VERSION_INFO.app.name}.yml`,
+      default: `.${VERSION_INFO.package.name}.yml`,
       group: 'Config:',
       type: 'string',
     })
@@ -131,7 +131,7 @@ export function parseArgs(argv: Array<string>): ParseResults {
       alias: ['t', 'tag'],
     })
     .help()
-    .version(VERSION_INFO.app.version)
+    .version(VERSION_INFO.package.version)
     .alias('version', 'v');
 
   // @TODO: this should not need a cast but argv's type only has the last option (include-tag)
