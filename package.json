@@ -52,7 +52,7 @@
     "mocha": "6.2.1",
     "noicejs": "2.5.2",
     "nyc": "14.1.1",
-    "rollup": "1.23.1",
+    "rollup": "1.24.0",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-json": "4.0.0",
     "rollup-plugin-multi-entry": "2.1.0",
