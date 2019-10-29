@@ -191,7 +191,7 @@ export async function visitRules(ctx: VisitorContext, rules: Array<Rule>, data: 
       const itemCopy = cloneDeep(item);
       const itemResult = await rule.visit(ctx, itemCopy);
 
-      if (itemResult.errors.length === 0) {
+      if (itemResult.errors.length > 0) {
         ctx.logger.warn({ count: itemResult.errors.length, rule }, 'rule failed');
         ctx.mergeResult(itemResult);
         continue;
