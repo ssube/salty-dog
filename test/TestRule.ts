@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { ConsoleLogger } from 'noicejs';
-import { mock } from 'sinon';
+import { mock, spy } from 'sinon';
 
 import { makeSelector, resolveRules, Rule, visitRules } from '../src/rule';
 import { VisitorContext } from '../src/visitor/VisitorContext';
@@ -166,5 +166,66 @@ describeLeaks('rule visitor', async () => {
 
     mockRule.verify();
     expect(ctx.errors.length).to.equal(0);
+  });
+
+  itLeaks('should pick items from the scope', async () => {
+    const ctx = new VisitorContext({
+      innerOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
+      logger: new ConsoleLogger(),
+    });
+    const data = {
+      foo: 3,
+    };
+    const rule = new Rule({
+      check: {},
+      desc: '',
+      level: 'info',
+      name: 'foo',
+      select: '$.foo',
+      tags: [],
+    });
+    const results = await rule.pick(ctx, data);
+
+    expect(results).to.deep.equal([data.foo]);
+  });
+
+  itLeaks('should filter out items', async () => {
+    const ctx = new VisitorContext({
+      innerOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
+      logger: new ConsoleLogger(),
+    });
+    const errorSpy = spy(ctx, 'error');
+
+    const data = {
+      foo: 3,
+    };
+    const rule = new Rule({
+      check: {},
+      desc: '',
+      filter: {
+        properties: {
+          foo: {
+            type: 'number',
+          },
+        },
+        type: 'object',
+      },
+      level: 'info',
+      name: 'foo',
+      select: '$.foo',
+      tags: [],
+    });
+
+    const results = await rule.visit(ctx, data);
+    expect(results.errors.length).to.equal(0);
+    expect(errorSpy).to.have.callCount(0);
   });
 });
