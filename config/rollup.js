@@ -1,8 +1,8 @@
 import commonjs from 'rollup-plugin-commonjs';
 import json from 'rollup-plugin-json';
 import multiEntry from 'rollup-plugin-multi-entry';
-import replace from 'rollup-plugin-replace';
 import resolve from 'rollup-plugin-node-resolve';
+import replace from 'rollup-plugin-replace';
 import tslint from 'rollup-plugin-tslint';
 import typescript from 'rollup-plugin-typescript2';
 
@@ -11,6 +11,7 @@ const shebang = '#! /usr/bin/env node';
 
 const bundle = {
 	external: [
+		'chai',
 		'dtrace-provider',
 	],
 	input: [
