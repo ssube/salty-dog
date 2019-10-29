@@ -61,7 +61,7 @@
     "rollup-plugin-tslint": "0.2.2",
     "rollup-plugin-typescript2": "0.24.3",
     "sinon": "7.5.0",
-    "source-map-support": "0.5.13",
+    "source-map-support": "0.5.15",
     "standard-version": "7.0.0",
     "tslint": "5.20.0",
     "tslint-clean-code": "0.2.10",
