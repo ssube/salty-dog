@@ -130,7 +130,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/chai-as-promised@^7.1.2":
+"@types/chai-as-promised@7.1.2":
   version "7.1.2"
   resolved "https://artifacts.apextoaster.com/repository/group-npm/@types/chai-as-promised/-/chai-as-promised-7.1.2.tgz#2f564420e81eaf8650169e5a3a6b93e096e5068b"
   integrity sha512-PO2gcfR3Oxa+u0QvECLe1xKXOqYTzCmWf0FhLhjREoW3fPAVamjihL7v1MOVLJLsnAMdLcjkfrs01yvDMwVK4Q==
@@ -179,7 +179,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/sinon-chai@^3.2.3":
+"@types/sinon-chai@3.2.3":
   version "3.2.3"
   resolved "https://artifacts.apextoaster.com/repository/group-npm/@types/sinon-chai/-/sinon-chai-3.2.3.tgz#afe392303dda95cc8069685d1e537ff434fa506e"
   integrity sha512-TOUFS6vqS0PVL1I8NGVSNcFaNJtFoyZPXZ5zur+qlhDfOmQECZZM4H4kKgca6O8L+QceX/ymODZASfUfn+y4yQ==
@@ -395,7 +395,7 @@ camelcase@^5.0.0:
   resolved "https://artifacts.apextoaster.com/repository/group-npm/camelcase/-/camelcase-5.3.1.tgz#e3c9b31569e106811df242f715725a1f4c494320"
   integrity sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==
 
-chai-as-promised@^7.1.1:
+chai-as-promised@7.1.1:
   version "7.1.1"
   resolved "https://artifacts.apextoaster.com/repository/group-npm/chai-as-promised/-/chai-as-promised-7.1.1.tgz#08645d825deb8696ee61725dbf590c012eb00ca0"
   integrity sha512-azL6xMoi+uxu6z4rhWQ1jbdUhOMhis2PvscD/xjLqNMkv3BPPp2JyyuTHOrf9BOosGpNQ11v6BKv/g57RXbiaA==
@@ -2329,7 +2329,7 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   resolved "https://artifacts.apextoaster.com/repository/group-npm/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
 
-sinon-chai@^3.3.0:
+sinon-chai@3.3.0:
   version "3.3.0"
   resolved "https://artifacts.apextoaster.com/repository/group-npm/sinon-chai/-/sinon-chai-3.3.0.tgz#8084ff99451064910fbe2c2cb8ab540c00b740ea"
   integrity sha512-r2JhDY7gbbmh5z3Q62pNbrjxZdOAjpsqW/8yxAZRSqLZqowmfGZPGUZPFf3UX36NLis0cv8VEM5IJh9HgkSOAA==
