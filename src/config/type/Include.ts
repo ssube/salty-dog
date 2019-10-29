@@ -13,10 +13,15 @@ export const includeSchema = {
 export const includeType = new YamlType('!include', {
   kind: 'scalar',
   resolve(path: string) {
-    const canonical = resolvePath(path);
-    if (existsSync(canonical)) {
-      return true;
-    } else {
+    try {
+      const canonical = resolvePath(path);
+      // throws in node 11+
+      if (existsSync(canonical)) {
+        return true;
+      } else {
+        throw new NotFoundError('included file does not exist');
+      }
+    } catch (err) {
       throw new NotFoundError('included file does not exist');
     }
   },
