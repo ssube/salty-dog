@@ -101,7 +101,7 @@ build-node:
       - node_modules
       - out/cache
 
-.build-image-alpine-branch:
+build-image-alpine-branch:
   <<: [*build-docker]
   except:
     - tags
@@ -110,7 +110,7 @@ build-node:
     IMAGE_ARCH: alpine
     IMAGE_TAG: "ssube/salty-dog:${CI_COMMIT_REF_SLUG}"
 
-.build-image-alpine-tag:
+build-image-alpine-tag:
   <<: [*build-docker]
   only:
     - tags
