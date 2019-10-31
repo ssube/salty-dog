@@ -1,3 +1,5 @@
+#! /bin/sh
+
 EXAMPLES="$(find ./examples -name '*.yml')"
 
 for example in ${EXAMPLES};
