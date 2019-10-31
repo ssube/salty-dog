@@ -112,6 +112,16 @@ After building, run with `node out/index.js` or install run as `salty-dog`:
 ingress.extensions/gitlab created (dry run)
 ```
 
+Build with Docker:
+```
+# Stretch
+docker run --rm -v "$(pwd):/salty-dog" -w /salty-dog node:11-stretch make
+docker build -t salty-dog:stretch -f Dockerfile.stretch .
+# Alpine
+docker run --rm -v "$(pwd):/salty-dog" -w /salty-dog node:11-alpine sh -c "apk add build-base && make"
+docker build -t salty-dog:alpine -f Dockerfile.alpine .
+```
+
 ## Install
 
 ### Docker
