@@ -8,9 +8,11 @@ supports multiple documents per stream or file, inserting defaults, and other ma
   - [Status](#status)
   - [Releases](#releases)
   - [Build](#build)
+    - [Local Build](#local-build)
+    - [Docker Build](#docker-build)
   - [Install](#install)
-    - [Docker](#docker)
-    - [Node](#node)
+    - [Docker Install](#docker-install)
+    - [Yarn Install](#yarn-install)
       - [Global](#global)
       - [Project](#project)
   - [Usage](#usage)
@@ -86,7 +88,9 @@ ingress.extensions/gitlab created (dry run)
 
 ## Build
 
-This project is written in Typescript and requires `node` and `yarn` to build.
+### Local Build
+
+This project is written in Typescript and requires `make`, `node`, and `yarn` to build.
 
 ```shell
 > git clone git@github.com:ssube/salty-dog.git
@@ -112,11 +116,15 @@ After building, run with `node out/index.js` or install run as `salty-dog`:
 ingress.extensions/gitlab created (dry run)
 ```
 
+### Docker Build
+
 Build with Docker:
-```
+
+```shell
 # Stretch
 docker run --rm -v "$(pwd):/salty-dog" -w /salty-dog node:11-stretch make
 docker build -t salty-dog:stretch -f Dockerfile.stretch .
+
 # Alpine
 docker run --rm -v "$(pwd):/salty-dog" -w /salty-dog node:11-alpine sh -c "apk add build-base && make"
 docker build -t salty-dog:alpine -f Dockerfile.alpine .
@@ -124,7 +132,7 @@ docker build -t salty-dog:alpine -f Dockerfile.alpine .
 
 ## Install
 
-### Docker
+### Docker Install
 
 To run with Docker: `docker run --rm ssube/salty-dog:master`
 
@@ -136,7 +144,7 @@ The Docker container is published for each branch and git tag, tagged with the g
 Rules are baked into the image in `/salty-dog/rules`. To use custom rules, mount them with
 `-v $(pwd)/rules:/salty-dog/rules:ro` and load with `--rules /rules/foo.yml`.
 
-### Node
+### Yarn Install
 
 #### Global
 
