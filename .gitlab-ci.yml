@@ -11,75 +11,9 @@ stages:
   only:
     - master
 
-.build-curl: &build-curl
-  image: apextoaster/base:1.2
-  tags:
-    - platform:k8s
-    - runner:shared
-
-.build-climate: &build-climate
-  image: apextoaster/code-climate:0.6
-  tags:
-    - platform:k8s
-    - runner:shared
-  allow_failure: false
-  variables:
-    CI_BRANCH: "${CI_COMMIT_REF_NAME}"
-    GIT_BRANCH: "${CI_COMMIT_REF_NAME}"
-    GIT_COMMIT_SHA: "${CI_COMMIT_SHA}"
-
-.build-codecov: &build-codecov
-  image: apextoaster/codecov:3.1
-  tags:
-    - platform:k8s
-    - runner:shared
-  allow_failure: false
-
-.build-docker: &build-docker
-  stage: image
-  image: docker:18.09.9
-  services:
-    - docker:18.09.9-dind
-  tags:
-    - platform:k8s
-    - runner:shared
-  allow_failure: false
-
-  before_script:
-    # prep secrets
-    - mkdir ${HOME}/.docker
-    - echo "${DOCKER_SECRET}" | base64 -d > ${HOME}/.docker/config.json
-    - docker info
-  after_script:
-    - rm -rfv ${HOME}/.docker
-
-  dependencies:
-    - build-node
-  variables: &vars-docker
-    DOCKER_DRIVER: overlay2
-    DOCKER_HOST: tcp://localhost:2375
-    DEFAULT_ARCH: "false"
-
-.build-node: &build-node
-  image: apextoaster/node:11.15
-  tags:
-    - platform:k8s
-    - runner:shared
-  allow_failure: false
-
-  before_script:
-    - echo "${NPM_SECRET}" | base64 -d > ${HOME}/.npmrc
-
-.build-sonar: &build-sonar
-  image: apextoaster/sonar-scanner:3.3
-  tags:
-    - platform:k8s
-    - runner:shared
-  allow_failure: false
-
 # build jobs
 build-node:
-  <<: [*build-node]
+  extends: [.build-node]
   stage: build
 
   variables:
@@ -100,48 +34,44 @@ build-node:
       - out/cache
 
 build-image-alpine-branch:
-  <<: [*build-docker]
+  extends: [.build-docker]
   except:
     - tags
   script:
     - ./scripts/docker-build.sh --push --default
   variables:
-    <<: [*vars-docker]
     IMAGE_ARCH: alpine
 
 build-image-alpine-tag:
-  <<: [*build-docker]
+  extends: [.build-docker]
   only:
     - tags
   script:
     - ./scripts/docker-build.sh --push --default
   variables:
-    <<: [*vars-docker]
     IMAGE_ARCH: alpine
 
 build-image-stretch-branch:
-  <<: [*build-docker]
+  extends: [.build-docker]
   except:
     - tags
   script:
     - ./scripts/docker-build.sh --push
   variables:
-    <<: [*vars-docker]
     IMAGE_ARCH: stretch
 
 build-image-stretch-tag:
-  <<: [*build-docker]
+  extends: [.build-docker]
   only:
     - tags
   script:
     - ./scripts/docker-build.sh --push
   variables:
-    <<: [*vars-docker]
     IMAGE_ARCH: stretch
 
 # publish jobs
 publish-npm:
-  <<: [*build-node]
+  extends: [.build-node]
   stage: publish
   only:
     - tags
@@ -182,20 +112,23 @@ codecov-success:
     - make upload-codecov
 
 github-pending:
-  <<: [*build-curl]
+  extends:
+    - .build-curl
   stage: status-pre
   script:
     - ./scripts/github-status.sh pending
 
 github-failure:
-  <<: [*build-curl]
+  extends:
+    - .build-curl
   stage: status-post
   when: on_failure
   script:
     - ./scripts/github-status.sh failure
 
 github-success:
-  <<: [*build-curl]
+  extends:
+    - .build-curl
   stage: status-post
   when: on_success
   script:
