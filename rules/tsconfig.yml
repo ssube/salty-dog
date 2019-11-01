@@ -33,6 +33,7 @@ rules:
     check:
       not:
         anyOf:
+          # from https://www.typescriptlang.org/docs/handbook/compiler-options.html
           - required: [alwaysStrict]
           - required: [noImplicitAny]
           - required: [noImplicitThis]
@@ -75,47 +76,8 @@ rules:
                 lib:
                   contains:
                     type: string
-                    const: esnext
+                    const:
+                      $data: "2/target"
                 target:
                   type: string
-                  const: esnext
-            - properties:
-                lib:
-                  contains:
-                    type: string
-                    const: es2017
-                target:
-                  type: string
-                  const: es2017
-            - properties:
-                lib:
-                  contains:
-                    type: string
-                    const: es2016
-                target:
-                  type: string
-                  const: es2016
-            - properties:
-                lib:
-                  contains:
-                    type: string
-                    enum: [es2015, es6]
-                target:
-                  type: string
-                  enum: [es2015, es6]
-            - properties:
-                lib:
-                  contains:
-                    type: string
-                    const: es5
-                target:
-                  type: string
-                  const: es5
-            - properties:
-                lib:
-                  contains:
-                    type: string
-                    const: es3
-                target:
-                  type: string
-                  const: es3
+                  enum: [esnext, es2017, es2016, es5, es3]
