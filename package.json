@@ -27,7 +27,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "out/harness.js"
+    "build": "make",
+    "test": "make test"
   },
   "author": "ssube",
   "license": "MIT",
@@ -80,5 +81,8 @@
   },
   "resolutions": {
     "lodash": "4.17.15"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
   }
 }
