@@ -54,9 +54,11 @@ stages:
     - docker build -f Dockerfile.${IMAGE_ARCH} -t ${IMAGE_TAG}-${IMAGE_ARCH} .
     - docker push ${IMAGE_TAG}-${IMAGE_ARCH}
     - |
-      [[ "${DEFAULT_ARCH:-false}" = "true" ]] && \
-        docker tag ${IMAGE_TAG}-${IMAGE_ARCH} ${IMAGE_TAG} && \
+      if [[ "${DEFAULT_ARCH:-false}" = "true" ]];
+      then
+        docker tag ${IMAGE_TAG}-${IMAGE_ARCH} ${IMAGE_TAG}
         docker push ${IMAGE_TAG}
+      fi
 
   after_script:
     - rm -rfv ${HOME}/.docker
