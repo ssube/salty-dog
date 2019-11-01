@@ -22,7 +22,7 @@ export const includeType = new YamlType('!include', {
         throw new NotFoundError('included file does not exist');
       }
     } catch (err) {
-      throw new NotFoundError('included file does not exist');
+      throw new NotFoundError('included file does not exist', err);
     }
   },
   construct(path: string): unknown {
