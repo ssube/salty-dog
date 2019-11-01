@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.1](https://github.com/ssube/salty-dog/compare/v0.7.0...v0.7.1) (2019-11-01)
+
+
+### Bug Fixes
+
+* **build:** publish npm packages to npmjs.org ([b9819b8](https://github.com/ssube/salty-dog/commit/b9819b8))
+* **docs:** update readme tags ([e7d1f9f](https://github.com/ssube/salty-dog/commit/e7d1f9f))
+* **rule:** log and apply mutation when rule has > 0 diffs ([63b6e48](https://github.com/ssube/salty-dog/commit/63b6e48))
+
 ## [0.7.0](https://github.com/ssube/salty-dog/compare/v0.6.1...v0.7.0) (2019-11-01)
 
 
