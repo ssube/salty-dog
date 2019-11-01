@@ -36,6 +36,7 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
     this.errorBuffer = [];
 
     this.ajv = new Ajv({
+      $data: true,
       coerceTypes: options.innerOptions.coerce,
       useDefaults: options.innerOptions.defaults,
     });
