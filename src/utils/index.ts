@@ -1,6 +1,6 @@
 import { isNil } from 'lodash';
 
-export function isNilOrEmpty(val: Array<unknown> | null | undefined): val is Array<unknown> {
+export function hasItems(val: Array<unknown> | null | undefined): val is Array<unknown> {
   return (Array.isArray(val) && val.length > 0);
 }
 

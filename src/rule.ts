@@ -6,7 +6,7 @@ import { LogLevel } from 'noicejs';
 
 import { YamlParser } from './parser/YamlParser';
 import { readFileSync } from './source';
-import { ensureArray, isNilOrEmpty } from './utils';
+import { ensureArray, hasItems } from './utils';
 import { friendlyError } from './utils/ajv';
 import { Visitor } from './visitor';
 import { VisitorContext } from './visitor/VisitorContext';
@@ -198,21 +198,20 @@ export async function visitRules(ctx: VisitorContext, rules: Array<Rule>, data: 
       }
 
       const itemDiff = diff(item, itemCopy);
-      if (isNilOrEmpty(itemDiff)) {
+      if (hasItems(itemDiff)) {
+        ctx.logger.info({
+          diff: itemDiff,
+          item,
+          rule: rule.name,
+        }, 'rule passed with modifications');
+
+        if (ctx.innerOptions.mutate) {
+          applyDiff(item, itemCopy);
+        }
+      } else {
         ctx.logger.info({ rule: rule.name }, 'rule passed');
-        continue;
       }
-
-      ctx.logger.info({
-        diff: itemDiff,
-        item,
-        rule: rule.name,
-      }, 'rule passed with modifications');
-
-      if (ctx.innerOptions.mutate) {
-        applyDiff(item, itemCopy);
-      }
-    }
+   }
   }
 
   return ctx;
