@@ -7,6 +7,9 @@ out/cache/
 out/*.html
 out/*.json
 out/*.map
+out/src/
+out/test/
+out/test.*
 scripts/
 src/
 test/
