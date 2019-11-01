@@ -36,9 +36,9 @@ definitions:
         default: '$'
         minLength: 1
       filter:
-        type: object
+        $ref: "http://json-schema.org/draft-07/schema#"
       check:
-        type: object
+        $ref: "http://json-schema.org/draft-07/schema#"
 
 rules:
   - name: salty-dog-rule
