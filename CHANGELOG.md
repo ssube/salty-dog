@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://github.com/ssube/salty-dog/compare/v0.6.1...v0.7.0) (2019-11-01)
+
+
+### Bug Fixes
+
+* **build:** add tslint back to rollup ([6aa1cb5](https://github.com/ssube/salty-dog/commit/6aa1cb5))
+* **build:** pin docker/dind images ([070a623](https://github.com/ssube/salty-dog/commit/070a623))
+* **build:** replace app with package in version data ([c76781b](https://github.com/ssube/salty-dog/commit/c76781b))
+* **build:** set a default image arch, do not suffix those tags ([37b1aae](https://github.com/ssube/salty-dog/commit/37b1aae))
+* **build:** switch to relative imports ([0ab6de7](https://github.com/ssube/salty-dog/commit/0ab6de7))
+* **build:** switch to relative imports ([45a53a9](https://github.com/ssube/salty-dog/commit/45a53a9))
+* **build:** tag images with architecture ([d2c50a1](https://github.com/ssube/salty-dog/commit/d2c50a1))
+* **build:** use npm mirror ([c5aeac0](https://github.com/ssube/salty-dog/commit/c5aeac0))
+* **config:** pass include errors as nested cause ([6ab7d9c](https://github.com/ssube/salty-dog/commit/6ab7d9c))
+* **config/include:** handle more errors in include ([4a05fcd](https://github.com/ssube/salty-dog/commit/4a05fcd))
+* **docs:** disambiguate build/install headers ([47fe866](https://github.com/ssube/salty-dog/commit/47fe866))
+* **docs:** fix license section ([100f9ce](https://github.com/ssube/salty-dog/commit/100f9ce))
+* **rule:** print failure message when errors are present ([5160eaa](https://github.com/ssube/salty-dog/commit/5160eaa))
+* **scripts:** make example tests more shell compatible ([#106](https://github.com/ssube/salty-dog/issues/106)) ([1304cf5](https://github.com/ssube/salty-dog/commit/1304cf5))
+* **test:** set mutate option for test contexts ([72920b2](https://github.com/ssube/salty-dog/commit/72920b2))
+* **tests:** add async helpers for tests, wrap async tests, make chai external ([0eb9d51](https://github.com/ssube/salty-dog/commit/0eb9d51))
+* **tests:** always print actual exit status of test scenarios ([77c1d0c](https://github.com/ssube/salty-dog/commit/77c1d0c))
+* **tests:** begin testing friendly errors, other errors (exceptions) ([a13a909](https://github.com/ssube/salty-dog/commit/a13a909))
+* **tests:** begin testing rules ([013b1d7](https://github.com/ssube/salty-dog/commit/013b1d7))
+* star import ([93f4917](https://github.com/ssube/salty-dog/commit/93f4917))
+
+
+### Features
+
+* **build:** add alpine image jobs ([017dfd7](https://github.com/ssube/salty-dog/commit/017dfd7))
+* include data path in error messages ([67a61f6](https://github.com/ssube/salty-dog/commit/67a61f6))
+* **docs:** add fossa badge ([7aaaf29](https://github.com/ssube/salty-dog/commit/7aaaf29))
+* **test:** add nyc coverage ([e627a51](https://github.com/ssube/salty-dog/commit/e627a51))
+* **test:** add source map support ([489ca33](https://github.com/ssube/salty-dog/commit/489ca33))
+* **visitor:** improve error messages ([#20](https://github.com/ssube/salty-dog/issues/20)) ([c9c1a58](https://github.com/ssube/salty-dog/commit/c9c1a58))
+* make fix mode mutations and defaults independent ([30ab437](https://github.com/ssube/salty-dog/commit/30ab437))
+
 ### [0.6.1](https://github.com/ssube/salty-dog/compare/v0.6.0...v0.6.1) (2019-07-04)
 
 
