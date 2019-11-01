@@ -59,29 +59,28 @@ ingress.extensions/gitlab created (dry run)
 ## Status
 
 [![Pipeline status](https://img.shields.io/gitlab/pipeline/ssube/salty-dog.svg?gitlab_url=https%3A%2F%2Fgit.apextoaster.com&logo=gitlab)](https://git.apextoaster.com/ssube/salty-dog/commits/master)
+[![Test coverage](https://codecov.io/gh/ssube/salty-dog/branch/master/graph/badge.svg)](https://codecov.io/gh/ssube/salty-dog)
+[![MIT license](https://img.shields.io/github/license/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/blob/master/LICENSE.md)
 
 [![Open bug count](https://img.shields.io/github/issues-raw/ssube/salty-dog/type-bug.svg)](https://github.com/ssube/salty-dog/issues?q=is%3Aopen+is%3Aissue+label%3Atype%2Fbug)
 [![Open issue count](https://img.shields.io/github/issues-raw/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/issues?q=is%3Aopen+is%3Aissue)
 [![Closed issue count](https://img.shields.io/github/issues-closed-raw/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/issues?q=is%3Aissue+is%3Aclosed)
 
 [![Renovate badge](https://badges.renovateapi.com/github/ssube/salty-dog)](https://renovatebot.com)
-[![Known vulnerabilities](https://snyk.io/test/github/ssube/salty-dog/badge.svg)](https://snyk.io/test/github/ssube/salty-dog)
 [![Dependency status](https://img.shields.io/david/ssube/salty-dog.svg)](https://david-dm.org/ssube/salty-dog)
 [![Dev dependency status](https://img.shields.io/david/dev/ssube/salty-dog.svg)](https://david-dm.org/ssube/salty-dog?type=dev)
+[![Known vulnerabilities](https://snyk.io/test/github/ssube/salty-dog/badge.svg)](https://snyk.io/test/github/ssube/salty-dog)
 
 [![Maintainability score](https://api.codeclimate.com/v1/badges/5d4326d6f68a2fa137cd/maintainability)](https://codeclimate.com/github/ssube/salty-dog/maintainability)
 [![Technical debt ratio](https://img.shields.io/codeclimate/tech-debt/ssube/salty-dog.svg)](https://codeclimate.com/github/ssube/salty-dog/trends/technical_debt)
 [![Quality issues](https://img.shields.io/codeclimate/issues/ssube/salty-dog.svg)](https://codeclimate.com/github/ssube/salty-dog/issues)
-
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/ssube/salty-dog.svg?logo=lgtm)](https://lgtm.com/projects/g/ssube/salty-dog/context:javascript)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/ssube/salty-dog.svg)](https://lgtm.com/projects/g/ssube/salty-dog/alerts/)
-[![MIT license](https://img.shields.io/github/license/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/blob/master/LICENSE.md)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fssube%2Fsalty-dog.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fssube%2Fsalty-dog?ref=badge_shield)
 
 ## Releases
 
 [![Github release version](https://img.shields.io/github/tag/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/releases)
-[![Commits since release](https://img.shields.io/github/commits-since/ssube/salty-dog/v0.6.1.svg)](https://github.com/ssube/salty-dog/compare/v0.6.1...master)
+[![Commits since release](https://img.shields.io/github/commits-since/ssube/salty-dog/v0.7.1.svg)](https://github.com/ssube/salty-dog/compare/v0.7.1...master)
 
 [![npm release version](https://img.shields.io/npm/v/salty-dog.svg)](https://www.npmjs.com/package/salty-dog)
 [![Docker image size](https://images.microbadger.com/badges/image/ssube/salty-dog:master.svg)](https://microbadger.com/images/ssube/salty-dog:master)
