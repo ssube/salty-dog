@@ -54,7 +54,7 @@ stages:
     - docker build -f Dockerfile.${IMAGE_ARCH} -t ${IMAGE_TAG}-${IMAGE_ARCH} .
     - docker push ${IMAGE_TAG}-${IMAGE_ARCH}
     - |
-      [[ "${DEFAULT_ARCH}" = "true" ]] && \
+      [[ "${DEFAULT_ARCH:-false}" = "true" ]] && \
         docker tag ${IMAGE_TAG}-${IMAGE_ARCH} ${IMAGE_TAG} && \
         docker push ${IMAGE_TAG}
 
@@ -66,6 +66,7 @@ stages:
   variables: &vars-docker
     DOCKER_DRIVER: overlay2
     DOCKER_HOST: tcp://localhost:2375
+    DEFAULT_ARCH: "false"
 
 .build-node: &build-node
   image: apextoaster/node:11.15
