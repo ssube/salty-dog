@@ -32,6 +32,8 @@ do
 
   ACTUAL_STATUS=$?
 
+  echo "Actual status: ${ACTUAL_STATUS}"
+
   if [ "${ACTUAL_STATUS}" != "${EXPECTED_STATUS}" ];
   then
     echo "Exit status does not match! (expected ${EXPECTED_STATUS}, got ${ACTUAL_STATUS})"
