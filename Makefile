@@ -1,14 +1,28 @@
 # Git
 export GIT_BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
 export GIT_COMMIT ?= $(shell git rev-parse HEAD)
-export GIT_REMOTES ?= $(shell git remote -v | awk '{ print $1; }' | sort | uniq)
 export GIT_OPTIONS ?=
+export GIT_REMOTES ?= $(shell git remote -v | awk '{ print $1; }' | sort | uniq)
+export GIT_TAG ?= $(shell git tag -l --points-at HEAD | head -1)
+
+# Paths
+# resolve the makefile's path and directory, from https://stackoverflow.com/a/18137056
+export MAKE_PATH		?= $(abspath $(lastword $(MAKEFILE_LIST)))
+export ROOT_PATH		?= $(dir $(MAKE_PATH))
+export CONFIG_PATH 	?= $(ROOT_PATH)/config
+export DOCS_PATH		?= $(ROOT_PATH)/docs
+export SCRIPT_PATH 	?= $(ROOT_PATH)/scripts
+export SOURCE_PATH 	?= $(ROOT_PATH)/src
+export TARGET_PATH	?= $(ROOT_PATH)/out
+export TEST_PATH		?= $(ROOT_PATH)/test
 
 # CI
 export CI_COMMIT_REF_SLUG ?= $(GIT_BRANCH)
 export CI_COMMIT_SHA ?= $(GIT_COMMIT)
+export CI_COMMIT_TAG ?= $(GIT_TAG)
 export CI_ENVIRONMENT_SLUG ?= local
 export CI_JOB_ID ?= 0
+export CI_PROJECT_PATH ?= $(shell ROOT_PATH=$(ROOT_PATH) ${SCRIPT_PATH}/ci-project-path.sh)
 export CI_RUNNER_DESCRIPTION ?= $(shell hostname)
 export CI_RUNNER_ID ?= $(shell hostname)
 export CI_RUNNER_VERSION ?= 0.0.0
@@ -17,32 +31,28 @@ export CI_RUNNER_VERSION ?= 0.0.0
 export DEBUG_BIND ?= 127.0.0.1
 export DEBUG_PORT ?= 9229
 
-# Paths
-# resolve the makefile's path and directory, from https://stackoverflow.com/a/18137056
-export MAKE_PATH		?= $(abspath $(lastword $(MAKEFILE_LIST)))
-export ROOT_PATH		?= $(dir $(MAKE_PATH))
-export CONFIG_PATH 	?= $(ROOT_PATH)/config
-export SCRIPT_PATH 	?= $(ROOT_PATH)/scripts
-export SOURCE_PATH 	?= $(ROOT_PATH)/src
-export TARGET_PATH	?= $(ROOT_PATH)/out
-export TEST_PATH		?= $(ROOT_PATH)/test
+# Versions
+export NODE_VERSION		:= $(shell node -v || echo "none")
+export RUNNER_VERSION  := $(CI_RUNNER_VERSION)
+
 
 # Node options
 NODE_BIN := $(ROOT_PATH)/node_modules/.bin
 NODE_CMD ?= $(shell env node)
 NODE_DEBUG ?= --inspect-brk=$(DEBUG_BIND):$(DEBUG_PORT) --nolazy
-export NODE_OPTIONS ?= --max-old-space-size=5500
+NODE_INFO := $(shell node -v)
 
 # Tool options
+COVER_OPTS	?= --reporter=lcov --reporter=text-summary --reporter=html --report-dir="$(TARGET_PATH)/coverage" --exclude-after-remap
 DOCKER_IMAGE ?= ssube/salty:master
-DOCS_OPTS		?= --exclude "test.+" --tsconfig "$(CONFIG_PATH)/tsconfig.json" --out "$(TARGET_PATH)/docs"
+MOCHA_OPTS  ?= --check-leaks --colors --sort --ui bdd
 RELEASE_OPTS ?= --commit-all
 
-# Versions
-export NODE_VERSION		:= $(shell node -v)
-export RUNNER_VERSION  := $(CI_RUNNER_VERSION)
+.PHONY: all clean clean-deps clean-target configure help todo
+.PHONY: build build-bundle build-docs build-image test test-check test-cover test-watch
+.PHONY: yarn-install yarn-upgrade git-push git-stats license-check release release-dry upload-climate upload-codecov
 
-all: build test
+all: build test ## builds, bundles, and tests the application
 	@echo Success!
 
 clean: ## clean up everything added by the default target
@@ -78,39 +88,40 @@ todo:
 	@grep "as any" -r src/ test/ || true
 	@echo ""
 
-# build targets
+# Build targets
 build: ## builds, bundles, and tests the application
-build: build-bundle
+build: build-bundle build-docs
 
 build-bundle: node_modules
 	$(NODE_BIN)/rollup --config $(CONFIG_PATH)/rollup.js
 
-build-image: build-bundle
-	docker build $(ROOT_PATH)
+build-docs: ## generate html docs
+	$(NODE_BIN)/api-extractor run --config $(CONFIG_PATH)/api-extractor.json --local -v
+	$(NODE_BIN)/api-documenter markdown -i $(TARGET_PATH)/api -o $(DOCS_PATH)/api
 
-test: test-bundle test-rules test-examples
+build-image: ## build a docker image
+	$(SCRIPT_PATH)/docker-build.sh --push
 
-test-examples: ## run medium (feature) tests
-	$(SCRIPT_PATH)/test-examples.sh
+test: ## run mocha unit tests
+test: test-cover
 
-test-bundle: ## run small (unit) tests
-test-bundle: build-bundle
-	$(NODE_BIN)/nyc --report-dir="$(TARGET_PATH)/coverage" --exclude-after-remap \
-		--reporter=html --reporter=lcov --reporter=text-summary \
-		$(NODE_BIN)/mocha --timeout 5000 $(TARGET_PATH)/test.js
+test-check: ## run mocha unit tests with coverage reports
+	$(NODE_BIN)/nyc $(COVER_OPTS) $(NODE_BIN)/mocha $(MOCHA_OPTS) $(TARGET_PATH)/test.js
 
-test-rules: ## validate the rules directory
-test-rules: build-bundle
-	find $(ROOT_PATH)/rules -maxdepth 1 -name '*.yml' | while read file; \
-	do \
-		echo "Validating $${file}..."; \
-		node out/index.js \
-			--config-path $(ROOT_PATH)/docs \
-			--config-name config-stderr.yml \
-			--rules $(ROOT_PATH)/rules/salty-dog.yml \
-			--source $${file} \
-			--tag salty-dog > /dev/null || exit 1; \
-	done
+test-cover: ## run mocha unit tests with coverage reports
+test-cover: test-check
+	sed -i $(TARGET_PATH)/coverage/lcov.info \
+		-e '/external ".*"$$/,/end_of_record/d' \
+		-e '/ sync$$/,/end_of_record/d' \
+		-e '/test sync/,/end_of_record/d' \
+		-e '/node_modules/,/end_of_record/d' \
+		-e '/bootstrap$$/,/end_of_record/d' \
+		-e '/universalModuleDefinition/,/end_of_record/d'
+	sed -n '/^SF/,$$p' -i $(TARGET_PATH)/coverage/lcov.info
+	sed '1s;^;TN:\n;' -i $(TARGET_PATH)/coverage/lcov.info
+
+test-watch:
+	$(NODE_BIN)/nyc $(COVER_OPTS) $(NODE_BIN)/mocha $(MOCHA_OPTS) --watch $(TARGET_PATH)/test-bundle.js
 
 yarn-install: ## install dependencies from package and lock file
 	yarn
@@ -149,16 +160,4 @@ upload-climate:
 upload-codecov:
 	codecov --disable=gcov --file=$(TARGET_PATH)/coverage/lcov.info --token=$(shell echo "${CODECOV_SECRET}" | base64 -d)
 
-# run targets
-run-help: ## print the help
-	@node out/index.js --help
-
-run-stream: ## validate stdin and write it to stdout, errors to stderr
-	@node out/index.js \
-		--config-path $(ROOT_PATH)/docs \
-		--config-name config-stderr.yml \
-		--dest - \
-		--format yaml \
-		--rules $(ROOT_PATH)/rules/kubernetes.yml \
-		--source - \
-		--tag kubernetes
+include $(shell find $(ROOT_PATH) -name '*.mk' | grep -v node_modules)

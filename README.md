@@ -101,7 +101,7 @@ After building, run with `node out/index.js` or install run as `salty-dog`:
 
 ```shell
 > cd salty-dog
-> yarn global add file:$PWD
+> yarn global add file:$(pwd)
 ```
 
 `make` targets are provided for some common arguments:

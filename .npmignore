@@ -4,16 +4,18 @@ config/
 deploy/
 node_modules/
 out/cache/
-out/*.html
-out/*.json
-out/*.map
 out/src/
 out/test/
-out/test.*
 scripts/
 src/
 test/
 vendor/
+
+out/*.html
+out/*.json
+out/*.map
+out/entry-*
+out/test.*
 
 .codeclimate.yml
 .gitlab-ci.yml
