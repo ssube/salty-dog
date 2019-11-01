@@ -53,6 +53,11 @@ stages:
   script:
     - docker build -f Dockerfile.${IMAGE_ARCH} -t ${IMAGE_TAG}-${IMAGE_ARCH} .
     - docker push ${IMAGE_TAG}-${IMAGE_ARCH}
+    - |
+      [[ ${DEFAULT_ARCH} == "true" ]] && \
+        docker tag ${IMAGE_TAG}-${IMAGE_ARCH} ${IMAGE_TAG} && \
+        docker push ${IMAGE_TAG}
+
   after_script:
     - rm -rfv ${HOME}/.docker
 
@@ -107,6 +112,7 @@ build-image-alpine-branch:
     - tags
   variables:
     <<: [*vars-docker]
+    DEFAULT_ARCH: "true"
     IMAGE_ARCH: alpine
     IMAGE_TAG: "ssube/salty-dog:${CI_COMMIT_REF_SLUG}"
 
@@ -116,6 +122,7 @@ build-image-alpine-tag:
     - tags
   variables:
     <<: [*vars-docker]
+    DEFAULT_ARCH: "true"
     IMAGE_ARCH: alpine
     IMAGE_TAG: "ssube/salty-dog:${CI_COMMIT_TAG}"
 
