@@ -1,7 +1,7 @@
 import { VisitorContext } from './VisitorContext';
 import { VisitorResult } from './VisitorResult';
 
-export interface Visitor<TResult extends VisitorResult> {
+export interface Visitor<TResult extends VisitorResult = VisitorResult> {
   /**
    * Select nodes eligible to be visited.
    **/
