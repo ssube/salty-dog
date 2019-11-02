@@ -64,10 +64,10 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
   }
 
   public addSchema(name: string, schema: any): void {
-    this.logger.debug('adding ajv schema', {
+    this.logger.debug({
       name,
       schema,
-    });
+    }, 'adding ajv schema');
 
     this.ajv.addSchema({
       $id: name,
