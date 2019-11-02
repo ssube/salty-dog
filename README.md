@@ -197,8 +197,30 @@ the easiest to read, and can be pretty-printed by redirecting `stderr` through `
 }
 ```
 
-Using `jq` allows for additional filtering, for example `>(jq 'select(.level > 30)')` will only print warnings and
-errors (log level is also part of the configuration file).
+Using `jq` allows for additional filtering and formatting. For example, `>(jq 'select(.level > 30)')` will only print
+warnings and errors (log level is also part of the configuration file).
+
+To print the last line's message and error messages: `>(tail -1 | jq '[.msg, ((.errors // [])[] | .msg)]')`
+
+```shell
+> cat test/examples/kubernetes-resources-high.yml | salty-dog \
+    --rules rules/kubernetes.yml \
+    --tag kubernetes 2> >(tail -1 | jq '[.msg, ((.errors // [])[] | .msg)]')
+
+[
+  "all rules passed"
+]
+
+> cat test/examples/kubernetes-resources-some.yml | salty-dog \
+    --rules rules/kubernetes.yml \
+    --tag kubernetes 2> >(tail -1 | jq '[.msg, ((.errors // [])[] | .msg)]')
+
+[
+  "some rules failed",
+  ".resources.limits should have required property 'memory' at $.spec.template.spec.containers[*] for kubernetes-resources",
+  ".metadata should have required property 'labels' at $ for kubernetes-labels"
+]
+```
 
 ### Modes
 

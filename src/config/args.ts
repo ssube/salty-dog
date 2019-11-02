@@ -156,7 +156,7 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
     .version(VERSION_INFO.package.version)
     .alias('version', 'v');
 
-  // @TODO: this should not need a cast but the parser's type only has the last option (include-tag)
+  // @TODO: this should not need a cast but the parser's type omits command options and doesn't expose camelCase
   // tslint:disable-next-line:no-any
   const args = parser.argv as any;
   return {
