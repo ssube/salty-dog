@@ -42,20 +42,55 @@ rules:
 
     check:
       type: object
-      patternProperties:
-        "^(?!stages$|\\.)":
+      properties:
+        after_script:
+          type: array
+        before_script:
+          type: array
+        cache:
           type: object
-          required: [script]
-          properties:
-            after_script:
-              type: array
-              items:
-                type: string
-            before_script:
-              type: array
-              items:
-                type: string
-            script:
-              type: array
-              items:
-                type: string
+        image:
+          type: string
+        services:
+          type: array
+        stages:
+          type: array
+        types:
+          type: array
+        variables:
+          type: object
+      additionalProperties:
+        type: object
+        required: [script]
+        properties:
+          after_script:
+            type: array
+            items:
+              type: string
+          before_script:
+            type: array
+            items:
+              type: string
+          script:
+            type: array
+            items:
+              type: string
+
+  - name: gitlab-top-level
+    desc: should only have jobs and stages at the top level scope
+    level: info
+    tags:
+      - gitlab
+      - optional
+
+    check:
+      type: object
+      not:
+        anyOf:
+          - required: [image]
+          - required: [services]
+          - required: [types]
+          - required: [before_script]
+          - required: [after_script]
+          - required: [variables]
+          - required: [cache]
