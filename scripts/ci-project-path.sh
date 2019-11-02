@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 
 PROJECT="${ROOT_PATH}"
 PARENT="$(dirname "${PROJECT}")"
