@@ -1,9 +1,10 @@
-import { Dictionary, intersection, isNil } from 'lodash';
+import { applyDiff, diff } from 'deep-diff';
+import { cloneDeep, Dictionary, intersection, isNil } from 'lodash';
 import { LogLevel } from 'noicejs';
 
 import { YamlParser } from '../parser/YamlParser';
 import { readFile } from '../source';
-import { ensureArray } from '../utils';
+import { ensureArray, hasItems } from '../utils';
 import { VisitorContext } from '../visitor/VisitorContext';
 import { SchemaRule } from './SchemaRule';
 
@@ -36,7 +37,7 @@ export interface RuleSource {
   rules: Array<RuleData>;
 }
 
-export function makeSelector(options: Partial<RuleSelector>) {
+export function createRuleSelector(options: Partial<RuleSelector>) {
   return {
     excludeLevel: ensureArray(options.excludeLevel),
     excludeName: ensureArray(options.excludeName),
@@ -102,4 +103,37 @@ export async function resolveRules(rules: Array<SchemaRule>, selector: RuleSelec
   }
 
   return Array.from(activeRules);
+}
+
+export async function visitRules(ctx: VisitorContext, rules: Array<SchemaRule>, data: any): Promise<VisitorContext> {
+  for (const rule of rules) {
+    const items = await rule.pick(ctx, data);
+    for (const item of items) {
+      const itemResult = cloneDeep(item);
+      const ruleResult = await rule.visit(ctx, itemResult);
+
+      if (ruleResult.errors.length > 0) {
+        ctx.logger.warn({ count: ruleResult.errors.length, rule }, 'rule failed');
+        ctx.mergeResult(ruleResult);
+        continue;
+      }
+
+      const itemDiff = diff(item, itemResult);
+      if (hasItems(itemDiff)) {
+        ctx.logger.info({
+          diff: itemDiff,
+          item,
+          rule: rule.name,
+        }, 'rule passed with modifications');
+
+        if (ctx.innerOptions.mutate) {
+          applyDiff(item, itemResult);
+        }
+      } else {
+        ctx.logger.info({ rule: rule.name }, 'rule passed');
+      }
+   }
+  }
+
+  return ctx;
 }
