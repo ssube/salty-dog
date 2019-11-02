@@ -1,6 +1,6 @@
 #! /bin/sh
 
-EXAMPLES="$(find ./examples -name '*.yml')"
+EXAMPLES="$(find ./test/examples -name '*.yml')"
 
 for example in ${EXAMPLES};
 do

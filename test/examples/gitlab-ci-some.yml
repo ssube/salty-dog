@@ -1,0 +1,28 @@
+# test rules gitlab-ci
+# test tags gitlab
+# test exit-status 2
+
+stages:
+  - build
+  - package
+
+before_script:
+  - echo "this is a terrible idea!"
+
+---
+
+stages:
+  - build
+  - package
+
+build-node:
+  stage: build
+  script: []
+
+image-alpine:
+  stage: package
+  # missing script
+
+image-stretch:
+  stage: package
+  script: []
