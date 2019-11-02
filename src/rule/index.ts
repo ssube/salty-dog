@@ -108,8 +108,8 @@ export async function loadRulePaths(paths: Array<string>, ctx: VisitorContext): 
   for (const path of paths) {
     const allFiles = await readDir(path);
     const files = allFiles.filter((name) => {
-      // skip files that start with `.`, limit to yml
-      return name.match(/^[^\.].*\.ya?ml/);
+      // skip files that start with `.`, limit to json and yaml/yml
+      return name.toLowerCase().match(/^[^\.].*\.(json|ya?ml)/);
     }).map((name) => join(path, name));
 
     const pathRules = await loadRuleFiles(files, ctx);
@@ -209,7 +209,7 @@ export async function visitRules(ctx: VisitorContext, rules: Array<SchemaRule>, 
       } else {
         ctx.logger.info({ rule: rule.name }, 'rule passed');
       }
-   }
+    }
   }
 
   return ctx;
