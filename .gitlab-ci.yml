@@ -1,15 +1,13 @@
+include:
+  - local: /config/gitlab/ci-tools.yml
+  - local: /config/gitlab/ci-rules.yml
+
 stages:
   - status-pre
   - build
   - image
   - publish
   - status-post
-
-# template jobs
-
-.branch-deploy: &branch-deploy
-  only:
-    - master
 
 # build jobs
 build-node:
