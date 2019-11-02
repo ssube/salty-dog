@@ -1,4 +1,4 @@
-import { Options, showCompletionScript, usage } from 'yargs';
+import { Options, usage } from 'yargs';
 
 import { RuleSelector, RuleSources } from '../rule';
 import { VERSION_INFO } from '../version';
@@ -158,14 +158,6 @@ export function parseArgs(argv: Array<string>): ParseResults {
   // @TODO: this should not need a cast but argv's type only has the last option (include-tag)
   // @tslint:disable-next-line:no-any
   const args = parser.argv as any;
-
-  // this should not need a cast either, but something here allows TS to narrow MODE into
-  // MODE.check, which is much _too_ specific
-  if (mode as MODE === MODE.complete) {
-    showCompletionScript();
-    process.exit(0);
-  }
-
   return {
     args,
     mode,
