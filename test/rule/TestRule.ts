@@ -2,25 +2,26 @@ import { expect } from 'chai';
 import { ConsoleLogger } from 'noicejs';
 import { mock, spy } from 'sinon';
 
-import { makeSelector, resolveRules, Rule, visitRules } from '../src/rule';
-import { VisitorContext } from '../src/visitor/VisitorContext';
-import { describeLeaks, itLeaks } from './helpers/async';
+import { makeSelector, resolveRules } from '../../src/rule';
+import { SchemaRule, visitRules } from '../../src/rule/SchemaRule';
+import { VisitorContext } from '../../src/visitor/VisitorContext';
+import { describeLeaks, itLeaks } from '../helpers/async';
 
-const TEST_RULES = [new Rule({
+const TEST_RULES = [new SchemaRule({
   check: {},
   desc: '',
   level: 'info',
   name: 'foo',
   select: '$',
   tags: ['all', 'foo'],
-}), new Rule({
+}), new SchemaRule({
   check: {},
   desc: '',
   level: 'warn',
   name: 'bar',
   select: '$',
   tags: ['all', 'test'],
-}), new Rule({
+}), new SchemaRule({
   check: {},
   desc: '',
   level: 'warn',
@@ -111,7 +112,7 @@ describeLeaks('rule visitor', async () => {
       logger: new ConsoleLogger(),
     });
     const data = {};
-    const rule = new Rule({
+    const rule = new SchemaRule({
       check: {},
       desc: '',
       level: 'info',
@@ -143,7 +144,7 @@ describeLeaks('rule visitor', async () => {
       logger: new ConsoleLogger(),
     });
     const data = {};
-    const rule = new Rule({
+    const rule = new SchemaRule({
       check: {},
       desc: '',
       level: 'info',
@@ -180,7 +181,7 @@ describeLeaks('rule visitor', async () => {
     const data = {
       foo: 3,
     };
-    const rule = new Rule({
+    const rule = new SchemaRule({
       check: {},
       desc: '',
       level: 'info',
@@ -207,7 +208,7 @@ describeLeaks('rule visitor', async () => {
     const data = {
       foo: 3,
     };
-    const rule = new Rule({
+    const rule = new SchemaRule({
       check: {},
       desc: '',
       filter: {

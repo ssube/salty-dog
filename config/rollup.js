@@ -85,6 +85,7 @@ const bundle = {
 					'BaseError',
 					'ConsoleLogger',
 					'logWithLevel',
+					'NullLogger',
 				],
 				'node_modules/js-yaml/index.js': [
 					'DEFAULT_SAFE_SCHEMA',

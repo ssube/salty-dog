@@ -3,7 +3,8 @@ import { createLogger } from 'bunyan';
 import { loadConfig } from './config';
 import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, parseArgs } from './config/args';
 import { YamlParser } from './parser/YamlParser';
-import { loadRules, resolveRules, visitRules } from './rule';
+import { loadRules, resolveRules } from './rule';
+import { visitRules } from './rule/SchemaRule';
 import { loadSource, writeSource } from './source';
 import { VERSION_INFO } from './version';
 import { VisitorContext } from './visitor/VisitorContext';
@@ -59,19 +60,19 @@ export async function main(argv: Array<string>): Promise<number> {
     await visitRules(ctx, activeRules, data);
   }
 
-  if (ctx.errors.length > 0) {
-    logger.error({ count: ctx.errors.length, errors: ctx.errors }, 'some rules failed');
-    if (args.count) {
-      return Math.min(ctx.errors.length, STATUS_MAX);
-    } else {
-      return STATUS_ERROR;
-    }
-  } else {
+  if (ctx.errors.length === 0) {
     logger.info('all rules passed');
     const output = parser.dump(...docs);
     await writeSource(args.dest, output);
     return STATUS_SUCCESS;
   }
+
+  logger.error({ count: ctx.errors.length, errors: ctx.errors }, 'some rules failed');
+  if (args.count) {
+    return Math.min(ctx.errors.length, STATUS_MAX);
+  }
+
+  return STATUS_ERROR;
 }
 
 main(process.argv).then((status) => process.exit(status)).catch((err) => {

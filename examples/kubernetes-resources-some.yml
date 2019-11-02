@@ -31,13 +31,16 @@ spec:
           resources:
             limits:
               cpu: 200m
+              # missing memory
             requests:
               cpu: 100m
+              # same rule
 
 ---
 
 metadata:
   name: example
+  # missing labels
 spec:
   template:
     spec:
