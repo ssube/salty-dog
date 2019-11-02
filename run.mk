@@ -36,4 +36,13 @@ local-alpine:
 	docker run --rm -v "$(shell pwd):/salty-dog" -w /salty-dog node:11-stretch make ci
 
 local-stretch:
-	docker run --rm -v "$(shell pwd):/salty-dog" -w /salty-dog node:11-alpine sh -c "apk add build-base && make ci"
+	docker run --rm -v "$(shell pwd):/salty-dog" -w /salty-dog node:11-alpine sh -c "apk add build-base git && make ci"
+
+full: ## ultra thorough build (looong)
+	$(MAKE) clean-target ci
+	$(MAKE) clean-target local-alpine
+	$(MAKE) clean-target local-stretch
+	# clean up root-owned files the containers may leak
+	sudo chown -R ${USER}:${USER} $(ROOT_PATH)
+	$(MAKE) clean-target
+	@echo "Full build (CI, alpine, stretch) succeeded!
