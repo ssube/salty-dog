@@ -1,7 +1,16 @@
 import { Options, showCompletionScript, usage } from 'yargs';
 
-import { RuleSelector } from '../rule';
+import { RuleSelector, RuleSources } from '../rule';
 import { VERSION_INFO } from '../version';
+
+export enum MODE {
+  check = 'check',
+  complete = 'complete',
+  fix = 'fix',
+  list = 'list',
+}
+
+export const VALID_MODES = new Set([MODE.check, MODE.fix, MODE.list]);
 
 /* tslint:disable:no-any */
 
@@ -19,7 +28,7 @@ export interface Args {
   mode: string;
 }
 
-export interface ParsedArgs extends RuleSelector {
+export interface ParsedArgs extends RuleSelector, RuleSources {
   [CONFIG_ARGS_NAME]: string;
   [CONFIG_ARGS_PATH]: string;
   coerce: boolean;
@@ -33,7 +42,7 @@ export interface ParsedArgs extends RuleSelector {
 
 export interface ParseResults {
   args: ParsedArgs;
-  mode: string;
+  mode: MODE;
 }
 
 /**
@@ -42,14 +51,14 @@ export interface ParseResults {
  * @TODO: fix it to use argv, not sure if yargs can do that
  */
 export function parseArgs(argv: Array<string>): ParseResults {
-  let mode = 'check';
+  let mode: MODE = MODE.check;
 
   const parser = usage(`Usage: salty-dog <mode> [options]`)
     .command({
       command: ['check', '*'],
       describe: 'validate the source documents',
       handler: (argi: any) => {
-        mode = 'check';
+        mode = MODE.check;
       },
     })
     .command({
@@ -67,21 +76,21 @@ export function parseArgs(argv: Array<string>): ParseResults {
       command: ['fix'],
       describe: 'validate the source document and insert defaults',
       handler: (argi: any) => {
-        mode = 'fix';
+        mode = MODE.fix;
       },
     })
     .command({
       command: ['list'],
       describe: 'list active rules',
       handler: (argi: any) => {
-        mode = 'list';
+        mode = MODE.list;
       },
     })
     .command({
       command: ['complete'],
       describe: 'generate tab completion script for bash or zsh',
       handler: (argi: any) => {
-        mode = 'complete';
+        mode = MODE.complete;
       },
     })
     .option(CONFIG_ARGS_NAME, {
@@ -110,10 +119,22 @@ export function parseArgs(argv: Array<string>): ParseResults {
       default: 'yaml',
       type: 'string',
     })
-    .option('rules', {
-      alias: ['r'],
+    .option('rule-file', {
+      alias: ['r', 'rule', 'rules'],
       default: [],
       desc: 'Rules file',
+      type: 'array',
+    })
+    .option('rule-module', {
+      alias: ['m'],
+      default: [],
+      desc: 'Rules module',
+      type: 'array',
+    })
+    .option('rule-path', {
+      alias: ['p'],
+      default: [],
+      desc: 'Rules path',
       type: 'array',
     })
     .option('source', {
@@ -138,7 +159,9 @@ export function parseArgs(argv: Array<string>): ParseResults {
   // @tslint:disable-next-line:no-any
   const args = parser.argv as any;
 
-  if (mode === 'complete') {
+  // this should not need a cast either, but something here allows TS to narrow MODE into
+  // MODE.check, which is much _too_ specific
+  if (mode as MODE === MODE.complete) {
     showCompletionScript();
     process.exit(0);
   }
