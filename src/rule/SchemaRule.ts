@@ -1,5 +1,4 @@
 import { ValidateFunction } from 'ajv';
-import { JSONPath } from 'jsonpath-plus';
 import { cloneDeep, defaultTo, isNil } from 'lodash';
 import { LogLevel } from 'noicejs';
 
@@ -39,17 +38,13 @@ export class SchemaRule implements RuleData, Visitor<RuleResult> {
   }
 
   public async pick(ctx: VisitorContext, root: any): Promise<Array<any>> {
-    const scopes = JSONPath({
-      json: root,
-      path: this.select,
-    });
+    const items = ctx.pick(this.select, root);
 
-    if (hasItems(scopes)) {
-      return scopes;
+    if (items.length === 0) {
+      ctx.logger.debug('no data selected');
     }
 
-    ctx.logger.debug('no data selected');
-    return [];
+    return items;
   }
 
   public async visit(ctx: VisitorContext, node: any): Promise<RuleResult> {

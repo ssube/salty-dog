@@ -1,6 +1,8 @@
 import Ajv from 'ajv';
+import { JSONPath } from 'jsonpath-plus';
 import { Logger, logWithLevel } from 'noicejs';
 
+import { doesExist, hasItems } from '../utils';
 import { VisitorError } from './VisitorError';
 import { VisitorResult } from './VisitorResult';
 
@@ -45,6 +47,22 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
     this.innerOptions = options.innerOptions;
   }
 
+  public addSchema(name: string, schema: any): void {
+    this.logger.debug({
+      name,
+      schema,
+    }, 'adding ajv schema');
+
+    this.ajv.addSchema({
+      $id: name,
+      definitions: schema,
+    });
+  }
+
+  public compile(schema: any): Ajv.ValidateFunction {
+    return this.ajv.compile(schema);
+  }
+
   public error(...errors: Array<VisitorError>) {
     for (const err of errors) {
       logWithLevel(this.logger, err.level, err.data, err.msg);
@@ -59,19 +77,21 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
     return this;
   }
 
-  public compile(schema: any): Ajv.ValidateFunction {
-    return this.ajv.compile(schema);
-  }
-
-  public addSchema(name: string, schema: any): void {
-    this.logger.debug({
-      name,
-      schema,
-    }, 'adding ajv schema');
-
-    this.ajv.addSchema({
-      $id: name,
-      definitions: schema,
+  public pick(path: string, root: any): Array<any> {
+    const items = JSONPath({
+      json: root,
+      path,
     });
+
+    this.logger.debug({
+      items,
+      path,
+    }, 'path query picked items');
+
+    if (hasItems(items)) {
+      return items.filter(doesExist);
+    } else {
+      return [];
+    }
   }
 }
