@@ -42,7 +42,14 @@ export async function main(argv: Array<string>): Promise<number> {
   const activeRules = await resolveRules(loadedRules, ruleSelector);
 
   if (mode === MODE.list) {
-    logger.info({ activeRules, loadedRules, ruleSelector, ruleSources }, 'listing active rules');
+    logger.info({
+      activeCount: activeRules.length,
+      activeRules,
+      loadedCount: loadedRules.length,
+      loadedRules,
+      ruleSelector,
+      ruleSources,
+    }, 'listing active rules');
     return STATUS_SUCCESS;
   }
 
