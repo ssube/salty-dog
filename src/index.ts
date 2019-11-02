@@ -1,20 +1,12 @@
 import { createLogger } from 'bunyan';
 
 import { loadConfig } from './config';
-import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, parseArgs } from './config/args';
+import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs, VALID_MODES } from './config/args';
 import { YamlParser } from './parser/YamlParser';
-import { createRuleSelector, loadRules, resolveRules, visitRules } from './rule';
+import { createRuleSelector, createRuleSources, loadRules, resolveRules, visitRules } from './rule';
 import { loadSource, writeSource } from './source';
 import { VERSION_INFO } from './version';
 import { VisitorContext } from './visitor/VisitorContext';
-
-enum MODES {
-  check = 'check',
-  fix = 'fix',
-  list = 'list',
-}
-
-const MODES_LIST: Array<string> = [MODES.check, MODES.fix, MODES.list];
 
 const STATUS_SUCCESS = 0;
 const STATUS_ERROR = 1;
@@ -29,7 +21,7 @@ export async function main(argv: Array<string>): Promise<number> {
   logger.info({ args }, 'main arguments');
 
   // check mode
-  if (!MODES_LIST.includes(mode)) {
+  if (!VALID_MODES.has(mode)) {
     logger.error({ mode }, 'unsupported mode');
     return STATUS_ERROR;
   }
@@ -38,17 +30,19 @@ export async function main(argv: Array<string>): Promise<number> {
     innerOptions: {
       coerce: args.coerce,
       defaults: args.defaults,
-      mutate: mode === 'fix',
+      mutate: mode === MODE.fix,
     },
     logger,
   });
 
-  const selector = createRuleSelector(args);
-  const loadedRules = await loadRules(args.rules, ctx);
-  const activeRules = await resolveRules(loadedRules, selector);
+  const ruleSelector = createRuleSelector(args);
+  const ruleSources = createRuleSources(args);
 
-  if (mode === 'list') {
-    logger.info({ rules: activeRules, selector }, 'listing active rules');
+  const loadedRules = await loadRules(ruleSources, ctx);
+  const activeRules = await resolveRules(loadedRules, ruleSelector);
+
+  if (mode === MODE.list) {
+    logger.info({ activeRules, loadedRules, ruleSelector, ruleSources }, 'listing active rules');
     return STATUS_SUCCESS;
   }
 

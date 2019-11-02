@@ -1,9 +1,10 @@
 import { applyDiff, diff } from 'deep-diff';
 import { cloneDeep, Dictionary, intersection, isNil } from 'lodash';
 import { LogLevel } from 'noicejs';
+import { join } from 'path';
 
 import { YamlParser } from '../parser/YamlParser';
-import { readFile } from '../source';
+import { readDir, readFile } from '../source';
 import { ensureArray, hasItems } from '../utils';
 import { VisitorContext } from '../visitor/VisitorContext';
 import { SchemaRule } from './SchemaRule';
@@ -22,6 +23,11 @@ export interface RuleData {
   select: string;
 }
 
+/**
+ * Rule selector derived from arguments.
+ *
+ * The `excludeFoo`/`includeFoo`/ names match yargs output structure.
+ */
 export interface RuleSelector {
   excludeLevel: Array<LogLevel>;
   excludeName: Array<string>;
@@ -31,13 +37,30 @@ export interface RuleSelector {
   includeTag: Array<string>;
 }
 
-export interface RuleSource {
+/**
+ * Rule sources derived from arguments.
+ *
+ * The `ruleFoo` names match yargs output structure.
+ */
+export interface RuleSources {
+  ruleFile: Array<string>;
+  ruleModule: Array<string>;
+  rulePath: Array<string>;
+}
+
+export interface RuleSourceData {
   definitions?: Dictionary<any>;
   name: string;
   rules: Array<RuleData>;
 }
 
-export function createRuleSelector(options: Partial<RuleSelector>) {
+export interface RuleSourceModule {
+  definitions?: Dictionary<any>;
+  name: string;
+  rules: Array<SchemaRule>;
+}
+
+export function createRuleSelector(options: Partial<RuleSelector>): RuleSelector {
   return {
     excludeLevel: ensureArray(options.excludeLevel),
     excludeName: ensureArray(options.excludeName),
@@ -48,7 +71,15 @@ export function createRuleSelector(options: Partial<RuleSelector>) {
   };
 }
 
-export async function loadRules(paths: Array<string>, ctx: VisitorContext): Promise<Array<SchemaRule>> {
+export function createRuleSources(options: Partial<RuleSources>): RuleSources {
+  return {
+    ruleFile: ensureArray(options.ruleFile),
+    ruleModule: ensureArray(options.ruleModule),
+    rulePath: ensureArray(options.rulePath),
+  };
+}
+
+export async function loadRuleFiles(paths: Array<string>, ctx: VisitorContext): Promise<Array<SchemaRule>> {
   const parser = new YamlParser();
   const rules = [];
 
@@ -57,7 +88,7 @@ export async function loadRules(paths: Array<string>, ctx: VisitorContext): Prom
       encoding: 'utf-8',
     });
 
-    const docs = parser.parse(contents) as Array<RuleSource>;
+    const docs = parser.parse(contents) as Array<RuleSourceData>;
 
     for (const data of docs) {
       if (!isNil(data.definitions)) {
@@ -69,6 +100,52 @@ export async function loadRules(paths: Array<string>, ctx: VisitorContext): Prom
   }
 
   return rules;
+}
+
+export async function loadRulePaths(paths: Array<string>, ctx: VisitorContext): Promise<Array<SchemaRule>> {
+  const rules = [];
+
+  for (const path of paths) {
+    const allFiles = await readDir(path);
+    const files = allFiles.filter((name) => {
+      // skip files that start with `.`, limit to yml
+      return name.match(/^[^\.].*\.ya?ml/);
+    }).map((name) => join(path, name));
+
+    const pathRules = await loadRuleFiles(files, ctx);
+    rules.push(...pathRules);
+  }
+
+  return rules;
+}
+
+export async function loadRuleModules(modules: Array<string>, ctx: VisitorContext): Promise<Array<SchemaRule>> {
+  const rules = [];
+
+  for (const name of modules) {
+    try {
+      const module: RuleSourceModule = require(name);
+      // TODO: ensure module has definitions, name, and rules
+
+      if (!isNil(module.definitions)) {
+        ctx.addSchema(module.name, module.definitions);
+      }
+
+      rules.push(...module.rules);
+    } catch (err) {
+      ctx.logger.error(err, 'error requiring rule module');
+    }
+  }
+
+  return rules;
+}
+
+export async function loadRules(sources: RuleSources, ctx: VisitorContext): Promise<Array<SchemaRule>> {
+  return [
+    ...await loadRuleFiles(sources.ruleFile, ctx),
+    ...await loadRulePaths(sources.rulePath, ctx),
+    ...await loadRuleModules(sources.ruleModule, ctx),
+  ];
 }
 
 export async function resolveRules(rules: Array<SchemaRule>, selector: RuleSelector): Promise<Array<SchemaRule>> {

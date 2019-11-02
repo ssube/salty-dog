@@ -1,8 +1,10 @@
-import { readFile as readBack, writeFile as writeBack } from 'fs';
+import { readdir, readFile as readBack, writeFile as writeBack } from 'fs';
 import { isNil } from 'lodash';
 import { promisify } from 'util';
 
 export const FILE_ENCODING = 'utf-8';
+
+export const readDir = promisify(readdir);
 export const readFile = promisify(readBack);
 export const writeFile = promisify(writeBack);
 
