@@ -31,3 +31,9 @@ test-rules: build-bundle
 			--source $${file} \
 			--tag salty-dog > /dev/null || exit 1; \
 	done
+
+local-alpine:
+	docker run --rm -v "$(shell pwd):/salty-dog" -w /salty-dog node:11-stretch make ci
+
+local-stretch:
+	docker run --rm -v "$(shell pwd):/salty-dog" -w /salty-dog node:11-alpine sh -c "apk add build-base && make ci"

@@ -117,7 +117,7 @@ ingress.extensions/gitlab created (dry run)
 
 ### Docker Build
 
-This method does not require the usual dependencies to be installed locally, only `docker` itself.
+This method does not require the usual dependencies to be installed, only `docker` itself.
 
 Build with Docker:
 
