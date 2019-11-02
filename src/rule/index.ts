@@ -189,7 +189,7 @@ export async function visitRules(ctx: VisitorContext, rules: Array<SchemaRule>, 
       const itemResult = cloneDeep(item);
       const ruleResult = await rule.visit(ctx, itemResult);
 
-      if (ruleResult.errors.length > 0) {
+      if (hasItems(ruleResult.errors)) {
         ctx.logger.warn({ count: ruleResult.errors.length, rule }, 'rule failed');
         ctx.mergeResult(ruleResult);
         continue;
