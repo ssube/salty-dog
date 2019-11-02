@@ -57,7 +57,7 @@ export class SchemaRule implements RuleData, Visitor {
     if (filter(node)) {
       ctx.logger.debug({ item: node }, 'checking item');
       if (!check(node) && hasItems(check.errors)) {
-        errors.push(...check.errors.map(friendlyError));
+        errors.push(...check.errors.map((err) => friendlyError(ctx, err, this)));
       }
     } else {
       ctx.logger.debug({ errors: filter.errors, item: node }, 'skipping item');
