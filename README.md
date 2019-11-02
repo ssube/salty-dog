@@ -16,6 +16,7 @@ supports multiple documents per stream or file, inserting defaults, and other ma
       - [Global](#global)
       - [Project](#project)
   - [Usage](#usage)
+    - [Logs](#logs)
     - [Modes](#modes)
       - [Check Mode](#check-mode)
       - [Fix Mode](#fix-mode)
@@ -170,6 +171,34 @@ To run with Node:
 ```
 
 ## Usage
+
+### Logs
+
+`salty-dog` uses [node-bunyan](https://github.com/trentm/node-bunyan) for logging and prints JSON logs. These are not
+the easiest to read, and can be pretty-printed by redirecting `stderr` through `bunyan` itself or `jq`:
+
+```shell
+> cat resource.yml | salty-dog --rules rules/kubernetes.yml --tag kubernetes 2> >(bunyan)
+
+...
+[2019-06-15T23:53:34.223Z]  INFO: salty-dog/19839 on cerberus: all rules passed
+
+> cat resource.yml | salty-dog --rules rules/kubernetes.yml --tag kubernetes 2> >(jq)
+
+...
+{
+  "name": "salty-dog",
+  "hostname": "cerberus",
+  "pid": 19839,
+  "level": 30,
+  "msg": "all rules passed",
+  "time": "2019-06-15T23:53:34.223Z",
+  "v": 0
+}
+```
+
+Using `jq` allows for additional filtering, for example `>(jq 'select(.level > 30)')` will only print warnings and
+errors (log level is also part of the configuration file).
 
 ### Modes
 
