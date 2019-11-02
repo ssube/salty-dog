@@ -11,7 +11,8 @@ stages:
 
 # build jobs
 build-node:
-  extends: [.build-node]
+  extends:
+    - .build-node
   stage: build
 
   variables:
@@ -32,7 +33,9 @@ build-node:
       - out/cache
 
 build-image-alpine-branch:
-  extends: [.build-docker]
+  extends:
+    - .build-docker
+  stage: docker
   except:
     - tags
   script:
@@ -41,7 +44,9 @@ build-image-alpine-branch:
     IMAGE_ARCH: alpine
 
 build-image-alpine-tag:
-  extends: [.build-docker]
+  extends:
+    - .build-docker
+  stage: docker
   only:
     - tags
   script:
@@ -51,6 +56,7 @@ build-image-alpine-tag:
 
 build-image-stretch-branch:
   extends: [.build-docker]
+  stage: docker
   except:
     - tags
   script:
@@ -59,7 +65,9 @@ build-image-stretch-branch:
     IMAGE_ARCH: stretch
 
 build-image-stretch-tag:
-  extends: [.build-docker]
+  extends:
+    - .build-docker
+  stage: docker
   only:
     - tags
   script:
@@ -69,7 +77,8 @@ build-image-stretch-tag:
 
 # publish jobs
 publish-npm:
-  extends: [.build-node]
+  extends:
+    - .build-node
   stage: publish
   only:
     - tags
