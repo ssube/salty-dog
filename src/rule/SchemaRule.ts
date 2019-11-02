@@ -10,11 +10,7 @@ import { VisitorContext } from '../visitor/VisitorContext';
 import { VisitorError } from '../visitor/VisitorError';
 import { VisitorResult } from '../visitor/VisitorResult';
 
-export interface RuleResult extends VisitorResult {
-  rule: SchemaRule;
-}
-
-export class SchemaRule implements RuleData, Visitor<RuleResult> {
+export class SchemaRule implements RuleData, Visitor {
   public readonly check: ValidateFunction;
   public readonly desc: string;
   public readonly filter?: ValidateFunction;
@@ -47,16 +43,15 @@ export class SchemaRule implements RuleData, Visitor<RuleResult> {
     return items;
   }
 
-  public async visit(ctx: VisitorContext, node: any): Promise<RuleResult> {
+  public async visit(ctx: VisitorContext, node: any): Promise<VisitorResult> {
     ctx.logger.debug({ item: node, rule: this }, 'visiting node');
 
     const check = ctx.compile(this.check);
     const filter = this.compileFilter(ctx);
     const errors: Array<VisitorError> = [];
-    const result: RuleResult = {
+    const result: VisitorResult = {
       changes: [],
       errors,
-      rule: this,
     };
 
     if (filter(node)) {
