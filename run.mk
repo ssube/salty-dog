@@ -38,11 +38,12 @@ local-alpine:
 local-stretch:
 	docker run --rm -v "$(shell pwd):/salty-dog" -w /salty-dog node:11-alpine sh -c "apk add build-base git && make ci"
 
+local-chown-leaks: ## clean up root-owned files the containers may leak
+	sudo chown -R ${USER}:${USER} $(ROOT_PATH)
+
 full: ## ultra thorough build (looong)
 	$(MAKE) clean-target ci
-	$(MAKE) clean-target local-alpine
-	$(MAKE) clean-target local-stretch
-	# clean up root-owned files the containers may leak
-	sudo chown -R ${USER}:${USER} $(ROOT_PATH)
+	$(MAKE) clean-target local-alpine local-chown-leaks
+	$(MAKE) clean-target local-stretch local-chown-leaks
 	$(MAKE) clean-target
-	@echo "Full build (CI, alpine, stretch) succeeded!
+	@echo "Full build (CI, alpine, stretch) succeeded!"
