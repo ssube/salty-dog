@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { ConsoleLogger } from 'noicejs';
-import { mock, spy } from 'sinon';
+import { mock } from 'sinon';
 
 import { createRuleSelector, resolveRules, visitRules } from '../../src/rule';
 import { SchemaRule } from '../../src/rule/SchemaRule';
@@ -203,7 +203,6 @@ describeLeaks('rule visitor', async () => {
       },
       logger: new ConsoleLogger(),
     });
-    const errorSpy = spy(ctx, 'error');
 
     const data = {
       foo: 3,
@@ -227,6 +226,5 @@ describeLeaks('rule visitor', async () => {
 
     const results = await rule.visit(ctx, data);
     expect(results.errors.length).to.equal(0);
-    expect(errorSpy).to.have.callCount(0);
   });
 });
