@@ -1,6 +1,6 @@
 import Ajv from 'ajv';
 import { JSONPath } from 'jsonpath-plus';
-import { Logger, logWithLevel } from 'noicejs';
+import { Logger } from 'noicejs';
 
 import { doesExist, hasItems } from '../utils';
 import { VisitorError } from './VisitorError';
@@ -61,14 +61,6 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
 
   public compile(schema: any): Ajv.ValidateFunction {
     return this.ajv.compile(schema);
-  }
-
-  public error(...errors: Array<VisitorError>) {
-    for (const err of errors) {
-      logWithLevel(this.logger, err.level, err.data, err.msg);
-    }
-
-    this.errorBuffer.push(...errors);
   }
 
   public mergeResult(other: VisitorResult): this {
