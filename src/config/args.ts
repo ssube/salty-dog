@@ -36,7 +36,6 @@ export interface ParsedArgs extends RuleSelector, RuleSources {
   defaults: boolean;
   dest: string;
   mode: string;
-  rules: Array<string>;
   source: string;
 }
 
@@ -47,10 +46,8 @@ export interface ParseResults {
 
 /**
  * Wrap yargs to exit after completion.
- *
- * @TODO: fix it to use argv, not sure if yargs can do that
  */
-export function parseArgs(argv: Array<string>): ParseResults {
+export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
   let mode: MODE = MODE.check;
 
   const parser = usage(`Usage: salty-dog <mode> [options]`)
@@ -64,13 +61,15 @@ export function parseArgs(argv: Array<string>): ParseResults {
     .command({
       builder: (yargs: any) => {
         return yargs
-          .option('coerce', {
-            default: false,
-            type: 'boolean',
-          })
-          .option('defaults', {
-            default: true,
-            type: 'boolean',
+          .options({
+            coerce: {
+              default: false,
+              type: 'boolean',
+            },
+            defaults: {
+              default: true,
+              type: 'boolean',
+            },
           });
       },
       command: ['fix'],
@@ -93,70 +92,72 @@ export function parseArgs(argv: Array<string>): ParseResults {
         mode = MODE.complete;
       },
     })
-    .option(CONFIG_ARGS_NAME, {
-      default: `.${VERSION_INFO.package.name}.yml`,
-      group: 'Config:',
-      type: 'string',
-    })
-    .option(CONFIG_ARGS_PATH, {
-      default: [],
-      group: 'Config:',
-      type: 'array',
-    })
-    .option('count', {
-      alias: ['c'],
-      default: false,
-      desc: 'Exit with error count',
-      type: 'boolean',
-    })
-    .option('dest', {
-      alias: ['d'],
-      default: '-',
-      type: 'string',
-    })
-    .option('format', {
-      alias: ['f'],
-      default: 'yaml',
-      type: 'string',
-    })
-    .option('rule-file', {
-      alias: ['r', 'rule', 'rules'],
-      default: [],
-      desc: 'Rules file',
-      type: 'array',
-    })
-    .option('rule-module', {
-      alias: ['m'],
-      default: [],
-      desc: 'Rules module',
-      type: 'array',
-    })
-    .option('rule-path', {
-      alias: ['p'],
-      default: [],
-      desc: 'Rules path',
-      type: 'array',
-    })
-    .option('source', {
-      alias: ['s'],
-      default: '-',
-      type: 'string',
-    })
-    .option('exclude-level', RULE_OPTION)
-    .option('exclude-name', RULE_OPTION)
-    .option('exclude-tag', RULE_OPTION)
-    .option('include-level', RULE_OPTION)
-    .option('include-name', RULE_OPTION)
-    .option('include-tag', {
-      ...RULE_OPTION,
-      alias: ['t', 'tag'],
+    .options({
+      [CONFIG_ARGS_NAME]: {
+        default: `.${VERSION_INFO.package.name}.yml`,
+        group: 'Config:',
+        type: 'string',
+      },
+      [CONFIG_ARGS_PATH]: {
+        default: [],
+        group: 'Config:',
+        type: 'array',
+      },
+      'count': {
+        alias: ['c'],
+        default: false,
+        desc: 'Exit with error count',
+        type: 'boolean',
+      },
+      'dest': {
+        alias: ['d'],
+        default: '-',
+        type: 'string',
+      },
+      'exclude-level': RULE_OPTION,
+      'exclude-name': RULE_OPTION,
+      'exclude-tag': RULE_OPTION,
+      'format': {
+        alias: ['f'],
+        default: 'yaml',
+        type: 'string',
+      },
+      'include-level': RULE_OPTION,
+      'include-name': RULE_OPTION,
+      'include-tag': {
+        ...RULE_OPTION,
+        alias: ['t', 'tag'],
+      },
+      'rule-file': {
+        alias: ['r', 'rule', 'rules'],
+        default: [],
+        desc: 'Rules file',
+        type: 'array',
+      },
+      'rule-module': {
+        alias: ['m'],
+        default: [],
+        desc: 'Rules module',
+        type: 'array',
+      },
+      'rule-path': {
+        alias: ['p'],
+        default: [],
+        desc: 'Rules path',
+        type: 'array',
+      },
+      'source': {
+        alias: ['s'],
+        default: '-',
+        type: 'string',
+      },
     })
     .help()
     .version(VERSION_INFO.package.version)
     .alias('version', 'v');
 
-  // @TODO: this should not need a cast but argv's type only has the last option (include-tag)
-  // @tslint:disable-next-line:no-any
+  // @TODO: this should not need a cast but the parser's type only has the last option (include-tag)
+  // tslint:disable-next-line:no-any
   const args = parser.argv as any;
   return {
     args,

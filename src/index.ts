@@ -14,7 +14,7 @@ const STATUS_ERROR = 1;
 const STATUS_MAX = 255;
 
 export async function main(argv: Array<string>): Promise<number> {
-  const { args, mode } = parseArgs(argv);
+  const { args, mode } = await parseArgs(argv);
   if (mode === MODE.complete) {
     showCompletionScript();
     return STATUS_SUCCESS;
@@ -24,7 +24,7 @@ export async function main(argv: Array<string>): Promise<number> {
 
   const logger = createLogger(config.data.logger);
   logger.info(VERSION_INFO, 'version info');
-  logger.info({ args }, 'main arguments');
+  logger.info({ args, mode }, 'main arguments');
 
   // check mode
   if (!VALID_MODES.has(mode)) {
