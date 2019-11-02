@@ -15,10 +15,8 @@ build-node:
     - .build-node
   stage: build
 
-  variables:
-    GIT_SUBMODULE_STRATEGY: recursive
   script:
-    - make clean-target build test
+    - make ci
 
   artifacts:
     expire_in: 1 week
