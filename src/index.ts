@@ -3,8 +3,7 @@ import { createLogger } from 'bunyan';
 import { loadConfig } from './config';
 import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, parseArgs } from './config/args';
 import { YamlParser } from './parser/YamlParser';
-import { loadRules, resolveRules } from './rule';
-import { visitRules } from './rule/SchemaRule';
+import { createRuleSelector, loadRules, resolveRules, visitRules } from './rule';
 import { loadSource, writeSource } from './source';
 import { VERSION_INFO } from './version';
 import { VisitorContext } from './visitor/VisitorContext';
@@ -44,11 +43,12 @@ export async function main(argv: Array<string>): Promise<number> {
     logger,
   });
 
-  const rules = await loadRules(args.rules, ctx);
-  const activeRules = await resolveRules(rules, args);
+  const selector = createRuleSelector(args);
+  const loadedRules = await loadRules(args.rules, ctx);
+  const activeRules = await resolveRules(loadedRules, selector);
 
   if (mode === 'list') {
-    logger.info({ rules: activeRules }, 'listing active rules');
+    logger.info({ rules: activeRules, selector }, 'listing active rules');
     return STATUS_SUCCESS;
   }
 

@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import { ConsoleLogger } from 'noicejs';
 import { mock, spy } from 'sinon';
 
-import { makeSelector, resolveRules } from '../../src/rule';
-import { SchemaRule, visitRules } from '../../src/rule/SchemaRule';
+import { createRuleSelector, resolveRules, visitRules } from '../../src/rule';
+import { SchemaRule } from '../../src/rule/SchemaRule';
 import { VisitorContext } from '../../src/visitor/VisitorContext';
 import { describeLeaks, itLeaks } from '../helpers/async';
 
@@ -33,7 +33,7 @@ const TEST_RULES = [new SchemaRule({
 describeLeaks('rule resolver', async () => {
   describeLeaks('include by level', async () => {
     itLeaks('should include info rules', async () => {
-      const info = await resolveRules(TEST_RULES, makeSelector({
+      const info = await resolveRules(TEST_RULES, createRuleSelector({
         includeLevel: ['info'],
       }));
 
@@ -42,7 +42,7 @@ describeLeaks('rule resolver', async () => {
     });
 
     itLeaks('should include warn rules', async () => {
-      const info = await resolveRules(TEST_RULES, makeSelector({
+      const info = await resolveRules(TEST_RULES, createRuleSelector({
         includeLevel: ['warn'],
       }));
 
@@ -54,7 +54,7 @@ describeLeaks('rule resolver', async () => {
 
   describeLeaks('include by name', async () => {
     itLeaks('should include foo rules', async () => {
-      const rules = await resolveRules(TEST_RULES, makeSelector({
+      const rules = await resolveRules(TEST_RULES, createRuleSelector({
         includeName: ['foo'],
       }));
 
@@ -65,7 +65,7 @@ describeLeaks('rule resolver', async () => {
 
   describeLeaks('include by tag', async () => {
     itLeaks('should include test rules', async () => {
-      const rules = await resolveRules(TEST_RULES, makeSelector({
+      const rules = await resolveRules(TEST_RULES, createRuleSelector({
         includeTag: ['test'],
       }));
 
@@ -77,7 +77,7 @@ describeLeaks('rule resolver', async () => {
 
   describeLeaks('exclude by name', async () => {
     itLeaks('should exclude foo rules', async () => {
-      const rules = await resolveRules(TEST_RULES, makeSelector({
+      const rules = await resolveRules(TEST_RULES, createRuleSelector({
         excludeName: ['foo'],
         includeTag: ['all'],
       }));
@@ -90,7 +90,7 @@ describeLeaks('rule resolver', async () => {
 
   describeLeaks('exclude by tag', async () => {
     itLeaks('should exclude test rules', async () => {
-      const rules = await resolveRules(TEST_RULES, makeSelector({
+      const rules = await resolveRules(TEST_RULES, createRuleSelector({
         excludeTag: ['test'],
         includeTag: ['all'],
       }));

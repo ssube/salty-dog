@@ -1,5 +1,4 @@
 import { ValidateFunction } from 'ajv';
-import { applyDiff, diff } from 'deep-diff';
 import { JSONPath } from 'jsonpath-plus';
 import { cloneDeep, defaultTo, isNil } from 'lodash';
 import { LogLevel } from 'noicejs';
@@ -84,37 +83,4 @@ export class SchemaRule implements RuleData, Visitor<RuleResult> {
       return ctx.compile(this.filter);
     }
   }
-}
-
-export async function visitRules(ctx: VisitorContext, rules: Array<SchemaRule>, data: any): Promise<VisitorContext> {
-  for (const rule of rules) {
-    const items = await rule.pick(ctx, data);
-    for (const item of items) {
-      const itemResult = cloneDeep(item);
-      const ruleResult = await rule.visit(ctx, itemResult);
-
-      if (ruleResult.errors.length > 0) {
-        ctx.logger.warn({ count: ruleResult.errors.length, rule }, 'rule failed');
-        ctx.mergeResult(ruleResult);
-        continue;
-      }
-
-      const itemDiff = diff(item, itemResult);
-      if (hasItems(itemDiff)) {
-        ctx.logger.info({
-          diff: itemDiff,
-          item,
-          rule: rule.name,
-        }, 'rule passed with modifications');
-
-        if (ctx.innerOptions.mutate) {
-          applyDiff(item, itemResult);
-        }
-      } else {
-        ctx.logger.info({ rule: rule.name }, 'rule passed');
-      }
-   }
-  }
-
-  return ctx;
 }
