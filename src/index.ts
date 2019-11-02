@@ -1,4 +1,5 @@
 import { createLogger } from 'bunyan';
+import { showCompletionScript } from 'yargs';
 
 import { loadConfig } from './config';
 import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs, VALID_MODES } from './config/args';
@@ -14,6 +15,11 @@ const STATUS_MAX = 255;
 
 export async function main(argv: Array<string>): Promise<number> {
   const { args, mode } = parseArgs(argv);
+  if (mode === MODE.complete) {
+    showCompletionScript();
+    return STATUS_SUCCESS;
+  }
+
   const config = await loadConfig(args[CONFIG_ARGS_NAME], ...args[CONFIG_ARGS_PATH]);
 
   const logger = createLogger(config.data.logger);
