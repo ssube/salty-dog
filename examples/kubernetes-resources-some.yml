@@ -1,9 +1,10 @@
 # test rules kubernetes
 # test tags kubernetes
-# test exit-status 1
+# test exit-status 2
 
 metadata:
   name: example
+  labels: {}
 spec:
   template:
     spec:
@@ -21,6 +22,7 @@ spec:
 
 metadata:
   name: example
+  labels: {}
 spec:
   template:
     spec:
@@ -29,10 +31,8 @@ spec:
           resources:
             limits:
               cpu: 200m
-              memory: 5Mi
             requests:
               cpu: 100m
-              memory: 2Mi
 
 ---
 

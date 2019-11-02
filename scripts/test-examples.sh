@@ -12,20 +12,17 @@ do
   USE_TAGS="$(grep '# test tags' "${example}" | sed 's/# test tags \(.*\)/\1/')"
   [ -z "${USE_TAGS}" ] && echo "Test example must have '# test tags' pragma" && exit 1
 
-  EXPECTED_ERRORS="$(grep '# test error-count' "${example}" | sed 's/# test error-count \([0-9]*\)/\1/')"
-  [ -z "${EXPECTED_ERRORS}" ] && EXPECTED_ERRORS=0
-
   EXPECTED_STATUS="$(grep '# test exit-status' "${example}" | sed 's/# test exit-status \([0-9]*\)/\1/')"
   [ -z "${EXPECTED_STATUS}" ] && EXPECTED_STATUS=0
 
   echo "Using rules: ${USE_RULES}"
   echo "Using tags: ${USE_TAGS}"
-  echo "Expected errors: ${EXPECTED_ERRORS}"
   echo "Expected status: ${EXPECTED_STATUS}"
 
   node out/index.js \
     --config-path ./docs \
     --config-name config-stderr.yml \
+    --count \
     --rules "rules/${USE_RULES}.yml" \
     --tag "${USE_TAGS}" \
     --source "${example}"
@@ -37,6 +34,7 @@ do
   if [ "${ACTUAL_STATUS}" != "${EXPECTED_STATUS}" ];
   then
     echo "Exit status does not match! (expected ${EXPECTED_STATUS}, got ${ACTUAL_STATUS})"
+    echo "Failed in: ${example}"
     exit 1
   fi
 done
