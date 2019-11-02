@@ -5,7 +5,7 @@ import { join } from 'path';
 
 import { NotFoundError } from '../error/NotFoundError';
 import { YamlParser } from '../parser/YamlParser';
-import { readFileSync } from '../source';
+import { readFile } from '../source';
 import { CONFIG_ENV, CONFIG_SCHEMA } from './schema';
 import { includeSchema } from './type/Include';
 
@@ -70,7 +70,7 @@ export async function readConfig(path: string): Promise<string | undefined> {
   try {
     // need to await this read to catch the error, need to catch the error to check the code
     // tslint:disable-next-line:prefer-immediate-return
-    const data = await readFileSync(path, {
+    const data = await readFile(path, {
       encoding: 'utf-8',
     });
     return data;

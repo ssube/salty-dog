@@ -2,7 +2,7 @@ import { Dictionary, intersection, isNil } from 'lodash';
 import { LogLevel } from 'noicejs';
 
 import { YamlParser } from '../parser/YamlParser';
-import { readFileSync } from '../source';
+import { readFile } from '../source';
 import { ensureArray } from '../utils';
 import { VisitorContext } from '../visitor/VisitorContext';
 import { SchemaRule } from './SchemaRule';
@@ -52,7 +52,7 @@ export async function loadRules(paths: Array<string>, ctx: VisitorContext): Prom
   const rules = [];
 
   for (const path of paths) {
-    const contents = await readFileSync(path, {
+    const contents = await readFile(path, {
       encoding: 'utf-8',
     });
 

@@ -1,18 +1,18 @@
-import { readFile, writeFile } from 'fs';
+import { readFile as readBack, writeFile as writeBack } from 'fs';
 import { isNil } from 'lodash';
 import { promisify } from 'util';
 
 export const FILE_ENCODING = 'utf-8';
-export const readFileSync = promisify(readFile);
-export const writeFileSync = promisify(writeFile);
+export const readFile = promisify(readBack);
+export const writeFile = promisify(writeBack);
 
 export async function loadSource(path: string): Promise<string> {
   if (path === '-') {
-    return readFileSync(0, {
+    return readFile(0, {
       encoding: FILE_ENCODING,
     });
   } else {
-    return readFileSync(path, {
+    return readFile(path, {
       encoding: FILE_ENCODING,
     });
   }
@@ -30,7 +30,7 @@ export async function writeSource(path: string, data: string): Promise<void> {
       });
     });
   } else {
-    return writeFileSync(path, data, {
+    return writeFile(path, data, {
       encoding: FILE_ENCODING,
     });
   }

@@ -84,8 +84,8 @@ const bundle = {
 				'node_modules/noicejs/out/main-bundle.js': [
 					'BaseError',
 					'ConsoleLogger',
-					'logWithLevel',
 					'NullLogger',
+					'logWithLevel',
 				],
 				'node_modules/js-yaml/index.js': [
 					'DEFAULT_SAFE_SCHEMA',
