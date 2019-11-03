@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { ConsoleLogger } from 'noicejs';
-import { mock } from 'sinon';
+import { mock, spy, stub } from 'sinon';
 
-import { createRuleSelector, resolveRules, visitRules } from '../../src/rule';
+import { createRuleSelector, createRuleSources, resolveRules, visitRules } from '../../src/rule';
 import { SchemaRule } from '../../src/rule/SchemaRule';
 import { VisitorContext } from '../../src/visitor/VisitorContext';
 import { describeLeaks, itLeaks } from '../helpers/async';
@@ -169,7 +169,7 @@ describeLeaks('rule visitor', async () => {
     expect(ctx.errors.length).to.equal(0);
   });
 
-  itLeaks('should pick items from the scope', async () => {
+  itLeaks('should visit individual items', async () => {
     const ctx = new VisitorContext({
       innerOptions: {
         coerce: false,
@@ -179,22 +179,30 @@ describeLeaks('rule visitor', async () => {
       logger: new ConsoleLogger(),
     });
     const data = {
-      foo: 3,
+      foo: [1, 2, 3],
     };
     const rule = new SchemaRule({
       check: {},
       desc: '',
       level: 'info',
       name: 'foo',
-      select: '$.foo',
+      select: '$.foo.*',
       tags: [],
     });
-    const results = await rule.pick(ctx, data);
 
-    expect(results).to.deep.equal([data.foo]);
+    const pickSpy = spy(rule, 'pick');
+    const visitStub = stub(rule, 'visit').returns(Promise.resolve({
+      changes: [],
+      errors: [],
+    }));
+
+    await visitRules(ctx, [rule], data);
+
+    expect(pickSpy).to.have.callCount(1).and.to.have.been.calledWithExactly(ctx, data);
+    expect(visitStub).to.have.callCount(3);
   });
 
-  itLeaks('should filter out items', async () => {
+  itLeaks('should visit individual items', async () => {
     const ctx = new VisitorContext({
       innerOptions: {
         coerce: false,
@@ -203,28 +211,52 @@ describeLeaks('rule visitor', async () => {
       },
       logger: new ConsoleLogger(),
     });
-
     const data = {
-      foo: 3,
+      foo: [1, 2, 3],
     };
     const rule = new SchemaRule({
       check: {},
       desc: '',
-      filter: {
-        properties: {
-          foo: {
-            type: 'number',
-          },
-        },
-        type: 'object',
-      },
       level: 'info',
       name: 'foo',
-      select: '$.foo',
+      select: '$.foo.*',
       tags: [],
     });
 
-    const results = await rule.visit(ctx, data);
-    expect(results.errors.length).to.equal(0);
+    const visitStub = stub(rule, 'visit').returns(Promise.resolve({
+      changes: [],
+      errors: [{
+        data: {},
+        msg: 'kaboom!',
+      }],
+    }));
+
+    await visitRules(ctx, [rule], data);
+
+    expect(visitStub).to.have.callCount(3);
+    expect(ctx.errors.length).to.equal(3);
+  });
+});
+
+describe('create rule sources helper', () => {
+  it('should ensure every field is an array', () => {
+    const sources = createRuleSources({});
+
+    expect(sources).to.have.deep.property('ruleFile', []);
+    expect(sources).to.have.deep.property('ruleModule', []);
+    expect(sources).to.have.deep.property('rulePath', []);
+  });
+});
+
+describe('create rule selector helper', () => {
+  it('should ensure every field is an array', () => {
+    const sources = createRuleSelector({});
+
+    expect(sources).to.have.deep.property('excludeLevel', []);
+    expect(sources).to.have.deep.property('excludeName', []);
+    expect(sources).to.have.deep.property('excludeTag', []);
+    expect(sources).to.have.deep.property('includeLevel', []);
+    expect(sources).to.have.deep.property('includeName', []);
+    expect(sources).to.have.deep.property('includeTag', []);
   });
 });

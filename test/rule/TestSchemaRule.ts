@@ -9,6 +9,65 @@ import { describeLeaks, itLeaks } from '../helpers/async';
 const TEST_NAME = 'test-rule';
 
 describeLeaks('schema rule', async () => {
+  itLeaks('should pick items from the scope', async () => {
+    const ctx = new VisitorContext({
+      innerOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
+      logger: NullLogger.global,
+    });
+    const data = {
+      foo: 3,
+    };
+    const rule = new SchemaRule({
+      check: {},
+      desc: '',
+      level: 'info',
+      name: 'foo',
+      select: '$.foo',
+      tags: [],
+    });
+    const results = await rule.pick(ctx, data);
+
+    expect(results).to.deep.equal([data.foo]);
+  });
+
+  itLeaks('should filter out items', async () => {
+    const ctx = new VisitorContext({
+      innerOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
+      logger: NullLogger.global,
+    });
+
+    const data = {
+      foo: 3,
+    };
+    const rule = new SchemaRule({
+      check: {},
+      desc: '',
+      filter: {
+        properties: {
+          foo: {
+            type: 'number',
+          },
+        },
+        type: 'object',
+      },
+      level: 'info',
+      name: 'foo',
+      select: '$.foo',
+      tags: [],
+    });
+
+    const results = await rule.visit(ctx, data);
+    expect(results.errors.length).to.equal(0);
+  });
+
   itLeaks('should pick items from the root', async () => {
     const ctx = new VisitorContext({
       innerOptions: {
