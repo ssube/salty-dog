@@ -4,24 +4,25 @@ Rules apply a schema fragment to a set of nodes selected from the original data.
 
 This is a descriptive standard for rules. The enforced meta-rules for rules [are located here](../rules/salty-dog.yml).
 
-- [Rules](#Rules)
-  - [From File](#From-File)
-    - [YAML Schema](#YAML-Schema)
-      - [Env Type](#Env-Type)
-      - [Include Type](#Include-Type)
-      - [Regexp Type](#Regexp-Type)
-      - [Stream Type](#Stream-Type)
-    - [File Name](#File-Name)
-    - [Schema Definitions](#Schema-Definitions)
-    - [Rule Definitions](#Rule-Definitions)
-      - [Rule Name](#Rule-Name)
-      - [Rule Description](#Rule-Description)
-      - [Rule Level](#Rule-Level)
-      - [Rule Tags](#Rule-Tags)
-      - [Rule Selector](#Rule-Selector)
-      - [Rule Filter](#Rule-Filter)
-      - [Rule Check](#Rule-Check)
-  - [From Module](#From-Module)
+- [Rules](#rules)
+  - [From File](#from-file)
+    - [YAML Schema](#yaml-schema)
+      - [Env Type](#env-type)
+      - [Include Type](#include-type)
+      - [Regexp Type](#regexp-type)
+      - [Stream Type](#stream-type)
+    - [File Name](#file-name)
+    - [Schema Definitions](#schema-definitions)
+    - [Rule Definitions](#rule-definitions)
+      - [Rule Name](#rule-name)
+      - [Rule Description](#rule-description)
+      - [Rule Level](#rule-level)
+      - [Rule Tags](#rule-tags)
+      - [Rule Selector](#rule-selector)
+      - [Rule Filter](#rule-filter)
+      - [Rule Check](#rule-check)
+  - [From Module](#from-module)
+  - [From Path](#from-path)
 
 ## From File
 
@@ -216,4 +217,36 @@ rules:
 
 ## From Module
 
-**TODO:** load rules from `require`d modules
+Rules may be loaded from an external module. Any module that can be `require`d can be used by name,
+using [normal Node `require` rules](https://nodejs.org/api/modules.html#modules_require_id).
+
+To load a module: `--rule-module salty-dog-oot-example`
+
+The default export from a rule module must match the schema for rule files:
+
+```typescript
+const { RuleOne, RuleTwo } = require('./rules');
+
+module.exports = {
+  name: 'module-name',
+  definitions: {
+    snippet: {},
+  },
+  rules: [
+    new RuleOne(),
+    new RuleTwo(),
+  ],
+};
+```
+
+An example rule module [is available here](https://github.com/ssube/salty-dog-oot-example/).
+
+## From Path
+
+Rules may be loaded from a directory. Files with `.json` and `.yaml`/`.yml` extensions will be loaded,
+with filenames lowercased before checking.
+
+To load a directory: `--rule-path rules/`
+
+Each file will be loaded as [an individual rule file](#from-file). Schema definitions and rules will
+be loaded normally.
