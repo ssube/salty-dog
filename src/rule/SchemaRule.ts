@@ -1,14 +1,11 @@
-import { ValidateFunction } from 'ajv';
+import { ErrorObject, ValidateFunction } from 'ajv';
 import { cloneDeep, defaultTo, isNil } from 'lodash';
 import { LogLevel } from 'noicejs';
 
 import { Rule, RuleData } from '.';
 import { hasItems } from '../utils';
-import { friendlyError } from '../utils/ajv';
-import { Visitor } from '../visitor';
+import { Visitor, VisitorError, VisitorResult } from '../visitor';
 import { VisitorContext } from '../visitor/VisitorContext';
-import { VisitorError } from '../visitor/VisitorError';
-import { VisitorResult } from '../visitor/VisitorResult';
 
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/strict-boolean-expressions */
 
@@ -74,5 +71,24 @@ export class SchemaRule implements Rule, RuleData, Visitor {
     } else {
       return ctx.compile(this.filter);
     }
+  }
+}
+
+export function friendlyError(ctx: VisitorContext, err: ErrorObject, rule: SchemaRule): VisitorError {
+  return {
+    data: {
+      err,
+      rule,
+    },
+    level: 'error',
+    msg: friendlyErrorMessage(err, rule),
+  };
+}
+
+export function friendlyErrorMessage(err: ErrorObject, rule: SchemaRule): string {
+  if (isNil(err.message)) {
+    return `${err.dataPath} ${err.keyword} at ${rule.select} for ${rule.name}`;
+  } else {
+    return `${err.dataPath} ${err.message} at ${rule.select} for ${rule.name}`;
   }
 }

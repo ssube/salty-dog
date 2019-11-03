@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { NullLogger } from 'noicejs';
 import { stub } from 'sinon';
 
-import { SchemaRule } from '../../src/rule/SchemaRule';
+import { friendlyError, SchemaRule } from '../../src/rule/SchemaRule';
 import { VisitorContext } from '../../src/visitor/VisitorContext';
 import { describeLeaks, itLeaks } from '../helpers/async';
 
@@ -155,5 +155,31 @@ describeLeaks('schema rule', async () => {
 
     expect(filterSpy, 'filter spy should have been called with data').to.have.callCount(1).and.been.calledWithExactly(data);
     expect(checkSpy, 'check spy should not have been called').to.have.callCount(0);
+  });
+});
+
+describe('friendly errors', () => {
+  it('should have a message', () => {
+    const err = friendlyError(new VisitorContext({
+      innerOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
+      logger: NullLogger.global,
+    }), {
+      dataPath: 'test-path',
+      keyword: TEST_NAME,
+      params: { /* ? */ },
+      schemaPath: 'test-path',
+    }, new SchemaRule({
+      check: {},
+      desc: TEST_NAME,
+      level: 'info',
+      name: TEST_NAME,
+      select: '',
+      tags: [TEST_NAME],
+    }));
+    expect(err.msg).to.not.equal('');
   });
 });

@@ -244,7 +244,7 @@ An example rule module [is available here](https://github.com/ssube/salty-dog-oo
 ## From Path
 
 Rules may be loaded from a directory. Files with `.json` and `.yaml`/`.yml` extensions will be loaded,
-with filenames lowercased before checking.
+with file names converted to lowercase before being checked.
 
 To load a directory: `--rule-path rules/`
 

@@ -1,5 +1,20 @@
+import { LogLevel } from 'noicejs';
+
 import { VisitorContext } from './VisitorContext';
-import { VisitorResult } from './VisitorResult';
+
+/**
+ * This is a runtime error, not an exception.
+ */
+export interface VisitorError {
+  data: any;
+  level: LogLevel;
+  msg: string;
+}
+
+export interface VisitorResult {
+  changes: ReadonlyArray<any>;
+  errors: ReadonlyArray<any>;
+}
 
 export interface Visitor<TResult extends VisitorResult = VisitorResult> {
   /**
