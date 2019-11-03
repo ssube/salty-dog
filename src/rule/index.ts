@@ -7,8 +7,8 @@ import { join } from 'path';
 import { YamlParser } from '../parser/YamlParser';
 import { readDir, readFile } from '../source';
 import { ensureArray, hasItems } from '../utils';
+import { VisitorResult } from '../visitor';
 import { VisitorContext } from '../visitor/VisitorContext';
-import { VisitorResult } from '../visitor/VisitorResult';
 import { SchemaRule } from './SchemaRule';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

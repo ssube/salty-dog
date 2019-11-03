@@ -2,9 +2,8 @@ import Ajv from 'ajv';
 import { JSONPath } from 'jsonpath-plus';
 import { Logger } from 'noicejs';
 
+import { VisitorError, VisitorResult } from '.';
 import { doesExist, hasItems } from '../utils';
-import { VisitorError } from './VisitorError';
-import { VisitorResult } from './VisitorResult';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
