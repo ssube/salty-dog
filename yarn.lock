@@ -94,7 +94,7 @@
   resolved "https://artifacts.apextoaster.com/repository/group-npm/@istanbuljs/nyc-config-typescript/-/nyc-config-typescript-0.1.3.tgz#944d15b3ebdb71f963a628daffaa25ade981bb86"
   integrity sha512-EzRFg92bRSD1W/zeuNkeGwph0nkWf+pP2l/lYW4/5hav7RjKKBN5kV1Ix7Tvi0CMu3pC4Wi/U7rNisiJMR3ORg==
 
-"@microsoft/api-documenter@^7.5.4":
+"@microsoft/api-documenter@7.5.4":
   version "7.5.4"
   resolved "https://artifacts.apextoaster.com/repository/group-npm/@microsoft/api-documenter/-/api-documenter-7.5.4.tgz#4aaec26c010eea71c6d8a17955c3307c2e63aae4"
   integrity sha512-N/mDVpf1V4g6UTbFlrsF9LT09SFTb362gm+ZnPUA1OAGV62SqBBe8ZJO7LPFyLo1UOYGUpfK+YgS6dlGKItxkg==
@@ -115,7 +115,7 @@
     "@microsoft/node-core-library" "3.16.0"
     "@microsoft/tsdoc" "0.12.14"
 
-"@microsoft/api-extractor@^7.5.2":
+"@microsoft/api-extractor@7.5.2":
   version "7.5.2"
   resolved "https://artifacts.apextoaster.com/repository/group-npm/@microsoft/api-extractor/-/api-extractor-7.5.2.tgz#4da588e71c6342ec66b6b087a471aa773a232c81"
   integrity sha512-IGMpxhiTaUsGGdrGqCwhwGbyJNMwrVe0wi3vYqFL0G93N+DO2uI89/JNGxaiGjgQ8nCem6u8hPd0NhOcGU6DcA==
