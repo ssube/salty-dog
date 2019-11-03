@@ -1,3 +1,4 @@
+import { ValidateFunction } from 'ajv';
 import { applyDiff, diff } from 'deep-diff';
 import { cloneDeep, Dictionary, intersection, isNil } from 'lodash';
 import { LogLevel } from 'noicejs';
@@ -7,10 +8,10 @@ import { YamlParser } from '../parser/YamlParser';
 import { readDir, readFile } from '../source';
 import { ensureArray, hasItems } from '../utils';
 import { VisitorContext } from '../visitor/VisitorContext';
+import { VisitorResult } from '../visitor/VisitorResult';
 import { SchemaRule } from './SchemaRule';
 
 /* tslint:disable:no-any */
-
 export interface RuleData {
   // metadata
   desc: string;
@@ -21,6 +22,21 @@ export interface RuleData {
   check: any;
   filter?: any;
   select: string;
+}
+/* tslint:enable:no-any */
+
+export type Validator = ValidateFunction;
+export interface Rule {
+  check: Validator;
+  desc?: string;
+  filter?: Validator;
+  level: LogLevel;
+  name: string;
+  select: string;
+  tags: Array<string>;
+
+  pick(ctx: VisitorContext, root: any): Promise<Array<any>>;
+  visit(ctx: VisitorContext, item: any): Promise<VisitorResult>;
 }
 
 /**
@@ -57,7 +73,7 @@ export interface RuleSourceData {
 export interface RuleSourceModule {
   definitions?: Dictionary<any>;
   name: string;
-  rules: Array<SchemaRule>;
+  rules: Array<Rule>;
 }
 
 export function createRuleSelector(options: Partial<RuleSelector>): RuleSelector {
@@ -79,7 +95,7 @@ export function createRuleSources(options: Partial<RuleSources>): RuleSources {
   };
 }
 
-export async function loadRuleFiles(paths: Array<string>, ctx: VisitorContext): Promise<Array<SchemaRule>> {
+export async function loadRuleFiles(paths: Array<string>, ctx: VisitorContext): Promise<Array<Rule>> {
   const parser = new YamlParser();
   const rules = [];
 
@@ -102,7 +118,7 @@ export async function loadRuleFiles(paths: Array<string>, ctx: VisitorContext): 
   return rules;
 }
 
-export async function loadRulePaths(paths: Array<string>, ctx: VisitorContext): Promise<Array<SchemaRule>> {
+export async function loadRulePaths(paths: Array<string>, ctx: VisitorContext): Promise<Array<Rule>> {
   const rules = [];
 
   for (const path of paths) {
@@ -119,7 +135,7 @@ export async function loadRulePaths(paths: Array<string>, ctx: VisitorContext): 
   return rules;
 }
 
-export async function loadRuleModules(modules: Array<string>, ctx: VisitorContext): Promise<Array<SchemaRule>> {
+export async function loadRuleModules(modules: Array<string>, ctx: VisitorContext): Promise<Array<Rule>> {
   const rules = [];
 
   for (const name of modules) {
@@ -140,7 +156,7 @@ export async function loadRuleModules(modules: Array<string>, ctx: VisitorContex
   return rules;
 }
 
-export async function loadRules(sources: RuleSources, ctx: VisitorContext): Promise<Array<SchemaRule>> {
+export async function loadRules(sources: RuleSources, ctx: VisitorContext): Promise<Array<Rule>> {
   return [
     ...await loadRuleFiles(sources.ruleFile, ctx),
     ...await loadRulePaths(sources.rulePath, ctx),
@@ -148,8 +164,8 @@ export async function loadRules(sources: RuleSources, ctx: VisitorContext): Prom
   ];
 }
 
-export async function resolveRules(rules: Array<SchemaRule>, selector: RuleSelector): Promise<Array<SchemaRule>> {
-  const activeRules = new Set<SchemaRule>();
+export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): Promise<Array<Rule>> {
+  const activeRules = new Set<Rule>();
 
   for (const r of rules) {
     if (selector.excludeLevel.includes(r.level)) {
@@ -182,7 +198,7 @@ export async function resolveRules(rules: Array<SchemaRule>, selector: RuleSelec
   return Array.from(activeRules);
 }
 
-export async function visitRules(ctx: VisitorContext, rules: Array<SchemaRule>, data: any): Promise<VisitorContext> {
+export async function visitRules(ctx: VisitorContext, rules: Array<Rule>, data: any): Promise<VisitorContext> {
   for (const rule of rules) {
     const items = await rule.pick(ctx, data);
     for (const item of items) {
