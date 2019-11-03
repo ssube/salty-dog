@@ -2,7 +2,7 @@ import { ValidateFunction } from 'ajv';
 import { cloneDeep, defaultTo, isNil } from 'lodash';
 import { LogLevel } from 'noicejs';
 
-import { RuleData } from '.';
+import { Rule, RuleData } from '.';
 import { hasItems } from '../utils';
 import { friendlyError } from '../utils/ajv';
 import { Visitor } from '../visitor';
@@ -10,7 +10,7 @@ import { VisitorContext } from '../visitor/VisitorContext';
 import { VisitorError } from '../visitor/VisitorError';
 import { VisitorResult } from '../visitor/VisitorResult';
 
-export class SchemaRule implements RuleData, Visitor {
+export class SchemaRule implements Rule, RuleData, Visitor {
   public readonly check: ValidateFunction;
   public readonly desc: string;
   public readonly filter?: ValidateFunction;
