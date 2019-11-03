@@ -227,6 +227,7 @@ describeLeaks('rule visitor', async () => {
       changes: [],
       errors: [{
         data: {},
+        level: 'error',
         msg: 'kaboom!',
       }],
     }));

@@ -160,26 +160,64 @@ describeLeaks('schema rule', async () => {
 
 describe('friendly errors', () => {
   it('should have a message', () => {
-    const err = friendlyError(new VisitorContext({
-      innerOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-      logger: NullLogger.global,
-    }), {
-      dataPath: 'test-path',
-      keyword: TEST_NAME,
-      params: { /* ? */ },
-      schemaPath: 'test-path',
-    }, new SchemaRule({
+    const rule = new SchemaRule({
       check: {},
       desc: TEST_NAME,
       level: 'info',
       name: TEST_NAME,
       select: '',
       tags: [TEST_NAME],
-    }));
-    expect(err.msg).to.not.equal('');
+    });
+    const ctx = new VisitorContext({
+      innerOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
+      logger: NullLogger.global,
+    });
+    ctx.visitData = {
+      itemIndex: 0,
+      rule,
+    };
+    const err = friendlyError(ctx, {
+      dataPath: 'test-path',
+      keyword: TEST_NAME,
+      params: { /* ? */ },
+      schemaPath: 'test-path',
+    });
+    expect(err.msg).to.include(TEST_NAME);
+  });
+
+  it('should handle errors with an existing message', () => {
+    const TEST_MESSAGE = 'test-message';
+    const rule = new SchemaRule({
+      check: {},
+      desc: TEST_NAME,
+      level: 'info',
+      name: TEST_NAME,
+      select: '',
+      tags: [TEST_NAME],
+    });
+    const ctx = new VisitorContext({
+      innerOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
+      logger: NullLogger.global,
+    });
+    ctx.visitData = {
+      itemIndex: 0,
+      rule,
+    };
+    const err = friendlyError(ctx, {
+      dataPath: 'test-path',
+      keyword: TEST_NAME,
+      message: TEST_MESSAGE,
+      params: { /* ? */ },
+      schemaPath: 'test-path',
+    });
+    expect(err.msg).to.include(TEST_MESSAGE);
   });
 });

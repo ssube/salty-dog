@@ -1,0 +1,27 @@
+# test rules kubernetes
+# test tags kubernetes
+# test exit-status 1
+
+metadata:
+  name: example
+  labels: {}
+spec:
+  template:
+    spec:
+      containers:
+        - name: test
+          resources:
+            limits:
+              cpu: 4000m
+              memory: 5Gi
+            requests:
+              cpu: 4000m
+              memory: 5Gi
+
+        - name: other
+          resources:
+            limits:
+              cpu: 2000m
+            requests:
+              cpu: 2000m
+
