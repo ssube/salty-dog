@@ -25,6 +25,7 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
   protected readonly ajv: Ajv.Ajv;
   protected readonly changeBuffer: Array<any>;
   protected readonly errorBuffer: Array<VisitorError>;
+  protected data: any;
 
   public get changes(): ReadonlyArray<any> {
     return this.changeBuffer;
@@ -64,9 +65,17 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
     return this.ajv.compile(schema);
   }
 
-  public mergeResult(other: VisitorResult): this {
+  public mergeResult(other: VisitorResult, data: any = {}): this {
     this.changeBuffer.push(...other.changes);
-    this.errorBuffer.push(...other.errors);
+    this.errorBuffer.push(...other.errors.map((err) => {
+      return {
+        ...err,
+        data: {
+          ...err.data,
+          ...data,
+        },
+      };
+    }));
     return this;
   }
 
@@ -86,5 +95,18 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
     } else {
       return [];
     }
+  }
+
+  /**
+   * store some flash data. this is very much not the right way to do it.
+   *
+   * @TODO: fix this
+   */
+  public get visitData(): any {
+    return this.data;
+  }
+
+  public set visitData(value: any) {
+    this.data = value;
   }
 }

@@ -56,7 +56,7 @@ export class SchemaRule implements Rule, RuleData, Visitor {
     if (filter(node)) {
       ctx.logger.debug({ item: node }, 'checking item');
       if (!check(node) && hasItems(check.errors)) {
-        errors.push(...check.errors.map((err) => friendlyError(ctx, err, this)));
+        errors.push(...check.errors.map((err) => friendlyError(ctx, err)));
       }
     } else {
       ctx.logger.debug({ errors: filter.errors, item: node }, 'skipping item');
@@ -74,21 +74,26 @@ export class SchemaRule implements Rule, RuleData, Visitor {
   }
 }
 
-export function friendlyError(ctx: VisitorContext, err: ErrorObject, rule: SchemaRule): VisitorError {
+export function friendlyError(ctx: VisitorContext, err: ErrorObject): VisitorError {
   return {
     data: {
       err,
-      rule,
     },
     level: 'error',
-    msg: friendlyErrorMessage(err, rule),
+    msg: friendlyErrorMessage(ctx, err),
   };
 }
 
-export function friendlyErrorMessage(err: ErrorObject, rule: SchemaRule): string {
+export function friendlyErrorMessage(ctx: VisitorContext, err: ErrorObject): string {
+  const msg = [err.dataPath];
   if (isNil(err.message)) {
-    return `${err.dataPath} ${err.keyword} at ${rule.select} for ${rule.name}`;
+    msg.push(err.keyword);
   } else {
-    return `${err.dataPath} ${err.message} at ${rule.select} for ${rule.name}`;
+    msg.push(err.message);
   }
+  msg.push('at', 'item', ctx.visitData.itemIndex.toString());
+  msg.push('of', ctx.visitData.rule.select);
+  msg.push('for', ctx.visitData.rule.name);
+
+  return msg.join(' ');
 }

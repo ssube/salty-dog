@@ -1,3 +1,4 @@
+import { Diff } from 'deep-diff';
 import { LogLevel } from 'noicejs';
 
 import { VisitorContext } from './VisitorContext';
@@ -12,8 +13,8 @@ export interface VisitorError {
 }
 
 export interface VisitorResult {
-  changes: ReadonlyArray<any>;
-  errors: ReadonlyArray<any>;
+  changes: ReadonlyArray<Diff<any, any>>;
+  errors: ReadonlyArray<VisitorError>;
 }
 
 export interface Visitor<TResult extends VisitorResult = VisitorResult> {

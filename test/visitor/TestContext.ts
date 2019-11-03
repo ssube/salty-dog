@@ -15,8 +15,17 @@ describe('visitor context', () => {
     });
 
     const nextCtx = firstCtx.mergeResult({
-      changes: [{bar: 3}],
-      errors: [{foo: 2}],
+      changes: [{
+        kind: 'N',
+        rhs: {},
+      }],
+      errors: [{
+        data: {
+          foo: 2,
+        },
+        level: 'info',
+        msg: 'uh oh',
+      }],
     });
 
     expect(nextCtx).to.equal(firstCtx);

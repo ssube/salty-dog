@@ -202,13 +202,18 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
 export async function visitRules(ctx: VisitorContext, rules: Array<Rule>, data: any): Promise<VisitorContext> {
   for (const rule of rules) {
     const items = await rule.pick(ctx, data);
+    let itemIndex = 0;
     for (const item of items) {
+      ctx.visitData = {
+          itemIndex,
+          rule,
+      };
       const itemResult = cloneDeep(item);
       const ruleResult = await rule.visit(ctx, itemResult);
 
       if (hasItems(ruleResult.errors)) {
         ctx.logger.warn({ count: ruleResult.errors.length, rule }, 'rule failed');
-        ctx.mergeResult(ruleResult);
+        ctx.mergeResult(ruleResult, ctx.visitData);
         continue;
       }
 
@@ -226,6 +231,8 @@ export async function visitRules(ctx: VisitorContext, rules: Array<Rule>, data: 
       } else {
         ctx.logger.info({ rule: rule.name }, 'rule passed');
       }
+
+      itemIndex += 1;
     }
   }
 
