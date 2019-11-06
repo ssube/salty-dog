@@ -107,14 +107,6 @@
     js-yaml "~3.13.1"
     resolve "1.8.1"
 
-"@microsoft/api-extractor-model@7.5.2":
-  version "7.5.2"
-  resolved "https://artifacts.apextoaster.com/repository/group-npm/@microsoft/api-extractor-model/-/api-extractor-model-7.5.2.tgz#39a3c015ca01a3435b5f161b8fce07117e6039be"
-  integrity sha512-wDXQ6IvrVg7tp3iqA+7f7yrSzjUPQ2kVNKsrxD5AqbGeohsJYePbmWvz6V8yxxO7ZuM9W7V5zLY6pYh4epq8Dg==
-  dependencies:
-    "@microsoft/node-core-library" "3.16.0"
-    "@microsoft/tsdoc" "0.12.14"
-
 "@microsoft/api-extractor-model@7.5.4":
   version "7.5.4"
   resolved "https://artifacts.apextoaster.com/repository/group-npm/@microsoft/api-extractor-model/-/api-extractor-model-7.5.4.tgz#c5ad3823a59ee9c81b685e4f1a6f55e0e64218be"
@@ -123,13 +115,13 @@
     "@microsoft/node-core-library" "3.17.0"
     "@microsoft/tsdoc" "0.12.14"
 
-"@microsoft/api-extractor@7.5.2":
-  version "7.5.2"
-  resolved "https://artifacts.apextoaster.com/repository/group-npm/@microsoft/api-extractor/-/api-extractor-7.5.2.tgz#4da588e71c6342ec66b6b087a471aa773a232c81"
-  integrity sha512-IGMpxhiTaUsGGdrGqCwhwGbyJNMwrVe0wi3vYqFL0G93N+DO2uI89/JNGxaiGjgQ8nCem6u8hPd0NhOcGU6DcA==
+"@microsoft/api-extractor@7.5.4":
+  version "7.5.4"
+  resolved "https://artifacts.apextoaster.com/repository/group-npm/@microsoft/api-extractor/-/api-extractor-7.5.4.tgz#f841c66740f804d81ace185c1974044e9f559abb"
+  integrity sha512-zt+1WAQ1VRMBltpmaRiycDphWvdOt2dQ9u5B1gG8hHL9kR07DHbAws5p3eUcTI3QBqtBVGGuhK8Kt8IRnKZGOw==
   dependencies:
-    "@microsoft/api-extractor-model" "7.5.2"
-    "@microsoft/node-core-library" "3.16.0"
+    "@microsoft/api-extractor-model" "7.5.4"
+    "@microsoft/node-core-library" "3.17.0"
     "@microsoft/ts-command-line" "4.3.4"
     "@microsoft/tsdoc" "0.12.14"
     colors "~1.2.1"
@@ -137,17 +129,6 @@
     resolve "1.8.1"
     source-map "~0.6.1"
     typescript "~3.5.3"
-
-"@microsoft/node-core-library@3.16.0":
-  version "3.16.0"
-  resolved "https://artifacts.apextoaster.com/repository/group-npm/@microsoft/node-core-library/-/node-core-library-3.16.0.tgz#cdd3a27b1513cb470d1098ba32d50ca22a1fb75c"
-  integrity sha512-zjgOAmOhWgE5eX8ofmRagcomeIhs96GizRm7m9UfAuzhEmWtQSOE33/WpZzoyw41S/bjevHi7YbkY+R70mdjFg==
-  dependencies:
-    "@types/node" "8.10.54"
-    colors "~1.2.1"
-    fs-extra "~7.0.1"
-    jju "~1.4.0"
-    z-schema "~3.18.3"
 
 "@microsoft/node-core-library@3.17.0":
   version "3.17.0"
