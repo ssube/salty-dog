@@ -4,9 +4,3 @@
 
 ## salty-dog package
 
-## Functions
-
-|  Function | Description |
-|  --- | --- |
-|  [main(argv)](./salty-dog.main.md) |  |
-
