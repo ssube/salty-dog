@@ -11,7 +11,7 @@ import { VisitorContext } from '../visitor/VisitorContext';
 import { VisitorResult } from '../visitor/VisitorResult';
 import { SchemaRule } from './SchemaRule';
 
-/* tslint:disable:no-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface RuleData {
   // metadata
   desc: string;
@@ -123,10 +123,10 @@ export async function loadRulePaths(paths: Array<string>, ctx: VisitorContext): 
 
   for (const path of paths) {
     const allFiles = await readDir(path);
-    const files = allFiles.filter((name) => {
-      // skip files that start with `.`, limit to json and yaml/yml
-      return name.toLowerCase().match(/^[^\.].*\.(json|ya?ml)/);
-    }).map((name) => join(path, name));
+    // skip files that start with `.`, limit to json and yaml/yml
+    const files = allFiles
+      .filter((name) => name.toLowerCase().match(/^[^\.].*\.(json|ya?ml)/))
+      .map((name) => join(path, name));
 
     const pathRules = await loadRuleFiles(files, ctx);
     rules.push(...pathRules);
@@ -140,6 +140,7 @@ export async function loadRuleModules(modules: Array<string>, ctx: VisitorContex
 
   for (const name of modules) {
     try {
+      /* eslint-disable-next-line @typescript-eslint/no-var-requires */
       const module: RuleSourceModule = require(name);
       // TODO: ensure module has definitions, name, and rules
 

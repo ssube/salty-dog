@@ -10,6 +10,8 @@ import { VisitorContext } from '../visitor/VisitorContext';
 import { VisitorError } from '../visitor/VisitorError';
 import { VisitorResult } from '../visitor/VisitorResult';
 
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/strict-boolean-expressions */
+
 export class SchemaRule implements Rule, RuleData, Visitor {
   public readonly check: ValidateFunction;
   public readonly desc: string;

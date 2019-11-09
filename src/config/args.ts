@@ -12,7 +12,7 @@ export enum MODE {
 
 export const VALID_MODES = new Set([MODE.check, MODE.fix, MODE.list]);
 
-/* tslint:disable:no-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export const CONFIG_ARGS_NAME = 'config-name';
 export const CONFIG_ARGS_PATH = 'config-path';
@@ -50,7 +50,7 @@ export interface ParseResults {
 export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
   let mode: MODE = MODE.check;
 
-  const parser = usage(`Usage: salty-dog <mode> [options]`)
+  const parser = usage('Usage: salty-dog <mode> [options]')
     .command({
       command: ['check', '*'],
       describe: 'validate the source documents',
@@ -59,19 +59,16 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
       },
     })
     .command({
-      builder: (yargs: any) => {
-        return yargs
-          .options({
-            coerce: {
-              default: false,
-              type: 'boolean',
-            },
-            defaults: {
-              default: true,
-              type: 'boolean',
-            },
-          });
-      },
+      builder: (yargs: any) => yargs.options({
+        coerce: {
+          default: false,
+          type: 'boolean',
+        },
+        defaults: {
+          default: true,
+          type: 'boolean',
+        },
+      }),
       command: ['fix'],
       describe: 'validate the source document and insert defaults',
       handler: (argi: any) => {
