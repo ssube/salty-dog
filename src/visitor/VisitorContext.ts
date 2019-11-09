@@ -6,6 +6,8 @@ import { doesExist, hasItems } from '../utils';
 import { VisitorError } from './VisitorError';
 import { VisitorResult } from './VisitorResult';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export interface RuleOptions {
   coerce: boolean;
   defaults: boolean;

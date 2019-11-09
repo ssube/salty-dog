@@ -1,9 +1,9 @@
 import commonjs from 'rollup-plugin-commonjs';
+import { eslint } from 'rollup-plugin-eslint';
 import json from 'rollup-plugin-json';
 import multiEntry from 'rollup-plugin-multi-entry';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
-import tslint from 'rollup-plugin-tslint';
 import typescript from 'rollup-plugin-typescript2';
 
 const metadata = require('../package.json');
@@ -102,8 +102,8 @@ const bundle = {
 				],
 			},
 		}),
-		tslint({
-			configuration: './config/tslint.json',
+		eslint({
+			configFile: './config/eslint.json',
 			throwOnError: true,
 		}),
     typescript({

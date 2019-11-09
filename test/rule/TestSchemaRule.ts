@@ -6,6 +6,8 @@ import { SchemaRule } from '../../src/rule/SchemaRule';
 import { VisitorContext } from '../../src/visitor/VisitorContext';
 import { describeLeaks, itLeaks } from '../helpers/async';
 
+/* eslint-disable @typescript-eslint/unbound-method */
+
 const TEST_NAME = 'test-rule';
 
 describeLeaks('schema rule', async () => {

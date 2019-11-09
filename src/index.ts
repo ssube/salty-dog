@@ -83,7 +83,7 @@ export async function main(argv: Array<string>): Promise<number> {
 }
 
 main(process.argv).then((status) => process.exit(status)).catch((err) => {
-  /* tslint:disable-next-line:no-console */
+  /* eslint-disable-next-line no-console */
   console.error('uncaught error during main:', err);
   process.exit(STATUS_ERROR);
 });

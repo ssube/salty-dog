@@ -3,6 +3,8 @@ import { safeDump, safeLoadAll } from 'js-yaml';
 import { CONFIG_SCHEMA } from '../config/schema';
 import { Parser } from '../parser';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export class YamlParser implements Parser {
   public dump(...data: Array<any>): string {
     const docs: Array<any> = [];
