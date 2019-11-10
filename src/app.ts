@@ -9,9 +9,9 @@ import { loadSource, writeSource } from './source';
 import { VERSION_INFO } from './version';
 import { VisitorContext } from './visitor/VisitorContext';
 
-const STATUS_SUCCESS = 0;
-const STATUS_ERROR = 1;
-const STATUS_MAX = 255;
+export const STATUS_SUCCESS = 0;
+export const STATUS_ERROR = 1;
+export const STATUS_MAX = 255;
 
 export async function main(argv: Array<string>): Promise<number> {
   const { args, mode } = await parseArgs(argv);
