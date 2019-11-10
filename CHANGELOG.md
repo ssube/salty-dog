@@ -2,6 +2,60 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0](https://github.com/ssube/salty-dog/compare/v0.7.1...v0.8.0) (2019-11-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* **visitor:** rule errors must be grouped and returned in the rule
+
+### Bug Fixes
+
+* **build:** add shebang to index ([c746f62](https://github.com/ssube/salty-dog/commit/c746f62))
+* **build:** clean up after container builds ([c9a42f3](https://github.com/ssube/salty-dog/commit/c9a42f3))
+* **build:** update rollup config from template ([80d3cb8](https://github.com/ssube/salty-dog/commit/80d3cb8))
+* **docs:** add rule options to readme ([3cbf443](https://github.com/ssube/salty-dog/commit/3cbf443))
+* **rule:** allow leading directories in rule path glob ([00c7b89](https://github.com/ssube/salty-dog/commit/00c7b89))
+* export exit statuses ([e0dca3c](https://github.com/ssube/salty-dog/commit/e0dca3c))
+* **build:** add full build target for local and containers ([79b4c9a](https://github.com/ssube/salty-dog/commit/79b4c9a))
+* **build:** adopt rollup-template makefile, CI scripts ([a5bb2f4](https://github.com/ssube/salty-dog/commit/a5bb2f4))
+* **build:** exclude partial typedefs and test bundle from package ([da0e080](https://github.com/ssube/salty-dog/commit/da0e080))
+* **build:** include template jobs ([f9d3a44](https://github.com/ssube/salty-dog/commit/f9d3a44))
+* **build:** replace template jobs with extends ([3ae9412](https://github.com/ssube/salty-dog/commit/3ae9412))
+* **docs:** cover loading rules from module and path ([8ab6bb2](https://github.com/ssube/salty-dog/commit/8ab6bb2))
+* **rules:** filter gitlab jobs better ([988b942](https://github.com/ssube/salty-dog/commit/988b942))
+* **rules:** group rule errors to trigger correct failure ([#114](https://github.com/ssube/salty-dog/issues/114)) ([0c30036](https://github.com/ssube/salty-dog/commit/0c30036))
+* **rules:** remove redundant rule field from result ([b5d4698](https://github.com/ssube/salty-dog/commit/b5d4698))
+* **rules:** validate rule check/filter against full JSON schema metaschema ([afeba99](https://github.com/ssube/salty-dog/commit/afeba99))
+* **tests:** add gitlab CI test snippet, move test snippets into test dir ([247e1ab](https://github.com/ssube/salty-dog/commit/247e1ab))
+* **tests:** cover visit rules pass and errors ([44b1a60](https://github.com/ssube/salty-dog/commit/44b1a60))
+* extract rule interface ([ebe15fb](https://github.com/ssube/salty-dog/commit/ebe15fb))
+* **config:** group yargs to fix result TS interface ([5fefe0c](https://github.com/ssube/salty-dog/commit/5fefe0c))
+* **docs:** note pretty-printing logs ([a3b8341](https://github.com/ssube/salty-dog/commit/a3b8341))
+* **rules/tsconfig:** flatten target-lib using data refs ([b3c66dc](https://github.com/ssube/salty-dog/commit/b3c66dc))
+* **tests:** use count flag to check example errors ([d2156a5](https://github.com/ssube/salty-dog/commit/d2156a5))
+* **visitor:** handle missing errors gracefully ([9725685](https://github.com/ssube/salty-dog/commit/9725685))
+* **visitor:** include rule name and selector in error messages ([fcd4740](https://github.com/ssube/salty-dog/commit/fcd4740))
+* **visitor:** log added schemas correctly ([29e9462](https://github.com/ssube/salty-dog/commit/29e9462))
+* **visitor:** remove error method from context ([842006c](https://github.com/ssube/salty-dog/commit/842006c)), closes [#114](https://github.com/ssube/salty-dog/issues/114)
+* build a rule selector from args, log it in list mode ([59e7c13](https://github.com/ssube/salty-dog/commit/59e7c13))
+* include active/loaded rule count in list mode output ([05f3f2f](https://github.com/ssube/salty-dog/commit/05f3f2f))
+* move completion into main, remove weird exit from arg parsing ([a2a0fb4](https://github.com/ssube/salty-dog/commit/a2a0fb4))
+
+
+### Features
+
+* adopt rollup template index (fixes [#118](https://github.com/ssube/salty-dog/issues/118)) ([53e00c5](https://github.com/ssube/salty-dog/commit/53e00c5))
+* recursively load rules (fixes [#135](https://github.com/ssube/salty-dog/issues/135)) ([6f4b324](https://github.com/ssube/salty-dog/commit/6f4b324))
+* **build:** add build-in-image targets to make ([f805945](https://github.com/ssube/salty-dog/commit/f805945))
+* **build:** replace tslint with eslint ([7052096](https://github.com/ssube/salty-dog/commit/7052096))
+* **rules:** add item index to rule error (fixes [#116](https://github.com/ssube/salty-dog/issues/116)) ([f0b5109](https://github.com/ssube/salty-dog/commit/f0b5109))
+* **rules:** load JSON rule files when using --rule-path ([5229ada](https://github.com/ssube/salty-dog/commit/5229ada))
+* **visitor:** move jsonpath pick to context for modules to use ([b99431b](https://github.com/ssube/salty-dog/commit/b99431b))
+* enable data refs ([2b0dc92](https://github.com/ssube/salty-dog/commit/2b0dc92))
+* load rules from directories ([#8](https://github.com/ssube/salty-dog/issues/8)) and modules ([#6](https://github.com/ssube/salty-dog/issues/6)) ([9fbf7cc](https://github.com/ssube/salty-dog/commit/9fbf7cc))
+* split rule and helpers, test rule ([b3dc864](https://github.com/ssube/salty-dog/commit/b3dc864))
+
 ### [0.7.1](https://github.com/ssube/salty-dog/compare/v0.7.0...v0.7.1) (2019-11-01)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "salty-dog",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Rule-based JSON/YAML validator using JSON schemas",
   "keywords": [
     "cli",
