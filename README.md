@@ -25,6 +25,7 @@ supports multiple documents per stream or file, inserting defaults, and other ma
       - [List Mode](#list-mode)
     - [Rules](#rules)
       - [Enabling Rules](#enabling-rules)
+      - [Loading Rules](#loading-rules)
       - [Validate Rules](#validate-rules)
   - [License](#license)
 
@@ -325,6 +326,16 @@ To enable a single rule by name, `--include-name foo-rule`.
 To enable a group of rules by level, `--include-level warn`.
 
 To enable a group of rules by tag, `--include-tag foo`.
+
+#### Loading Rules
+
+Rules can be loaded from a file, module, or path.
+
+To load a file by name, `--rule-file foo.yml`. This will accept any extension.
+
+To load a module, `--rule-module foo`. The required module exports [are documented here](./docs/rules.md#from-module).
+
+To load a path, `--rule-path foo/`. This will recursively load any files matching `*.+(json|yaml|yml)`.
 
 #### Validate Rules
 
