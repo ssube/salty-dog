@@ -3,9 +3,12 @@
 .nyc_output/
 node_modules/
 out/
-package-lock.json
-yarn-error.log
+temp/
 
+# types
 *.bak
 *.swp
 *.tmp
+
+package-lock.json
+yarn-error.log
