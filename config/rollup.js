@@ -1,54 +1,84 @@
+import { join, sep } from 'path';
 import commonjs from 'rollup-plugin-commonjs';
 import { eslint } from 'rollup-plugin-eslint';
 import json from 'rollup-plugin-json';
 import multiEntry from 'rollup-plugin-multi-entry';
+import externals from 'rollup-plugin-node-externals';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
 import typescript from 'rollup-plugin-typescript2';
+import yaml from 'rollup-plugin-yaml';
 
+const debug = process.env['DEBUG'] === 'TRUE';
 const metadata = require('../package.json');
-const shebang = '#! /usr/bin/env node';
+
+const external = require('./rollup-external.json').names;
+const globals = require('./rollup-globals.json');
+const namedExports = require('./rollup-named.json');
+const stubNames = require('./rollup-stub.json').names;
+
+const passStub = 'require("pass-stub")';
+const stubs = stubNames.reduce((p, c) => (p[c] = passStub, p), {});
+
+const rootPath = process.env['ROOT_PATH'];
+const targetPath = process.env['TARGET_PATH'];
 
 const bundle = {
-	external: [
-		'chai',
-		'dtrace-provider',
-	],
-	input: [
-		'src/index.ts',
-		'test/harness.ts',
-		'test/**/Test*.ts',
-	],
+	external,
+	input: {
+		include: [
+			join(rootPath, 'src', 'index.ts'),
+			join(rootPath, 'test', 'harness.ts'),
+			join(rootPath, 'test', '**', 'Test*.ts'),
+		],
+	},
 	manualChunks(id) {
-		if (id.includes('/test/') /* || id.includes('/chai/') */ || id.includes('/sinon/')) {
-			return 'test'
+		if (id.includes(`${sep}test${sep}`)) {
+			return 'test';
 		}
 
-		if (id.includes('/node_modules/')) {
+		if (id.match(/commonjs-external/i) || id.match(/commonjsHelpers/)) {
 			return 'vendor';
 		}
 
-		if (id.includes('/src/index')) {
+		if (id.includes(`${sep}node_modules${sep}`)) {
+			return 'vendor';
+		}
+
+		if (id.includes(`${sep}src${sep}index`)) {
 			return 'index';
 		}
 
-		if (id.includes('/src/')) {
+		if (id.includes(`${sep}src${sep}`)) {
 			return 'main';
 		}
 	},
 	output: {
-		dir: 'out/',
+		dir: targetPath,
 		chunkFileNames: '[name].js',
 		entryFileNames: 'entry-[name].js',
 		format: 'cjs',
+		globals,
 		sourcemap: true,
-		banner: () => {
-			return shebang + '\n\n';
-		},
 	},
 	plugins: [
 		multiEntry(),
 		json(),
+		yaml(),
+		externals({
+			builtins: true,
+			deps: true,
+			devDeps: false,
+			peerDeps: false,
+		}),
+		replace({
+			delimiters: ['require("', '")'],
+			values: stubs,
+		}),
+		replace({
+			delimiters: ['require(\'', '\')'],
+			values: stubs,
+		}),
 		replace({
 			delimiters: ['{{ ', ' }}'],
 			values: {
@@ -65,49 +95,23 @@ const bundle = {
 			preferBuiltins: true,
 		}),
 		commonjs({
-			namedExports: {
-				'node_modules/chai/index.js': [
-					'expect',
-				],
-				'node_modules/deep-diff/index.js': [
-					'applyDiff',
-					'diff',
-				],
-				'node_modules/lodash/lodash.js': [
-					'cloneDeep',
-					'defaultTo',
-					'intersection',
-					'isNil',
-					'isString',
-					'kebabCase',
-				],
-				'node_modules/noicejs/out/main-bundle.js': [
-					'BaseError',
-					'ConsoleLogger',
-					'NullLogger',
-					'logWithLevel',
-				],
-				'node_modules/js-yaml/index.js': [
-					'DEFAULT_SAFE_SCHEMA',
-					'SAFE_SCHEMA',
-					'safeDump',
-					'safeLoad',
-					'safeLoadAll',
-					'Schema',
-					'Type',
-				],
-				'node_modules/yargs/index.js': [
-					'showCompletionScript',
-					'usage',
-				],
-			},
+			namedExports,
 		}),
 		eslint({
-			configFile: './config/eslint.json',
+			configFile: join('.', 'config', 'eslint.json'),
+			exclude: [
+				join('node_modules', '**'),
+				join('src', 'resource'),
+				join('src', '**', '*.json'),
+				join('src', '**', '*.yml'),
+			],
+			include: [
+				join('**', '*.ts'),
+			],
 			throwOnError: true,
 		}),
-    typescript({
-			cacheRoot: 'out/cache/rts2',
+		typescript({
+			cacheRoot: join(targetPath, 'cache', 'rts2'),
 			rollupCommonJSResolveHack: true,
 		}),
 	],

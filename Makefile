@@ -10,11 +10,14 @@ export GIT_TAG ?= $(shell git tag -l --points-at HEAD | head -1)
 export MAKE_PATH		?= $(abspath $(lastword $(MAKEFILE_LIST)))
 export ROOT_PATH		?= $(dir $(MAKE_PATH))
 export CONFIG_PATH 	?= $(ROOT_PATH)/config
-export DOCS_PATH		?= $(ROOT_PATH)/docs
+export DOCS_PATH	  ?= $(ROOT_PATH)/docs
 export SCRIPT_PATH 	?= $(ROOT_PATH)/scripts
 export SOURCE_PATH 	?= $(ROOT_PATH)/src
 export TARGET_PATH	?= $(ROOT_PATH)/out
+export TARGET_LOG		?= $(TARGET_PATH)/make.log
+export TARGET_MAIN 	?= $(TARGET_PATH)/index.js
 export TEST_PATH		?= $(ROOT_PATH)/test
+export VENDOR_PATH	?= $(ROOT_PATH)/vendor
 
 # CI
 export CI_COMMIT_REF_SLUG ?= $(GIT_BRANCH)

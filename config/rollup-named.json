@@ -1,0 +1,37 @@
+{
+  "node_modules/chai/index.js": [
+    "expect",
+    "use"
+  ],
+  "node_modules/deep-diff/index.js": [
+    "applyDiff",
+    "diff"
+  ],
+  "node_modules/lodash/lodash.js": [
+    "cloneDeep",
+    "defaultTo",
+    "intersection",
+    "isNil",
+    "isString",
+    "kebabCase"
+  ],
+  "node_modules/noicejs/out/main-bundle.js": [
+    "BaseError",
+    "ConsoleLogger",
+    "NullLogger",
+    "logWithLevel"
+  ],
+  "node_modules/js-yaml/index.js": [
+    "DEFAULT_SAFE_SCHEMA",
+    "SAFE_SCHEMA",
+    "safeDump",
+    "safeLoad",
+    "safeLoadAll",
+    "Schema",
+    "Type"
+  ],
+  "node_modules/yargs/index.js": [
+    "showCompletionScript",
+    "usage"
+  ]
+}
