@@ -24,8 +24,8 @@ supports multiple documents per stream or file, inserting defaults, and other ma
         - [Coercing Values](#coercing-values)
       - [List Mode](#list-mode)
     - [Rules](#rules)
-      - [Enabling Rules](#enabling-rules)
-      - [Loading Rules](#loading-rules)
+      - [Enable Rules](#enable-rules)
+      - [Load Rules](#load-rules)
       - [Validate Rules](#validate-rules)
   - [License](#license)
 
@@ -317,7 +317,7 @@ The rule's `select` expression is used to select nodes that should be validated,
 
 The structure of rule files and the rules within them [are documented here](docs/rules.md).
 
-#### Enabling Rules
+#### Enable Rules
 
 All rules are disabled by default and must be enabled by name, level, or tag.
 
@@ -327,7 +327,7 @@ To enable a group of rules by level, `--include-level warn`.
 
 To enable a group of rules by tag, `--include-tag foo`.
 
-#### Loading Rules
+#### Load Rules
 
 Rules can be loaded from a file, module, or path.
 
