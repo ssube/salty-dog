@@ -67,15 +67,13 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
 
   public mergeResult(other: VisitorResult, data: any = {}): this {
     this.changeBuffer.push(...other.changes);
-    this.errorBuffer.push(...other.errors.map((err) => {
-      return {
-        ...err,
-        data: {
-          ...err.data,
-          ...data,
-        },
-      };
-    }));
+    this.errorBuffer.push(...other.errors.map((err) => ({
+      ...err,
+      data: {
+        ...err.data,
+        ...data,
+      },
+    })));
     return this;
   }
 
