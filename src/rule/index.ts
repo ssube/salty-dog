@@ -205,8 +205,8 @@ export async function visitRules(ctx: VisitorContext, rules: Array<Rule>, data: 
     let itemIndex = 0;
     for (const item of items) {
       ctx.visitData = {
-          itemIndex,
-          rule,
+        itemIndex,
+        rule,
       };
       const itemResult = cloneDeep(item);
       const ruleResult = await rule.visit(ctx, itemResult);
