@@ -1,0 +1,8 @@
+{
+	"names": [
+		"async_hooks",
+		"chai",
+		"dtrace-provider",
+		"sinon"
+	]
+}
