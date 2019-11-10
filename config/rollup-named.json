@@ -15,6 +15,9 @@
     "isString",
     "kebabCase"
   ],
+  "node_modules/minimatch/minimatch.js": [
+    "Minimatch"
+  ],
   "node_modules/noicejs/out/main-bundle.js": [
     "BaseError",
     "ConsoleLogger",

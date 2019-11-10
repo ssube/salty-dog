@@ -1,11 +1,13 @@
 import { ValidateFunction } from 'ajv';
 import { applyDiff, diff } from 'deep-diff';
 import { cloneDeep, Dictionary, intersection, isNil } from 'lodash';
+import { Minimatch } from 'minimatch';
 import { LogLevel } from 'noicejs';
 import { join } from 'path';
+import recursive from 'recursive-readdir';
 
 import { YamlParser } from '../parser/YamlParser';
-import { readDir, readFile } from '../source';
+import { readFile } from '../source';
 import { ensureArray, hasItems } from '../utils';
 import { VisitorResult } from '../visitor';
 import { VisitorContext } from '../visitor/VisitorContext';
@@ -119,13 +121,16 @@ export async function loadRuleFiles(paths: Array<string>, ctx: VisitorContext): 
 }
 
 export async function loadRulePaths(paths: Array<string>, ctx: VisitorContext): Promise<Array<Rule>> {
+  const match = new Minimatch('*.+(json|yaml|yml)');
   const rules = [];
 
   for (const path of paths) {
-    const allFiles = await readDir(path);
+    const allFiles = await recursive(path);
+    ctx.logger.debug({ files: allFiles }, 'path matched files');
     // skip files that start with `.`, limit to json and yaml/yml
     const files = allFiles
-      .filter((name) => name.toLowerCase().match(/^[^\.].*\.(json|ya?ml)/))
+      .filter((name) => name[0] !== '.')
+      .filter((name) => match.match(name.toLowerCase()))
       .map((name) => join(path, name));
 
     const pathRules = await loadRuleFiles(files, ctx);
