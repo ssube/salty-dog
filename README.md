@@ -82,7 +82,7 @@ ingress.extensions/gitlab created (dry run)
 ## Releases
 
 [![Github release version](https://img.shields.io/github/tag/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/releases)
-[![Commits since release](https://img.shields.io/github/commits-since/ssube/salty-dog/v0.7.1.svg)](https://github.com/ssube/salty-dog/compare/v0.7.1...master)
+[![Commits since release](https://img.shields.io/github/commits-since/ssube/salty-dog/v0.8.0.svg)](https://github.com/ssube/salty-dog/compare/v0.8.0...master)
 
 [![npm release version](https://img.shields.io/npm/v/salty-dog.svg)](https://www.npmjs.com/package/salty-dog)
 [![Docker image size](https://images.microbadger.com/badges/image/ssube/salty-dog:master.svg)](https://microbadger.com/images/ssube/salty-dog:master)
