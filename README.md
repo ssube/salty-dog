@@ -61,8 +61,10 @@ ingress.extensions/gitlab created (dry run)
 ## Status
 
 [![Pipeline status](https://img.shields.io/gitlab/pipeline/ssube/salty-dog.svg?gitlab_url=https%3A%2F%2Fgit.apextoaster.com&logo=gitlab)](https://git.apextoaster.com/ssube/salty-dog/commits/master)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=ssube_salty-dog&metric=ncloc)](https://sonarcloud.io/dashboard?id=ssube_salty-dog)
 [![Test coverage](https://codecov.io/gh/ssube/salty-dog/branch/master/graph/badge.svg)](https://codecov.io/gh/ssube/salty-dog)
 [![MIT license](https://img.shields.io/github/license/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/blob/master/LICENSE.md)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fssube%2Fsalty-dog.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fssube%2Fsalty-dog?ref=badge_shield)
 
 [![Open bug count](https://img.shields.io/github/issues-raw/ssube/salty-dog/type-bug.svg)](https://github.com/ssube/salty-dog/issues?q=is%3Aopen+is%3Aissue+label%3Atype%2Fbug)
 [![Open issue count](https://img.shields.io/github/issues-raw/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/issues?q=is%3Aopen+is%3Aissue)
@@ -81,11 +83,16 @@ ingress.extensions/gitlab created (dry run)
 
 ## Releases
 
-[![Github release version](https://img.shields.io/github/tag/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/releases)
-[![Commits since release](https://img.shields.io/github/commits-since/ssube/salty-dog/v0.8.0.svg)](https://github.com/ssube/salty-dog/compare/v0.8.0...master)
+[![github release link](https://img.shields.io/badge/github-release-blue?logo=github)](https://github.com/ssube/salty-dog/releases)
+[![github release version](https://img.shields.io/github/tag/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/releases)
+[![github commits since release](https://img.shields.io/github/commits-since/ssube/salty-dog/v0.8.0.svg)](https://github.com/ssube/salty-dog/compare/v0.8.0...master)
 
+[![npm package link](https://img.shields.io/badge/npm-package-blue?logo=npm)](https://www.npmjs.com/package/salty-dog)
 [![npm release version](https://img.shields.io/npm/v/salty-dog.svg)](https://www.npmjs.com/package/salty-dog)
-[![Docker image size](https://images.microbadger.com/badges/image/ssube/salty-dog:master.svg)](https://microbadger.com/images/ssube/salty-dog:master)
+[![Typescript definitions](https://img.shields.io/npm/types/salty-dog.svg)](https://www.npmjs.com/package/salty-dog)
+
+[![docker image link](https://img.shields.io/badge/docker-image-blue?logo=docker)](https://hub.docker.com/r/ssube/salty-dog)
+[![docker image size](https://images.microbadger.com/badges/image/ssube/salty-dog:master.svg)](https://microbadger.com/images/ssube/salty-dog:master)
 
 ## Build
 
