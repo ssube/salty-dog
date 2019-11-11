@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { ConsoleLogger } from 'noicejs';
+import { ConsoleLogger, LogLevel } from 'noicejs';
 
 import { VisitorContext } from '../../src/visitor/VisitorContext';
 
@@ -23,7 +23,7 @@ describe('visitor context', () => {
         data: {
           foo: 2,
         },
-        level: 'info',
+        level: LogLevel.Info,
         msg: 'uh oh',
       }],
     });

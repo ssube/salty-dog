@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { NullLogger } from 'noicejs';
+import { LogLevel, NullLogger } from 'noicejs';
 import { stub } from 'sinon';
 
 import { friendlyError, SchemaRule } from '../../src/rule/SchemaRule';
@@ -26,7 +26,7 @@ describeLeaks('schema rule', async () => {
     const rule = new SchemaRule({
       check: {},
       desc: '',
-      level: 'info',
+      level: LogLevel.Info,
       name: 'foo',
       select: '$.foo',
       tags: [],
@@ -60,7 +60,7 @@ describeLeaks('schema rule', async () => {
         },
         type: 'object',
       },
-      level: 'info',
+      level: LogLevel.Info,
       name: 'foo',
       select: '$.foo',
       tags: [],
@@ -82,7 +82,7 @@ describeLeaks('schema rule', async () => {
     const rule = new SchemaRule({
       check: undefined,
       desc: TEST_NAME,
-      level: 'info',
+      level: LogLevel.Info,
       name: TEST_NAME,
       select: '$.foo',
       tags: [],
@@ -113,7 +113,7 @@ describeLeaks('schema rule', async () => {
       check,
       desc: TEST_NAME,
       filter,
-      level: 'info',
+      level: LogLevel.Info,
       name: TEST_NAME,
       select: '$.foo',
       tags: [],
@@ -144,7 +144,7 @@ describeLeaks('schema rule', async () => {
       check: undefined,
       desc: TEST_NAME,
       filter: {},
-      level: 'info',
+      level: LogLevel.Info,
       name: TEST_NAME,
       select: '$.foo',
       tags: [],
@@ -163,7 +163,7 @@ describe('friendly errors', () => {
     const rule = new SchemaRule({
       check: {},
       desc: TEST_NAME,
-      level: 'info',
+      level: LogLevel.Info,
       name: TEST_NAME,
       select: '',
       tags: [TEST_NAME],
@@ -194,7 +194,7 @@ describe('friendly errors', () => {
     const rule = new SchemaRule({
       check: {},
       desc: TEST_NAME,
-      level: 'info',
+      level: LogLevel.Info,
       name: TEST_NAME,
       select: '',
       tags: [TEST_NAME],

@@ -79,7 +79,7 @@ export function friendlyError(ctx: VisitorContext, err: ErrorObject): VisitorErr
     data: {
       err,
     },
-    level: 'error',
+    level: LogLevel.Error,
     msg: friendlyErrorMessage(ctx, err),
   };
 }

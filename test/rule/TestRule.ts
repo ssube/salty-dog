@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { ConsoleLogger } from 'noicejs';
+import { ConsoleLogger, LogLevel } from 'noicejs';
 import { mock, spy, stub } from 'sinon';
 
 import { createRuleSelector, createRuleSources, resolveRules, visitRules } from '../../src/rule';
@@ -10,21 +10,21 @@ import { describeLeaks, itLeaks } from '../helpers/async';
 const TEST_RULES = [new SchemaRule({
   check: {},
   desc: '',
-  level: 'info',
+  level: LogLevel.Info,
   name: 'foo',
   select: '$',
   tags: ['all', 'foo'],
 }), new SchemaRule({
   check: {},
   desc: '',
-  level: 'warn',
+  level: LogLevel.Warn,
   name: 'bar',
   select: '$',
   tags: ['all', 'test'],
 }), new SchemaRule({
   check: {},
   desc: '',
-  level: 'warn',
+  level: LogLevel.Warn,
   name: 'bin',
   select: '$',
   tags: ['all', 'test'],
@@ -34,7 +34,7 @@ describeLeaks('rule resolver', async () => {
   describeLeaks('include by level', async () => {
     itLeaks('should include info rules', async () => {
       const info = await resolveRules(TEST_RULES, createRuleSelector({
-        includeLevel: ['info'],
+        includeLevel: [LogLevel.Info],
       }));
 
       expect(info.length).to.equal(1);
@@ -43,7 +43,7 @@ describeLeaks('rule resolver', async () => {
 
     itLeaks('should include warn rules', async () => {
       const info = await resolveRules(TEST_RULES, createRuleSelector({
-        includeLevel: ['warn'],
+        includeLevel: [LogLevel.Warn],
       }));
 
       expect(info.length).to.equal(2);
@@ -115,7 +115,7 @@ describeLeaks('rule visitor', async () => {
     const rule = new SchemaRule({
       check: {},
       desc: '',
-      level: 'info',
+      level: LogLevel.Info,
       name: 'foo',
       select: '$',
       tags: [],
@@ -147,7 +147,7 @@ describeLeaks('rule visitor', async () => {
     const rule = new SchemaRule({
       check: {},
       desc: '',
-      level: 'info',
+      level: LogLevel.Info,
       name: 'foo',
       select: '$',
       tags: [],
@@ -184,7 +184,7 @@ describeLeaks('rule visitor', async () => {
     const rule = new SchemaRule({
       check: {},
       desc: '',
-      level: 'info',
+      level: LogLevel.Info,
       name: 'foo',
       select: '$.foo.*',
       tags: [],
@@ -217,7 +217,7 @@ describeLeaks('rule visitor', async () => {
     const rule = new SchemaRule({
       check: {},
       desc: '',
-      level: 'info',
+      level: LogLevel.Info,
       name: 'foo',
       select: '$.foo.*',
       tags: [],
@@ -227,7 +227,7 @@ describeLeaks('rule visitor', async () => {
       changes: [],
       errors: [{
         data: {},
-        level: 'error',
+        level: LogLevel.Error,
         msg: 'kaboom!',
       }],
     }));
