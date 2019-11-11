@@ -9,6 +9,8 @@ import { VisitorContext } from '../visitor/VisitorContext';
 
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/strict-boolean-expressions */
 
+const DEFAULT_FILTER = () => true;
+
 export class SchemaRule implements Rule, RuleData, Visitor {
   public readonly check: ValidateFunction;
   public readonly desc: string;
@@ -67,7 +69,7 @@ export class SchemaRule implements Rule, RuleData, Visitor {
 
   protected compileFilter(ctx: VisitorContext): ValidateFunction {
     if (isNil(this.filter)) {
-      return () => true;
+      return DEFAULT_FILTER;
     } else {
       return ctx.compile(this.filter);
     }
