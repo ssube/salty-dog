@@ -1,0 +1,27 @@
+name: json-schema
+rules:
+  - name: json-schema-root
+    desc: root must be a json schema
+    level: info
+    tags:
+      - json-schema
+      - important
+
+    check:
+      $ref: "http://json-schema.org/draft-07/schema#"
+
+  - name: json-schema-id
+    desc: schema must have an id
+    level: info
+    tags:
+      - json-schema
+      - important
+
+    check:
+      type: object
+      required: [$id, $schema]
+      properties:
+        $id:
+          type: string
+        $schema:
+          type: string
