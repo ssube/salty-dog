@@ -2385,10 +2385,10 @@ node-environment-flags@1.0.5:
     object.getownpropertydescriptors "^2.0.3"
     semver "^5.7.0"
 
-noicejs@2.5.2:
-  version "2.5.2"
-  resolved "https://artifacts.apextoaster.com/repository/group-npm/noicejs/-/noicejs-2.5.2.tgz#71d5ef524a2ac1e4d998474017a0e8a7c862e0c7"
-  integrity sha512-unGgqcZLcFMPEB+dVsD55RxNa0tl+dMioKMHxZqtYeXx57tlHZsxXNdvzsctTduHQ255nsW8zMONIqE3seYpFw==
+noicejs@3.0.0:
+  version "3.0.0"
+  resolved "https://artifacts.apextoaster.com/repository/group-npm/noicejs/-/noicejs-3.0.0.tgz#7fca4008c6c9c78ee4ca4b04bb179b424c23cb4c"
+  integrity sha512-DZFqSAgsh3nxDfHi/ncgLFtN2G2iWTJdOZQU6LQILAVcs7RX57OSR1+FS0WVL8FAZfd47WC4xhN8EGrNzKuSvQ==
 
 normalize-package-data@^2.3.0, normalize-package-data@^2.3.2, normalize-package-data@^2.3.4, normalize-package-data@^2.3.5:
   version "2.5.0"
