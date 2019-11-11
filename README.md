@@ -1,33 +1,7 @@
-# SALTY DOG
+# SALTY Dog
 
 Rule-based JSON/YAML validator using JSON schemas. Capable of filtering elements to validate partial documents,
 supports multiple documents per stream or file, inserting defaults, and other magic.
-
-- [SALTY DOG](#salty-dog)
-  - [Getting Started](#getting-started)
-  - [Status](#status)
-  - [Releases](#releases)
-  - [Build](#build)
-    - [Local Build](#local-build)
-    - [Docker Build](#docker-build)
-  - [Install](#install)
-    - [Docker Install](#docker-install)
-    - [Yarn Install](#yarn-install)
-      - [Global](#global)
-      - [Project](#project)
-  - [Usage](#usage)
-    - [Logs](#logs)
-    - [Modes](#modes)
-      - [Check Mode](#check-mode)
-      - [Fix Mode](#fix-mode)
-        - [Default Values](#default-values)
-        - [Coercing Values](#coercing-values)
-      - [List Mode](#list-mode)
-    - [Rules](#rules)
-      - [Enable Rules](#enable-rules)
-      - [Load Rules](#load-rules)
-      - [Validate Rules](#validate-rules)
-  - [License](#license)
 
 ## Getting Started
 
@@ -57,6 +31,35 @@ To download, validate, and apply a Kubernetes resource:
 {"name":"salty-dog","hostname":"cerberus","pid":7860,"level":30,"msg":"all rules passed","time":"2019-06-16T02:04:37.797Z","v":0}
 ingress.extensions/gitlab created (dry run)
 ```
+
+## Contents
+
+- [SALTY Dog](#salty-dog)
+  - [Getting Started](#getting-started)
+  - [Contents](#contents)
+  - [Status](#status)
+  - [Releases](#releases)
+  - [Build](#build)
+    - [Local Build](#local-build)
+    - [Docker Build](#docker-build)
+  - [Install](#install)
+    - [Docker Install](#docker-install)
+    - [Yarn Install](#yarn-install)
+      - [Global](#global)
+      - [Project](#project)
+  - [Usage](#usage)
+    - [Logs](#logs)
+    - [Modes](#modes)
+      - [Check Mode](#check-mode)
+      - [Fix Mode](#fix-mode)
+        - [Default Values](#default-values)
+        - [Coercing Values](#coercing-values)
+      - [List Mode](#list-mode)
+    - [Rules](#rules)
+      - [Enable Rules](#enable-rules)
+      - [Load Rules](#load-rules)
+      - [Validate Rules](#validate-rules)
+  - [License](#license)
 
 ## Status
 
@@ -106,14 +109,9 @@ This project is written in Typescript and requires `make`, `node`, and `yarn` to
 > make
 ```
 
-After building, run with `node out/index.js` or install run as `salty-dog`:
+After building, run with `node out/index.js` or install globally with `make yarn-global`.
 
-```shell
-> cd salty-dog
-> yarn global add file:$(pwd)
-```
-
-`make` targets are provided for some common arguments:
+`make` targets are provided for some example arguments:
 
 ```shell
 > curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml | \
@@ -356,4 +354,5 @@ To validate the rules in the `rules/` directory using the meta-rules:
 ```
 
 ## License
+
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fssube%2Fsalty-dog.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fssube%2Fsalty-dog?ref=badge_large)
