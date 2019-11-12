@@ -79,7 +79,7 @@ rules:
               type: string
 
   - name: gitlab-top-level
-    desc: should only have includes and stages at the top level scope
+    desc: should only have includes and stages at the top level
     level: info
     tags:
       - gitlab

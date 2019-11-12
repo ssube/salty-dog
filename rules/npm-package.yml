@@ -1,0 +1,55 @@
+name: npm-package
+rules:
+  - name: npm-package-license
+    desc: packages should have attribution information
+    level: info
+    tags:
+      - npm-package
+      - important
+
+    check:
+      type: object
+      required: [author, license, main, version]
+      properties:
+        author:
+          type: string
+        license:
+          type: string
+        main:
+          type: string
+        version:
+          type: string
+
+  - name: npm-package-publish
+    desc: packages should specify the registry to which they publish
+    level: info
+    tags:
+      - npm-package
+      - optional
+
+    check:
+      type: object
+      required: [publishConfig]
+      properties:
+        publishConfig:
+          type: object
+          required: [registry]
+          properties:
+            registry:
+              type: string
+
+  - name: npm-package-keywords
+    desc: packages should have normalized keywords
+    level: info
+    tags:
+      - npm-package
+      - optional
+
+    check:
+      type: object
+      required: [keywords]
+      properties:
+        keywords:
+          type: array
+          items:
+            type: string
