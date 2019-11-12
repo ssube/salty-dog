@@ -132,7 +132,7 @@ export async function loadRulePaths(paths: Array<string>, ctx: VisitorContext): 
       .filter((name) => name[0] !== '.')
       .filter((name) => match.match(name));
 
-    ctx.logger.debug({ allFiles, files }, 'path matched files');
+    ctx.logger.debug({ files }, 'path matched rule files');
 
     const pathRules = await loadRuleFiles(files, ctx);
     rules.push(...pathRules);

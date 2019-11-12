@@ -96,7 +96,6 @@ describeLeaks('load rule path helper', async () => {
   });
 
   itLeaks('should recursively load rule files', async () => {
-
     mockFS({
       test: {
         'bar-dir': {

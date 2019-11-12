@@ -51,8 +51,8 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
 
   public addSchema(name: string, schema: any): void {
     this.logger.debug({
-      name,
       schema,
+      schemaName: name,
     }, 'adding ajv schema');
 
     this.ajv.addSchema({
