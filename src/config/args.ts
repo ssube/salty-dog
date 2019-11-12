@@ -36,6 +36,7 @@ export interface ParsedArgs extends RuleSelector, RuleSources {
   defaults: boolean;
   dest: string;
   mode: string;
+  mutate: boolean;
   source: string;
 }
 
@@ -65,6 +66,10 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
           type: 'boolean',
         },
         defaults: {
+          default: true,
+          type: 'boolean',
+        },
+        mutate: {
           default: true,
           type: 'boolean',
         },

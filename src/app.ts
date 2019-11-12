@@ -37,7 +37,7 @@ export async function main(argv: Array<string>): Promise<number> {
     schemaOptions: {
       coerce: args.coerce,
       defaults: args.defaults,
-      mutate: mode === MODE.fix,
+      mutate: args.mutate,
     },
   });
 
