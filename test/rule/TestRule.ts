@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { ConsoleLogger, LogLevel } from 'noicejs';
+import { LogLevel, NullLogger } from 'noicejs';
 import { mock, spy, stub } from 'sinon';
 
 import { createRuleSelector, createRuleSources, resolveRules, visitRules } from '../../src/rule';
@@ -104,12 +104,12 @@ describeLeaks('rule resolver', async () => {
 describeLeaks('rule visitor', async () => {
   itLeaks('should only call visit for selected items', async () => {
     const ctx = new VisitorContext({
-      innerOptions: {
+      logger: NullLogger.global,
+      schemaOptions: {
         coerce: false,
         defaults: false,
         mutate: false,
       },
-      logger: new ConsoleLogger(),
     });
     const data = {};
     const rule = new SchemaRule({
@@ -136,12 +136,12 @@ describeLeaks('rule visitor', async () => {
 
   itLeaks('should call visit for each selected item', async () => {
     const ctx = new VisitorContext({
-      innerOptions: {
+      logger: NullLogger.global,
+      schemaOptions: {
         coerce: false,
         defaults: false,
         mutate: false,
       },
-      logger: new ConsoleLogger(),
     });
     const data = {};
     const rule = new SchemaRule({
@@ -171,12 +171,12 @@ describeLeaks('rule visitor', async () => {
 
   itLeaks('should visit individual items', async () => {
     const ctx = new VisitorContext({
-      innerOptions: {
+      logger: NullLogger.global,
+      schemaOptions: {
         coerce: false,
         defaults: false,
         mutate: false,
       },
-      logger: new ConsoleLogger(),
     });
     const data = {
       foo: [1, 2, 3],
@@ -204,12 +204,12 @@ describeLeaks('rule visitor', async () => {
 
   itLeaks('should visit individual items', async () => {
     const ctx = new VisitorContext({
-      innerOptions: {
+      logger: NullLogger.global,
+      schemaOptions: {
         coerce: false,
         defaults: false,
         mutate: false,
       },
-      logger: new ConsoleLogger(),
     });
     const data = {
       foo: [1, 2, 3],

@@ -33,12 +33,12 @@ export async function main(argv: Array<string>): Promise<number> {
   }
 
   const ctx = new VisitorContext({
-    innerOptions: {
+    logger,
+    schemaOptions: {
       coerce: args.coerce,
       defaults: args.defaults,
       mutate: mode === MODE.fix,
     },
-    logger,
   });
 
   const ruleSelector = createRuleSelector(args);

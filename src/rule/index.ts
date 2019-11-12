@@ -231,7 +231,7 @@ export async function visitRules(ctx: VisitorContext, rules: Array<Rule>, data: 
           rule: rule.name,
         }, 'rule passed with modifications');
 
-        if (ctx.innerOptions.mutate) {
+        if (ctx.schemaOptions.mutate) {
           applyDiff(item, itemResult);
         }
       } else {

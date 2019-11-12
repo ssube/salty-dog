@@ -13,12 +13,12 @@ const TEST_NAME = 'test-rule';
 describeLeaks('schema rule', async () => {
   itLeaks('should pick items from the scope', async () => {
     const ctx = new VisitorContext({
-      innerOptions: {
+      logger: NullLogger.global,
+      schemaOptions: {
         coerce: false,
         defaults: false,
         mutate: false,
       },
-      logger: NullLogger.global,
     });
     const data = {
       foo: 3,
@@ -38,12 +38,12 @@ describeLeaks('schema rule', async () => {
 
   itLeaks('should filter out items', async () => {
     const ctx = new VisitorContext({
-      innerOptions: {
+      logger: NullLogger.global,
+      schemaOptions: {
         coerce: false,
         defaults: false,
         mutate: false,
       },
-      logger: NullLogger.global,
     });
 
     const data = {
@@ -72,12 +72,12 @@ describeLeaks('schema rule', async () => {
 
   itLeaks('should pick items from the root', async () => {
     const ctx = new VisitorContext({
-      innerOptions: {
+      logger: NullLogger.global,
+      schemaOptions: {
         coerce: false,
         defaults: false,
         mutate: false,
       },
-      logger: NullLogger.global,
     });
     const rule = new SchemaRule({
       check: undefined,
@@ -95,12 +95,12 @@ describeLeaks('schema rule', async () => {
 
   itLeaks('should visit selected items', async () => {
     const ctx = new VisitorContext({
-      innerOptions: {
+      logger: NullLogger.global,
+      schemaOptions: {
         coerce: false,
         defaults: false,
         mutate: false,
       },
-      logger: NullLogger.global,
     });
 
     const check = {};
@@ -128,12 +128,12 @@ describeLeaks('schema rule', async () => {
 
   itLeaks('should skip filtered items', async () => {
     const ctx = new VisitorContext({
-      innerOptions: {
+      logger: NullLogger.global,
+      schemaOptions: {
         coerce: false,
         defaults: false,
         mutate: false,
       },
-      logger: NullLogger.global,
     });
 
     const checkSpy = stub().throws(new Error('check spy error'));
@@ -169,12 +169,12 @@ describe('friendly errors', () => {
       tags: [TEST_NAME],
     });
     const ctx = new VisitorContext({
-      innerOptions: {
+      logger: NullLogger.global,
+      schemaOptions: {
         coerce: false,
         defaults: false,
         mutate: false,
       },
-      logger: NullLogger.global,
     });
     ctx.visitData = {
       itemIndex: 0,
@@ -200,12 +200,12 @@ describe('friendly errors', () => {
       tags: [TEST_NAME],
     });
     const ctx = new VisitorContext({
-      innerOptions: {
+      logger: NullLogger.global,
+      schemaOptions: {
         coerce: false,
         defaults: false,
         mutate: false,
       },
-      logger: NullLogger.global,
     });
     ctx.visitData = {
       itemIndex: 0,

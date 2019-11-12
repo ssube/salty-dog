@@ -15,12 +15,12 @@ export interface RuleOptions {
 
 export interface VisitorContextOptions {
   logger: Logger;
-  innerOptions: RuleOptions;
+  schemaOptions: RuleOptions;
 }
 
 export class VisitorContext implements VisitorContextOptions, VisitorResult {
   public readonly logger: Logger;
-  public readonly innerOptions: RuleOptions;
+  public readonly schemaOptions: RuleOptions;
 
   protected readonly ajv: Ajv.Ajv;
   protected readonly changeBuffer: Array<any>;
@@ -41,12 +41,12 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
 
     this.ajv = new Ajv({
       $data: true,
-      coerceTypes: options.innerOptions.coerce,
-      useDefaults: options.innerOptions.defaults,
+      coerceTypes: options.schemaOptions.coerce,
+      useDefaults: options.schemaOptions.defaults,
     });
 
     this.logger = options.logger;
-    this.innerOptions = options.innerOptions;
+    this.schemaOptions = options.schemaOptions;
   }
 
   public addSchema(name: string, schema: any): void {

@@ -25,12 +25,12 @@ describeLeaks('load rule file helper', async () => {
     });
 
     const ctx = new VisitorContext({
-      innerOptions: {
+      logger: NullLogger.global,
+      schemaOptions: {
         coerce: false,
         defaults: false,
         mutate: false,
       },
-      logger: NullLogger.global,
     });
     const schemaSpy = spy(ctx, 'addSchema');
 
@@ -50,12 +50,12 @@ describeLeaks('load rule file helper', async () => {
     });
 
     const ctx = new VisitorContext({
-      innerOptions: {
+      logger: NullLogger.global,
+      schemaOptions: {
         coerce: false,
         defaults: false,
         mutate: false,
       },
-      logger: NullLogger.global,
     });
 
     const rules = await loadRuleFiles([
@@ -78,12 +78,12 @@ describeLeaks('load rule path helper', async () => {
     });
 
     const ctx = new VisitorContext({
-      innerOptions: {
+      logger: NullLogger.global,
+      schemaOptions: {
         coerce: false,
         defaults: false,
         mutate: false,
       },
-      logger: NullLogger.global,
     });
 
     const rules = await loadRulePaths([
@@ -109,12 +109,12 @@ describeLeaks('load rule path helper', async () => {
     });
 
     const ctx = new VisitorContext({
-      innerOptions: {
+      logger: NullLogger.global,
+      schemaOptions: {
         coerce: false,
         defaults: false,
         mutate: false,
       },
-      logger: NullLogger.global,
     });
 
     const rules = await loadRulePaths([
