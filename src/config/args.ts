@@ -124,8 +124,14 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
         default: 'yaml',
         type: 'string',
       },
-      'include-level': RULE_OPTION,
-      'include-name': RULE_OPTION,
+      'include-level': {
+        ...RULE_OPTION,
+        alias: ['l', 'level'],
+      },
+      'include-name': {
+        ...RULE_OPTION,
+        alias: ['n', 'name'],
+      },
       'include-tag': {
         ...RULE_OPTION,
         alias: ['t', 'tag'],
@@ -155,6 +161,7 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
       },
     })
     .help()
+    .alias('help', 'h')
     .version(VERSION_INFO.package.version)
     .alias('version', 'v');
 
