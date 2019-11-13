@@ -16,4 +16,12 @@ describeLeaks('regexp config type', async () => {
   itLeaks('should not match bare strings', async () => {
     expect(regexpType.resolve('foo')).to.equal(false);
   });
+
+  itLeaks('should not match invalid flags', async () => {
+    expect(regexpType.resolve('/foo/notrealflags')).to.equal(false);
+  });
+
+  itLeaks('should not match regex embedded in a longer string', async () => {
+    expect(regexpType.resolve('some/regex/with-padding')).to.equal(false);
+  });
 });

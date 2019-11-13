@@ -3,7 +3,7 @@ import { isNil } from 'lodash';
 
 import { InvalidArgumentError } from '../../error/InvalidArgumentError';
 
-export const REGEXP_REGEXP = /\/(.*)\/([gimuy]*)/;
+export const REGEXP_REGEXP = /^\/(.+)\/([gimsuy]*)$/;
 
 export const regexpType = new YamlType('!regexp', {
   kind: 'scalar',
