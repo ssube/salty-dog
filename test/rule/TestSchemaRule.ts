@@ -158,28 +158,34 @@ describeLeaks('schema rule', async () => {
   });
 });
 
+function createErrorContext() {
+  const rule = new SchemaRule({
+    check: {},
+    desc: TEST_NAME,
+    level: LogLevel.Info,
+    name: TEST_NAME,
+    select: '',
+    tags: [TEST_NAME],
+  });
+  const ctx = new VisitorContext({
+    logger: NullLogger.global,
+    schemaOptions: {
+      coerce: false,
+      defaults: false,
+      mutate: false,
+    },
+  });
+  ctx.visitData = {
+    itemIndex: 0,
+    rule,
+  };
+
+  return { ctx, rule };
+}
+
 describe('friendly errors', () => {
   it('should have a message', () => {
-    const rule = new SchemaRule({
-      check: {},
-      desc: TEST_NAME,
-      level: LogLevel.Info,
-      name: TEST_NAME,
-      select: '',
-      tags: [TEST_NAME],
-    });
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
-    ctx.visitData = {
-      itemIndex: 0,
-      rule,
-    };
+    const { ctx } = createErrorContext();
     const err = friendlyError(ctx, {
       dataPath: 'test-path',
       keyword: TEST_NAME,
@@ -190,27 +196,8 @@ describe('friendly errors', () => {
   });
 
   it('should handle errors with an existing message', () => {
+    const { ctx } = createErrorContext();
     const TEST_MESSAGE = 'test-message';
-    const rule = new SchemaRule({
-      check: {},
-      desc: TEST_NAME,
-      level: LogLevel.Info,
-      name: TEST_NAME,
-      select: '',
-      tags: [TEST_NAME],
-    });
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
-    ctx.visitData = {
-      itemIndex: 0,
-      rule,
-    };
     const err = friendlyError(ctx, {
       dataPath: 'test-path',
       keyword: TEST_NAME,
