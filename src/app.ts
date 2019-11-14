@@ -2,7 +2,7 @@ import { createLogger } from 'bunyan';
 import { showCompletionScript } from 'yargs';
 
 import { loadConfig } from './config';
-import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs, VALID_MODES } from './config/args';
+import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs } from './config/args';
 import { YamlParser } from './parser/YamlParser';
 import { createRuleSelector, createRuleSources, loadRules, resolveRules, visitRules } from './rule';
 import { readSource, writeSource } from './source';
@@ -26,12 +26,7 @@ export async function main(argv: Array<string>): Promise<number> {
   logger.info(VERSION_INFO, 'version info');
   logger.info({ args, mode }, 'main arguments');
 
-  // check mode
-  if (!VALID_MODES.has(mode)) {
-    logger.error({ mode }, 'unsupported mode');
-    return STATUS_ERROR;
-  }
-
+  // load rules
   const ctx = new VisitorContext({
     logger,
     schemaOptions: {
@@ -59,6 +54,7 @@ export async function main(argv: Array<string>): Promise<number> {
     return STATUS_SUCCESS;
   }
 
+  // load source
   const parser = new YamlParser();
   const source = await readSource(args.source);
   const docs = parser.parse(source);
