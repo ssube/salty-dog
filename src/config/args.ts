@@ -10,8 +10,6 @@ export enum MODE {
   list = 'list',
 }
 
-export const VALID_MODES = new Set([MODE.check, MODE.fix, MODE.list]);
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export const CONFIG_ARGS_NAME = 'config-name';
