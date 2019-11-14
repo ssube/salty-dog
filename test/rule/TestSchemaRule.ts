@@ -36,6 +36,31 @@ describeLeaks('schema rule', async () => {
     expect(results).to.deep.equal([data.foo]);
   });
 
+  itLeaks('should pick no items', async () => {
+    const ctx = new VisitorContext({
+      logger: NullLogger.global,
+      schemaOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
+    });
+    const data = {
+      bar: 3,
+    };
+    const rule = new SchemaRule({
+      check: {},
+      desc: '',
+      level: LogLevel.Info,
+      name: 'foo',
+      select: '$.foo',
+      tags: [],
+    });
+    const results = await rule.pick(ctx, data);
+
+    expect(results).to.deep.equal([]);
+  });
+
   itLeaks('should filter out items', async () => {
     const ctx = new VisitorContext({
       logger: NullLogger.global,
