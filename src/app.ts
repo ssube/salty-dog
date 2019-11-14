@@ -14,7 +14,7 @@ export const STATUS_ERROR = 1;
 export const STATUS_MAX = 255;
 
 export async function main(argv: Array<string>): Promise<number> {
-  const { args, mode } = await parseArgs(argv);
+  const { args, mode } = await parseArgs(argv.slice(2));
   if (mode === MODE.complete) {
     showCompletionScript();
     return STATUS_SUCCESS;
