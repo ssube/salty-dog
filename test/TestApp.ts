@@ -11,7 +11,20 @@ describeLeaks('main app', async () => {
   });
 
   itLeaks('should list rules and exit', async () => {
-    const status = await main(['node', 'test', 'list']);
+    mockFs({
+      docs: {
+        'config.yml': 'data: {logger: {level: debug, name: test, stream: !stream stderr}}',
+      },
+    });
+
+    const status = await main([
+      'node', 'test', 'list',
+      '--config-path', 'docs',
+      '--config-name', 'config.yml',
+    ]);
+
+    mockFs.restore();
+
     expect(status).to.equal(STATUS_SUCCESS);
   });
 
