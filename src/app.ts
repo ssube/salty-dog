@@ -5,7 +5,7 @@ import { loadConfig } from './config';
 import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs, VALID_MODES } from './config/args';
 import { YamlParser } from './parser/YamlParser';
 import { createRuleSelector, createRuleSources, loadRules, resolveRules, visitRules } from './rule';
-import { loadSource, writeSource } from './source';
+import { readSource, writeSource } from './source';
 import { VERSION_INFO } from './version';
 import { VisitorContext } from './visitor/VisitorContext';
 
@@ -60,7 +60,7 @@ export async function main(argv: Array<string>): Promise<number> {
   }
 
   const parser = new YamlParser();
-  const source = await loadSource(args.source);
+  const source = await readSource(args.source);
   const docs = parser.parse(source);
 
   for (const data of docs) {
