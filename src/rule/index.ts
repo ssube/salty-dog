@@ -1,13 +1,12 @@
 import { ValidateFunction } from 'ajv';
-import { applyDiff, diff } from 'deep-diff';
-import { cloneDeep, Dictionary, intersection, isNil } from 'lodash';
+import { Dictionary, intersection, isNil } from 'lodash';
 import { Minimatch } from 'minimatch';
 import { LogLevel } from 'noicejs';
 import recursive from 'recursive-readdir';
 
 import { YamlParser } from '../parser/YamlParser';
 import { readFile } from '../source';
-import { ensureArray, hasItems } from '../utils';
+import { ensureArray } from '../utils';
 import { VisitorResult } from '../visitor';
 import { VisitorContext } from '../visitor/VisitorContext';
 import { SchemaRule } from './SchemaRule';
@@ -203,44 +202,4 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
   }
 
   return Array.from(activeRules);
-}
-
-export async function visitRules(ctx: VisitorContext, rules: Array<Rule>, data: any): Promise<VisitorContext> {
-  for (const rule of rules) {
-    const items = await rule.pick(ctx, data);
-    let itemIndex = 0;
-    for (const item of items) {
-      ctx.visitData = {
-        itemIndex,
-        rule,
-      };
-      const itemResult = cloneDeep(item);
-      const ruleResult = await rule.visit(ctx, itemResult);
-
-      if (hasItems(ruleResult.errors)) {
-        ctx.logger.warn({ count: ruleResult.errors.length, rule }, 'rule failed');
-        ctx.mergeResult(ruleResult, ctx.visitData);
-        continue;
-      }
-
-      const itemDiff = diff(item, itemResult);
-      if (hasItems(itemDiff)) {
-        ctx.logger.info({
-          diff: itemDiff,
-          item,
-          rule: rule.name,
-        }, 'rule passed with modifications');
-
-        if (ctx.schemaOptions.mutate) {
-          applyDiff(item, itemResult);
-        }
-      } else {
-        ctx.logger.info({ rule: rule.name }, 'rule passed');
-      }
-
-      itemIndex += 1;
-    }
-  }
-
-  return ctx;
 }

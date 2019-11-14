@@ -4,7 +4,8 @@ import { showCompletionScript } from 'yargs';
 import { loadConfig } from './config';
 import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs } from './config/args';
 import { YamlParser } from './parser/YamlParser';
-import { createRuleSelector, createRuleSources, loadRules, resolveRules, visitRules } from './rule';
+import { createRuleSelector, createRuleSources, loadRules, resolveRules } from './rule';
+import { RuleVisitor } from './rule/RuleVisitor';
 import { readSource, writeSource } from './source';
 import { VERSION_INFO } from './version';
 import { VisitorContext } from './visitor/VisitorContext';
@@ -59,8 +60,12 @@ export async function main(argv: Array<string>): Promise<number> {
   const source = await readSource(args.source);
   const docs = parser.parse(source);
 
-  for (const data of docs) {
-    await visitRules(ctx, activeRules, data);
+  const visitor = new RuleVisitor({
+    rules: activeRules,
+  });
+
+  for (const root of docs) {
+    await visitor.visit(ctx, root);
   }
 
   if (ctx.errors.length === 0) {

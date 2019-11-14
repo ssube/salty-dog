@@ -2,7 +2,8 @@ import { expect } from 'chai';
 import { LogLevel, NullLogger } from 'noicejs';
 import { mock, spy, stub } from 'sinon';
 
-import { createRuleSelector, createRuleSources, resolveRules, visitRules } from '../../src/rule';
+import { createRuleSelector, createRuleSources, resolveRules } from '../../src/rule';
+import { RuleVisitor } from '../../src/rule/RuleVisitor';
 import { SchemaRule } from '../../src/rule/SchemaRule';
 import { VisitorContext } from '../../src/visitor/VisitorContext';
 import { describeLeaks, itLeaks } from '../helpers/async';
@@ -128,7 +129,10 @@ describeLeaks('rule visitor', async () => {
     pickStub.onFirstCall().returns(Promise.resolve([]));
     pickStub.throws();
 
-    await visitRules(ctx, [rule], {});
+    const visitor = new RuleVisitor({
+      rules: [rule],
+    });
+    await visitor.visit(ctx, {});
 
     mockRule.verify();
     expect(ctx.errors.length).to.equal(0);
@@ -163,7 +167,10 @@ describeLeaks('rule visitor', async () => {
     visitStub.onFirstCall().returns(Promise.resolve(ctx));
     visitStub.throws();
 
-    await visitRules(ctx, [rule], {});
+    const visitor = new RuleVisitor({
+      rules: [rule],
+    });
+    await visitor.visit(ctx, {});
 
     mockRule.verify();
     expect(ctx.errors.length).to.equal(0);
@@ -196,7 +203,10 @@ describeLeaks('rule visitor', async () => {
       errors: [],
     }));
 
-    await visitRules(ctx, [rule], data);
+    const visitor = new RuleVisitor({
+      rules: [rule],
+    });
+    await visitor.visit(ctx, data);
 
     expect(pickSpy).to.have.callCount(1).and.to.have.been.calledWithExactly(ctx, data);
     expect(visitStub).to.have.callCount(3);
@@ -232,7 +242,10 @@ describeLeaks('rule visitor', async () => {
       }],
     }));
 
-    await visitRules(ctx, [rule], data);
+    const visitor = new RuleVisitor({
+      rules: [rule],
+    });
+    await visitor.visit(ctx, data);
 
     expect(visitStub).to.have.callCount(3);
     expect(ctx.errors.length).to.equal(3);
