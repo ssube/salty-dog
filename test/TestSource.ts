@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import mockFs from 'mock-fs';
-import { spy } from 'sinon';
+import { BaseError } from 'noicejs';
+import { spy, stub } from 'sinon';
 import { PassThrough } from 'stream';
 
 import { readSource, writeSource } from '../src/source';
@@ -31,6 +32,14 @@ describeLeaks('load source helper', async () => {
 
     expect(source).to.equal(TEST_STRING);
   });
+
+  it('should handle errors reading from stdin', async () => {
+    const pt = new PassThrough();
+    const futureSource = readSource('-', pt);
+    pt.emit('error', new BaseError('terribad!'));
+
+    return expect(futureSource).to.eventually.be.rejectedWith(BaseError);
+  });
 });
 
 describeLeaks('write source helper', async () => {
@@ -55,5 +64,12 @@ describeLeaks('write source helper', async () => {
     pt.destroy();
 
     expect(writeSpy).to.have.been.calledWith(TEST_STRING);
+  });
+
+  it('should handle errors writing to stdout', async () => {
+    const pt = new PassThrough();
+    stub(pt, 'write').yields(new BaseError('terribad!'));
+
+    return expect(writeSource('-', 'test', pt)).to.eventually.be.rejectedWith(BaseError);
   });
 });
