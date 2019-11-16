@@ -1,0 +1,15 @@
+name: salty-dog-travis-ci
+rules:
+  - name: travis-language
+    desc: should specify a language
+    level: info
+    tags:
+      - travis-ci
+      - important
+
+    check:
+      type: object
+      required: [language]
+      properties:
+        language:
+          type: string
