@@ -10,4 +10,6 @@ spec:
     spec:
       containers:
         - name: test
+          image: foo
+          imagePullPolicy: Always
           # missing resources

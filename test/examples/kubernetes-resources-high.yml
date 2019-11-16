@@ -10,6 +10,8 @@ spec:
     spec:
       containers:
         - name: test
+          image: foo
+          imagePullPolicy: Always
           resources:
             limits:
               cpu: 4000m
