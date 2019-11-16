@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 
 import { regexpType } from '../../../src/config/type/Regexp';
+import { InvalidArgumentError } from '../../../src/error/InvalidArgumentError';
 import { describeLeaks, itLeaks } from '../../helpers/async';
 
 describeLeaks('regexp config type', async () => {
@@ -21,7 +22,11 @@ describeLeaks('regexp config type', async () => {
     expect(regexpType.resolve('/foo/notrealflags')).to.equal(false);
   });
 
-  itLeaks('should not match regex embedded in a longer string', async () => {
-    expect(regexpType.resolve('some/regex/with-padding')).to.equal(false);
+  itLeaks('should not match regexp embedded in a longer string', async () => {
+    expect(regexpType.resolve('some/regexp/with-padding')).to.equal(false);
+  });
+
+  itLeaks('should throw when constructing an invalid regexp', async () => {
+    expect(() => regexpType.construct('/foo/notrealflags')).to.throw(InvalidArgumentError);
   });
 });

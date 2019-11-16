@@ -7,6 +7,7 @@ import { NotFoundError } from '../../../src/error/NotFoundError';
 import { describeLeaks, itLeaks } from '../../helpers/async';
 
 const TEST_ROOT = '../test/config/type';
+const CONFIG_MISSING = 'missing.yml';
 
 describeLeaks('include config type', async () => {
   itLeaks('should resolve existing files', async () => {
@@ -15,7 +16,7 @@ describeLeaks('include config type', async () => {
 
   itLeaks('should throw when resolving missing files', async () => {
     expect(() => {
-      includeType.resolve(join(TEST_ROOT, 'missing.yml'));
+      includeType.resolve(join(TEST_ROOT, CONFIG_MISSING));
     }).to.throw(NotFoundError);
   });
 
@@ -25,7 +26,13 @@ describeLeaks('include config type', async () => {
 
   itLeaks('should throw when constructing missing files', async () => {
     expect(() => {
-      includeType.construct(join(TEST_ROOT, 'missing.yml'));
+      includeType.construct(join(TEST_ROOT, CONFIG_MISSING));
+    }).to.throw(BaseError);
+  });
+
+  itLeaks('should throw when resolving missing files', async () => {
+    expect(() => {
+      includeType.resolve(join(TEST_ROOT, CONFIG_MISSING));
     }).to.throw(BaseError);
   });
 });
