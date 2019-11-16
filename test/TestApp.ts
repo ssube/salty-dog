@@ -81,4 +81,6 @@ describeLeaks('main app', async () => {
 
     expect(status).to.equal(STATUS_ERROR);
   });
+
+  it('should fix up partial documents'); // TODO: test fix mode
 });
