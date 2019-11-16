@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import mockFs from 'mock-fs';
 
 import { main, STATUS_ERROR, STATUS_SUCCESS } from '../src/app';
+import { readSource } from '../src/source';
 import { describeLeaks, itLeaks } from './helpers/async';
 
 const TEST_ARGS_PRE = ['node', 'test'];
@@ -13,7 +14,25 @@ const TEST_FILES = {
   'docs': {
     'config.yml': 'data: {logger: {level: debug, name: test, stream: !stream stderr}}',
   },
-  'rules.yml': '{name: test, rules: [{name: test, desc: test, level: info, tags: [test], check: {type: number}}]}',
+  'rules.yml': `{
+    name: test,
+    rules: [{
+      name: test,
+      desc: test,
+      level: info,
+      tags: [test],
+      check: {
+        type: object,
+        required: [foo],
+        properties: {
+          foo: {
+            type: number,
+            default: 4
+          }
+        }
+      }
+    }]
+  }`,
   'test.yml': 'hello world',
 };
 
@@ -82,5 +101,25 @@ describeLeaks('main app', async () => {
     expect(status).to.equal(STATUS_ERROR);
   });
 
-  it('should fix up partial documents'); // TODO: test fix mode
+  it('should fix up partial documents', async () => {
+    mockFs({
+      ...TEST_FILES,
+      'test.yml': '{}',
+    });
+
+    const status = await main([
+      ...TEST_ARGS_PRE,
+      'fix',
+      ...TEST_ARGS_CONFIG,
+      ...TEST_ARGS_SOURCE,
+      ...TEST_ARGS_RULES,
+      '--dest', 'test-dest',
+    ]);
+    const result = await readSource('test-dest');
+
+    mockFs.restore();
+
+    expect(status).to.equal(STATUS_SUCCESS);
+    expect(result).to.equal('foo: 4\n');
+  });
 });
