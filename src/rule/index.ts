@@ -174,29 +174,35 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
   const activeRules = new Set<Rule>();
 
   for (const r of rules) {
-    if (selector.excludeLevel.includes(r.level)) {
-      continue;
-    }
-
-    if (selector.excludeName.includes(r.name)) {
-      continue;
-    }
-
-    const excludedTags = intersection(selector.excludeTag, r.tags);
-    if (excludedTags.length > 0) {
-      continue;
-    }
+    let active = false;
 
     if (selector.includeLevel.includes(r.level)) {
-      activeRules.add(r);
+      active = true;
     }
 
     if (selector.includeName.includes(r.name)) {
-      activeRules.add(r);
+      active = true;
     }
 
     const includedTags = intersection(selector.includeTag, r.tags);
     if (includedTags.length > 0) {
+      active = true;
+    }
+
+    if (selector.excludeLevel.includes(r.level)) {
+      active = false;
+    }
+
+    if (selector.excludeName.includes(r.name)) {
+      active = false;
+    }
+
+    const excludedTags = intersection(selector.excludeTag, r.tags);
+    if (excludedTags.length > 0) {
+      active = false;
+    }
+
+    if (active) {
       activeRules.add(r);
     }
   }
