@@ -106,6 +106,7 @@ rules:
     level: info
     tags:
       - kubernetes
+      - important
       - labels
 
     check:
@@ -122,3 +123,42 @@ rules:
               patternProperties:
                 "^[-.a-z0-9]{1,63}$":
                   type: string
+
+  - name: kubernetes-container-pull-policy
+    desc: all containers should have a pull policy
+    level: info
+    tags:
+      - kubernetes
+      - image
+      - optional
+
+    select: '$..containers.*'
+    check:
+      type: object
+      required: [image, imagePullPolicy]
+      properties:
+        imagePullPolicy:
+          type: string
+          enum:
+            - Always
+            - IfNotPresent
+            - Never
+
+
+  - name: kubernetes-image-latest
+    desc: images should never use :latest tag
+    level: info
+    tags:
+      - kubernetes
+      - image
+      - important
+
+    select: '$..containers.*'
+    check:
+      type: object
+      required: [image]
+      properties:
+        image:
+          type: string
+          not:
+            pattern: ':latest$'
