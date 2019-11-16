@@ -250,6 +250,22 @@ describeLeaks('rule visitor', async () => {
     expect(visitStub).to.have.callCount(3);
     expect(ctx.errors.length).to.equal(3);
   });
+
+  itLeaks('should not pick items', async () => {
+    const ctx = new VisitorContext({
+      logger: NullLogger.global,
+      schemaOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
+    });
+    const visitor = new RuleVisitor({
+      rules: [],
+    });
+
+    return expect(visitor.pick(ctx, {})).to.eventually.deep.equal([]);
+  });
 });
 
 describe('create rule sources helper', () => {
