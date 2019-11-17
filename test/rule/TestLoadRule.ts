@@ -167,11 +167,6 @@ describeLeaks('load rule module helper', async () => {
       },
     });
     const requireStub = stub().withArgs('test').returns({
-      definitions: {
-        foo: {
-          type: 'string',
-        },
-      },
       name: 'test',
       rules: [{
         check: {},
@@ -217,5 +212,34 @@ describeLeaks('load rule module helper', async () => {
     });
 
     return expect(loadRuleModules(['test'], ctx, requireStub)).to.eventually.deep.equal([]);
+  });
+
+  itLeaks('should load module definitions', async () => {
+    const requireStub = stub().returns({
+      definitions: {
+        foo: {
+          type: 'string',
+        },
+      },
+      name: 'test-rules',
+      rules: [],
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    }) as any;
+    const ctx = new VisitorContext({
+      logger: NullLogger.global,
+      schemaOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
+    });
+
+    await loadRuleModules(['test'], ctx, requireStub);
+    const schema = ctx.compile({
+      $ref: 'test-rules#/definitions/foo',
+    });
+
+    expect(schema(2)).to.equal(false);
+    expect(schema('foo')).to.equal(true);
   });
 });
