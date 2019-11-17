@@ -1,5 +1,13 @@
 name: salty-dog-meta
 definitions:
+  name-safe:
+    type: string
+    pattern: "[-a-z0-9]+"
+
+  name-tag:
+    type: string
+    pattern: "[-:a-z0-9]+"
+
   rule:
     type: object
     additionalProperties: false
@@ -13,8 +21,7 @@ definitions:
       - check
     properties:
       name:
-        type: string
-        pattern: "[-a-z0-9]+"
+        $ref: "salty-dog-meta#/definitions/name-safe"
       desc:
         type: string
         minLength: 8
@@ -29,8 +36,7 @@ definitions:
       tags:
         type: array
         items:
-          type: string
-          pattern: "[-:a-z0-9]+"
+          $ref: "salty-dog-meta#/definitions/name-tag"
       select:
         type: string
         default: '$'
@@ -39,6 +45,25 @@ definitions:
         $ref: "http://json-schema.org/draft-07/schema#"
       check:
         $ref: "http://json-schema.org/draft-07/schema#"
+
+  source:
+    type: object
+    required:
+      - name
+      - rules
+    properties:
+      name:
+        $ref: "salty-dog-meta#/definitions/name-safe"
+      definitions:
+        type: object
+        additionalProperties: false
+        patternProperties:
+          "[-a-z]+":
+            type: object
+      rules:
+        type: array
+        items:
+          $ref: "salty-dog-meta#/definitions/rule"
 
 rules:
   - name: salty-dog-rule
@@ -60,21 +85,10 @@ rules:
       - salty-dog
 
     check:
-      type: object
-      additionalProperties: false
-      required: [name, rules]
-      properties:
-        definitions:
-          type: object
-          additionalProperties: false
-          patternProperties:
-            "[-a-z]+":
-              type: object
-        name:
-          type: string
-          pattern: "[-a-z]+"
-        rules:
-          type: array
-          minItems: 1
-          items:
-            $ref: "salty-dog-meta#/definitions/rule"
+      allOf:
+        - $ref: "salty-dog-meta#/definitions/source"
+        - type: object
+          properties:
+            rules:
+              type: array
+              minItems: 1

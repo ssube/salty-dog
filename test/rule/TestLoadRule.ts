@@ -13,6 +13,7 @@ const EXAMPLE_RULES = `{
   definitions: {},
   rules: [{
     name: test,
+    desc: test-rule,
     level: info,
     tags: []
   }]

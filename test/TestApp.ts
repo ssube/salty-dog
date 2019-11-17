@@ -18,7 +18,7 @@ const TEST_FILES = {
     name: test,
     rules: [{
       name: test,
-      desc: test,
+      desc: test-rule,
       level: info,
       tags: [test],
       check: {

@@ -4,6 +4,7 @@ import { Minimatch } from 'minimatch';
 import { LogLevel } from 'noicejs';
 import recursive from 'recursive-readdir';
 
+import ruleSchemaData from '../../rules/salty-dog.yml';
 import { YamlParser } from '../parser/YamlParser';
 import { readFile } from '../source';
 import { ensureArray } from '../utils';
@@ -107,6 +108,14 @@ export async function loadRuleFiles(paths: Array<string>, ctx: VisitorContext): 
     const docs = parser.parse(contents) as Array<RuleSourceData>;
 
     for (const data of docs) {
+      if (!validateRules(ctx, data)) {
+        ctx.logger.error({
+          file: data,
+          path,
+        }, 'error loading rule file');
+        continue;
+      }
+
       if (!isNil(data.definitions)) {
         ctx.addSchema(data.name, data.definitions);
       }
@@ -147,7 +156,12 @@ export async function loadRuleModules(modules: Array<string>, ctx: VisitorContex
     try {
       /* eslint-disable-next-line @typescript-eslint/no-var-requires */
       const module: RuleSourceModule = r(name);
-      // TODO: ensure module has definitions, name, and rules
+      if (!validateRules(ctx, module)) {
+        ctx.logger.error({
+          module: name,
+        }, 'error loading rule module');
+        continue;
+      }
 
       if (!isNil(module.definitions)) {
         ctx.addSchema(module.name, module.definitions);
@@ -192,4 +206,19 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
   }
 
   return Array.from(activeRules);
+}
+
+export function validateRules(ctx: VisitorContext, root: any): boolean {
+  const { definitions, name } = ruleSchemaData as any;
+
+  const validCtx = new VisitorContext(ctx);
+  validCtx.addSchema(name, definitions);
+  const ruleSchema = validCtx.compile(definitions.source);
+
+  if (ruleSchema(root) === true) {
+    return true;
+  } else {
+    ctx.logger.error({ errors: ruleSchema.errors }, 'error validating rules');
+    return false;
+  }
 }

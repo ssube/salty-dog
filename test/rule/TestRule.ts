@@ -1,8 +1,9 @@
 import { expect } from 'chai';
-import { LogLevel } from 'noicejs';
+import { ConsoleLogger, LogLevel, NullLogger } from 'noicejs';
 
-import { createRuleSelector, createRuleSources, resolveRules } from '../../src/rule';
+import { createRuleSelector, createRuleSources, resolveRules, validateRules } from '../../src/rule';
 import { SchemaRule } from '../../src/rule/SchemaRule';
+import { VisitorContext } from '../../src/visitor/VisitorContext';
 import { describeLeaks, itLeaks } from '../helpers/async';
 
 const TEST_RULES = [new SchemaRule({
@@ -131,5 +132,39 @@ describe('create rule selector helper', () => {
     expect(sources).to.have.deep.property('includeLevel', []);
     expect(sources).to.have.deep.property('includeName', []);
     expect(sources).to.have.deep.property('includeTag', []);
+  });
+});
+
+describeLeaks('validate rule helper', async () => {
+  itLeaks('should accept valid modules', async () => {
+    const ctx = new VisitorContext({
+      logger: ConsoleLogger.global,
+      schemaOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
+    });
+
+    expect(validateRules(ctx, {
+      name: 'test',
+      rules: [],
+    })).to.equal(true);
+  });
+
+  itLeaks('should reject partial modules', async () => {
+    const ctx = new VisitorContext({
+      logger: NullLogger.global,
+      schemaOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
+    });
+
+    expect(validateRules(ctx, {})).to.equal(false);
+    expect(validateRules(ctx, {
+      name: '',
+    })).to.equal(false);
   });
 });
