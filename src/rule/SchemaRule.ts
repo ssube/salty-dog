@@ -3,7 +3,7 @@ import { cloneDeep, defaultTo, isNil } from 'lodash';
 import { LogLevel } from 'noicejs';
 
 import { Rule, RuleData } from '.';
-import { hasItems } from '../utils';
+import { doesExist, hasItems } from '../utils';
 import { Visitor, VisitorError, VisitorResult } from '../visitor';
 import { VisitorContext } from '../visitor/VisitorContext';
 
@@ -29,7 +29,7 @@ export class SchemaRule implements Rule, RuleData, Visitor {
 
     // copy schema objects
     this.check = cloneDeep(data.check);
-    if (!isNil(data.filter)) {
+    if (doesExist(data.filter)) {
       this.filter = cloneDeep(data.filter);
     }
   }

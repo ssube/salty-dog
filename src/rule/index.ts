@@ -1,5 +1,5 @@
 import { ValidateFunction } from 'ajv';
-import { Dictionary, intersection, isNil } from 'lodash';
+import { Dictionary, intersection } from 'lodash';
 import { Minimatch } from 'minimatch';
 import { LogLevel } from 'noicejs';
 import recursive from 'recursive-readdir';
@@ -7,7 +7,7 @@ import recursive from 'recursive-readdir';
 import ruleSchemaData from '../../rules/salty-dog.yml';
 import { YamlParser } from '../parser/YamlParser';
 import { readFile } from '../source';
-import { ensureArray } from '../utils';
+import { doesExist, ensureArray } from '../utils';
 import { VisitorResult } from '../visitor';
 import { VisitorContext } from '../visitor/VisitorContext';
 import { SchemaRule } from './SchemaRule';
@@ -116,7 +116,7 @@ export async function loadRuleFiles(paths: Array<string>, ctx: VisitorContext): 
         continue;
       }
 
-      if (!isNil(data.definitions)) {
+      if (doesExist(data.definitions)) {
         ctx.addSchema(data.name, data.definitions);
       }
 
@@ -163,7 +163,7 @@ export async function loadRuleModules(modules: Array<string>, ctx: VisitorContex
         continue;
       }
 
-      if (!isNil(module.definitions)) {
+      if (doesExist(module.definitions)) {
         ctx.addSchema(module.name, module.definitions);
       }
 
