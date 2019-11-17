@@ -27,6 +27,7 @@ const bundle = {
 	external,
 	input: {
 		include: [
+			// join(rootPath, 'rules', '*.yml'),
 			join(rootPath, 'src', 'index.ts'),
 			join(rootPath, 'test', 'harness.ts'),
 			join(rootPath, 'test', '**', 'Test*.ts'),
@@ -49,7 +50,7 @@ const bundle = {
 			return 'index';
 		}
 
-		if (id.includes(`${sep}src${sep}`)) {
+		if (id.includes(`${sep}src${sep}`) || id.includes(`${sep}rules${sep}`)) {
 			return 'main';
 		}
 
