@@ -157,5 +157,20 @@ describeLeaks('load rule module helper', async () => {
     expect(rules.length).to.equal(1);
   });
 
+  itLeaks('should handle errors loading rule modules', async () => {
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    const requireStub = stub().throws(new Error('could not load this module')) as any;
+    const ctx = new VisitorContext({
+      logger: NullLogger.global,
+      schemaOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
+    });
+
+    return expect(loadRuleModules(['test'], ctx, requireStub)).to.eventually.deep.equal([]);
+  });
+
   itLeaks('should validate rule module exports');
 });
