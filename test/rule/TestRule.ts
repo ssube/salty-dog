@@ -97,6 +97,18 @@ describeLeaks('rule resolver', async () => {
       expect(rules[0]).to.equal(TEST_RULES[0]);
     });
   });
+
+  describeLeaks('exclude by level', async () => {
+    itLeaks('should exclude warn rules', async () => {
+      const rules = await resolveRules(TEST_RULES, createRuleSelector({
+        excludeLevel: [LogLevel.Warn],
+        includeTag: ['all'],
+      }));
+
+      expect(rules.length).to.equal(1);
+      expect(rules[0]).to.equal(TEST_RULES[0]);
+    });
+  });
 });
 
 describe('create rule sources helper', () => {
