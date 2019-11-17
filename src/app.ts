@@ -4,7 +4,7 @@ import { showCompletionScript } from 'yargs';
 import { loadConfig } from './config';
 import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs } from './config/args';
 import { YamlParser } from './parser/YamlParser';
-import { createRuleSelector, createRuleSources, loadRules, resolveRules } from './rule';
+import { createRuleSelector, createRuleSources, loadRules, resolveRules, validateConfig } from './rule';
 import { RuleVisitor } from './rule/RuleVisitor';
 import { readSource, writeSource } from './source';
 import { VERSION_INFO } from './version';
@@ -36,6 +36,11 @@ export async function main(argv: Array<string>): Promise<number> {
       mutate: args.mutate,
     },
   });
+
+  if (!validateConfig(ctx, config)) {
+    logger.error('config was not valid according to embedded schema');
+    return STATUS_ERROR;
+  }
 
   const ruleSelector = createRuleSelector(args);
   const ruleSources = createRuleSources(args);
