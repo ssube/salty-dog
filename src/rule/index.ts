@@ -140,13 +140,13 @@ export async function loadRulePaths(paths: Array<string>, ctx: VisitorContext): 
   return rules;
 }
 
-export async function loadRuleModules(modules: Array<string>, ctx: VisitorContext): Promise<Array<Rule>> {
+export async function loadRuleModules(modules: Array<string>, ctx: VisitorContext, r = require): Promise<Array<Rule>> {
   const rules = [];
 
   for (const name of modules) {
     try {
       /* eslint-disable-next-line @typescript-eslint/no-var-requires */
-      const module: RuleSourceModule = require(name);
+      const module: RuleSourceModule = r(name);
       // TODO: ensure module has definitions, name, and rules
 
       if (!isNil(module.definitions)) {
