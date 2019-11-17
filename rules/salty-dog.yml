@@ -62,7 +62,6 @@ definitions:
         $ref: "salty-dog-meta#/definitions/name-safe"
       desc:
         type: string
-        minLength: 8
         maxLength: 255
       level:
         $ref: "salty-dog-meta#/definitions/log-level"
