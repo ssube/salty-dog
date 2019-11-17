@@ -1,11 +1,12 @@
 import { Stream } from 'bunyan';
-import { isNil, isString } from 'lodash';
+import { isString } from 'lodash';
 import { LogLevel } from 'noicejs';
 import { join } from 'path';
 
 import { NotFoundError } from '../error/NotFoundError';
 import { YamlParser } from '../parser/YamlParser';
 import { readFile } from '../source';
+import { doesExist } from '../utils';
 import { CONFIG_ENV, CONFIG_SCHEMA } from './schema';
 import { includeSchema } from './type/Include';
 
@@ -56,7 +57,7 @@ export async function loadConfig(name: string, ...extras: Array<string>): Promis
 
   for (const p of paths) {
     const data = await readConfig(p);
-    if (!isNil(data)) {
+    if (doesExist(data)) {
       const parser = new YamlParser();
       const [head] = parser.parse(data);
       return head;
