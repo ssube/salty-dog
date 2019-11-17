@@ -68,6 +68,33 @@ describeLeaks('load rule file helper', async () => {
 
     expect(rules.length).to.equal(1);
   });
+
+  itLeaks('should validate rule files', async () => {
+    mockFS({
+      test: `{
+        name: foo,
+        definitions: [],
+        rules: {}
+      }`
+    });
+
+    const ctx = new VisitorContext({
+      logger: NullLogger.global,
+      schemaOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
+    });
+
+    const rules = await loadRuleFiles([
+      'test',
+    ], ctx);
+
+    mockFS.restore();
+
+    expect(rules.length).to.equal(0);
+  });
 });
 
 describeLeaks('load rule path helper', async () => {
@@ -174,5 +201,21 @@ describeLeaks('load rule module helper', async () => {
     return expect(loadRuleModules(['test'], ctx, requireStub)).to.eventually.deep.equal([]);
   });
 
-  itLeaks('should validate rule module exports');
+  itLeaks('should validate rule module exports', async () => {
+    const requireStub = stub().returns({
+      name: 'test-rules',
+      rules: {},
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    }) as any;
+    const ctx = new VisitorContext({
+      logger: NullLogger.global,
+      schemaOptions: {
+        coerce: false,
+        defaults: false,
+        mutate: false,
+      },
+    });
+
+    return expect(loadRuleModules(['test'], ctx, requireStub)).to.eventually.deep.equal([]);
+  });
 });

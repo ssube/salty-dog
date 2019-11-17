@@ -13,6 +13,7 @@ const TEST_ARGS_SOURCE = ['--source', 'test.yml'];
 const TEST_FILES = {
   'docs': {
     'config.yml': 'data: {logger: {level: debug, name: test, stream: !stream stderr}}',
+    'partial.yml': 'data: {logger: {name: test}}',
   },
   'rules.yml': `{
     name: test,
@@ -121,5 +122,21 @@ describeLeaks('main app', async () => {
 
     expect(status).to.equal(STATUS_SUCCESS);
     expect(result).to.equal('foo: 4\n');
+  });
+
+  it('should validate config before running', async () => {
+    mockFs(TEST_FILES);
+
+    const status = await main([
+      ...TEST_ARGS_PRE,
+      ...TEST_ARGS_CONFIG.slice(0, 3),
+      'partial.yml',
+      ...TEST_ARGS_RULES,
+      ...TEST_ARGS_SOURCE,
+    ]);
+
+    mockFs.restore();
+
+    expect(status).to.equal(STATUS_ERROR);
   });
 });
