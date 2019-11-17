@@ -222,3 +222,18 @@ export function validateRules(ctx: VisitorContext, root: any): boolean {
     return false;
   }
 }
+
+export function validateConfig(ctx: VisitorContext, root: any): boolean {
+  const { definitions, name } = ruleSchemaData as any;
+
+  const validCtx = new VisitorContext(ctx);
+  validCtx.addSchema(name, definitions);
+  const ruleSchema = validCtx.compile(definitions.config);
+
+  if (ruleSchema(root) === true) {
+    return true;
+  } else {
+    ctx.logger.error({ errors: ruleSchema.errors }, 'error validating rules');
+    return false;
+  }
+}

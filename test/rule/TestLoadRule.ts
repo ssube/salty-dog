@@ -15,7 +15,8 @@ const EXAMPLE_RULES = `{
     name: test,
     desc: test-rule,
     level: info,
-    tags: []
+    tags: [],
+    check: {}
   }]
 }`;
 

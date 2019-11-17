@@ -1,5 +1,43 @@
 name: salty-dog-meta
 definitions:
+  log-level:
+    type: string
+    enum:
+      - debug
+      - info
+      - warn
+      - error
+
+  config-logger:
+    type: object
+    required:
+      - level
+      - name
+    properties:
+      level:
+        $ref: "salty-dog-meta#/definitions/log-level"
+      name:
+        type: string
+      streams:
+        type: array
+        items:
+          oneOf:
+            - type: string
+            - type: object
+
+  config:
+    type: object
+    required:
+      - data
+    properties:
+      data:
+        type: object
+        required:
+          - logger
+        properties:
+          logger:
+            $ref: "salty-dog-meta#/definitions/config-logger"
+
   name-safe:
     type: string
     pattern: "[-a-z0-9]+"
@@ -27,12 +65,7 @@ definitions:
         minLength: 8
         maxLength: 255
       level:
-        type: string
-        enum:
-          - debug
-          - info
-          - warn
-          - error
+        $ref: "salty-dog-meta#/definitions/log-level"
       tags:
         type: array
         items:
