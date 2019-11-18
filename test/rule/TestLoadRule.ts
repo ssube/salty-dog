@@ -1,9 +1,10 @@
 import { expect } from 'chai';
 import mockFS from 'mock-fs';
-import { NullLogger } from 'noicejs';
+import { LogLevel, NullLogger } from 'noicejs';
 import { spy, stub } from 'sinon';
 
-import { loadRuleFiles, loadRuleModules, loadRulePaths } from '../../src/rule';
+import { loadRuleFiles, loadRuleModules, loadRulePaths, loadRuleSource } from '../../src/rule';
+import { SchemaRule } from '../../src/rule/SchemaRule';
 import { VisitorContext } from '../../src/visitor/VisitorContext';
 import { describeLeaks, itLeaks } from '../helpers/async';
 
@@ -19,6 +20,17 @@ const EXAMPLE_RULES = `{
     check: {}
   }]
 }`;
+
+function testContext() {
+  return new VisitorContext({
+    logger: NullLogger.global,
+    schemaOptions: {
+      coerce: false,
+      defaults: false,
+      mutate: false,
+    },
+  });
+}
 
 describeLeaks('load rule file helper', async () => {
   itLeaks('should add schema', async () => {
@@ -158,14 +170,7 @@ describeLeaks('load rule path helper', async () => {
 
 describeLeaks('load rule module helper', async () => {
   itLeaks('should load rule modules', async () => {
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
+    const ctx = testContext();
     const requireStub = stub().withArgs('test').returns({
       name: 'test',
       rules: [{
@@ -175,7 +180,7 @@ describeLeaks('load rule module helper', async () => {
         name: 'test-rule',
         tags: [],
       }],
-    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     }) as any;
     const rules = await loadRuleModules(['test'], ctx, requireStub);
     expect(rules.length).to.equal(1);
@@ -184,14 +189,7 @@ describeLeaks('load rule module helper', async () => {
   itLeaks('should handle errors loading rule modules', async () => {
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     const requireStub = stub().throws(new Error('could not load this module')) as any;
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
+    const ctx = testContext();
 
     return expect(loadRuleModules(['test'], ctx, requireStub)).to.eventually.deep.equal([]);
   });
@@ -200,16 +198,9 @@ describeLeaks('load rule module helper', async () => {
     const requireStub = stub().returns({
       name: 'test-rules',
       rules: {},
-    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     }) as any;
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
+    const ctx = testContext();
 
     return expect(loadRuleModules(['test'], ctx, requireStub)).to.eventually.deep.equal([]);
   });
@@ -223,16 +214,9 @@ describeLeaks('load rule module helper', async () => {
       },
       name: 'test-rules',
       rules: [],
-    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     }) as any;
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
+    const ctx = testContext();
 
     await loadRuleModules(['test'], ctx, requireStub);
     const schema = ctx.compile({
@@ -241,5 +225,23 @@ describeLeaks('load rule module helper', async () => {
 
     expect(schema(2)).to.equal(false);
     expect(schema('foo')).to.equal(true);
+  });
+
+  itLeaks('should not instantiate class instances', async () => {
+    class TestRule extends SchemaRule {}
+    const ctx = testContext();
+
+    const rules = await loadRuleSource({
+      name: 'test',
+      rules: [new TestRule({
+        check: {},
+        desc: 'test',
+        level: LogLevel.Info,
+        name: 'test',
+        select: '$',
+        tags: [],
+      })],
+    }, ctx);
+    expect(rules[0]).to.be.an.instanceOf(TestRule);
   });
 });
