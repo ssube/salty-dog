@@ -97,16 +97,15 @@ export function createRuleSources(options: Partial<RuleSources>): RuleSources {
 }
 
 export function isPOJSO(val: any): val is RuleData {
-  const pojsoProto = Reflect.getPrototypeOf({});
-  return Reflect.getPrototypeOf(val) === pojsoProto;
+  return Reflect.getPrototypeOf(val) === Reflect.getPrototypeOf({});
 }
 
-export async function loadRuleSource(data: RuleSourceData | RuleSourceModule, ctx: VisitorContext): Promise<Array<Rule>> {
+export async function loadRuleSource(data: RuleSourceModule, ctx: VisitorContext): Promise<Array<Rule>> {
   if (doesExist(data.definitions)) {
     ctx.addSchema(data.name, data.definitions);
   }
 
-  return Array.from(data.rules).map((it: Rule | RuleData) => {
+  return data.rules.map((it: Rule | RuleData) => {
     if (isPOJSO(it)) {
       return new SchemaRule(it);
     } else {
