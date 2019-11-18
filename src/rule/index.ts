@@ -74,7 +74,7 @@ export interface RuleSourceData {
 export interface RuleSourceModule {
   definitions?: Dictionary<any>;
   name: string;
-  rules: Array<Rule>;
+  rules: Array<Rule | RuleData>;
 }
 
 export function createRuleSelector(options: Partial<RuleSelector>): RuleSelector {
@@ -94,6 +94,25 @@ export function createRuleSources(options: Partial<RuleSources>): RuleSources {
     ruleModule: ensureArray(options.ruleModule),
     rulePath: ensureArray(options.rulePath),
   };
+}
+
+export function isPOJSO(val: any): val is RuleData {
+  const pojsoProto = Reflect.getPrototypeOf({});
+  return Reflect.getPrototypeOf(val) === pojsoProto;
+}
+
+export async function loadRuleSource(data: RuleSourceData | RuleSourceModule, ctx: VisitorContext): Promise<Array<Rule>> {
+  if (doesExist(data.definitions)) {
+    ctx.addSchema(data.name, data.definitions);
+  }
+
+  return Array.from(data.rules).map((it: Rule | RuleData) => {
+    if (isPOJSO(it)) {
+      return new SchemaRule(it);
+    } else {
+      return it;
+    }
+  });
 }
 
 export async function loadRuleFiles(paths: Array<string>, ctx: VisitorContext): Promise<Array<Rule>> {
@@ -116,11 +135,7 @@ export async function loadRuleFiles(paths: Array<string>, ctx: VisitorContext): 
         continue;
       }
 
-      if (doesExist(data.definitions)) {
-        ctx.addSchema(data.name, data.definitions);
-      }
-
-      rules.push(...data.rules.map((it: RuleData) => new SchemaRule(it)));
+      rules.push(...await loadRuleSource(data, ctx));
     }
   }
 
@@ -155,19 +170,15 @@ export async function loadRuleModules(modules: Array<string>, ctx: VisitorContex
   for (const name of modules) {
     try {
       /* eslint-disable-next-line @typescript-eslint/no-var-requires */
-      const module: RuleSourceModule = r(name);
-      if (!validateRules(ctx, module)) {
+      const data: RuleSourceModule = r(name);
+      if (!validateRules(ctx, data)) {
         ctx.logger.error({
           module: name,
         }, 'error loading rule module');
         continue;
       }
 
-      if (doesExist(module.definitions)) {
-        ctx.addSchema(module.name, module.definitions);
-      }
-
-      rules.push(...module.rules);
+      rules.push(...await loadRuleSource(data, ctx));
     } catch (err) {
       ctx.logger.error(err, 'error requiring rule module');
     }
