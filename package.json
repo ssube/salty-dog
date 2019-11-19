@@ -41,7 +41,7 @@
     "@types/chai-as-promised": "7.1.2",
     "@types/deep-diff": "1.0.0",
     "@types/js-yaml": "3.12.1",
-    "@types/lodash": "4.14.148",
+    "@types/lodash": "4.14.149",
     "@types/minimatch": "3.0.3",
     "@types/mocha": "5.2.7",
     "@types/mock-fs": "4.10.0",
