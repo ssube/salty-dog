@@ -164,7 +164,8 @@ describeLeaks('load rule path helper', async () => {
 
     mockFS.restore();
 
-    expect(rules.length).to.equal(2);
+    const EXPECTED_RULES = 2;
+    expect(rules.length).to.equal(EXPECTED_RULES);
   });
 });
 
@@ -223,7 +224,8 @@ describeLeaks('load rule module helper', async () => {
       $ref: 'test-rules#/definitions/foo',
     });
 
-    expect(schema(2)).to.equal(false);
+    const NUMBER_VALUE = 2;
+    expect(schema(NUMBER_VALUE)).to.equal(false);
     expect(schema('foo')).to.equal(true);
   });
 

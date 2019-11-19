@@ -22,7 +22,8 @@ bar: {}
       `);
 
       expect(Array.isArray(data)).to.equal(true);
-      expect(data.length).to.equal(2);
+      const EXPECTED_DOCS = 2;
+      expect(data.length).to.equal(EXPECTED_DOCS);
     });
   });
 });

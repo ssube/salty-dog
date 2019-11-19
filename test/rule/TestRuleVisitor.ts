@@ -91,7 +91,7 @@ describeLeaks('rule visitor', async () => {
       },
     });
     const data = {
-      foo: [1, 2, 3],
+      foo: [Math.random(), Math.random(), Math.random()],
     };
     const rule = new SchemaRule({
       check: {},
@@ -114,7 +114,7 @@ describeLeaks('rule visitor', async () => {
     await visitor.visit(ctx, data);
 
     expect(pickSpy).to.have.callCount(1).and.to.have.been.calledWithExactly(ctx, data);
-    expect(visitStub).to.have.callCount(3);
+    expect(visitStub).to.have.callCount(data.foo.length);
   });
 
   itLeaks('should visit individual items', async () => {
@@ -127,7 +127,7 @@ describeLeaks('rule visitor', async () => {
       },
     });
     const data = {
-      foo: [1, 2, 3],
+      foo: [Math.random(), Math.random(), Math.random()],
     };
     const rule = new SchemaRule({
       check: {},
@@ -152,8 +152,9 @@ describeLeaks('rule visitor', async () => {
     });
     await visitor.visit(ctx, data);
 
-    expect(visitStub).to.have.callCount(3);
-    expect(ctx.errors.length).to.equal(3);
+    const EXPECTED_VISITS = 3;
+    expect(visitStub).to.have.callCount(EXPECTED_VISITS);
+    expect(ctx.errors.length).to.equal(EXPECTED_VISITS);
   });
 
   itLeaks('should not pick items', async () => {

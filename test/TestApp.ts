@@ -127,9 +127,12 @@ describeLeaks('main app', async () => {
   it('should validate config before running', async () => {
     mockFs(TEST_FILES);
 
+    const [configPath, configDocs, configName] = TEST_ARGS_CONFIG;
     const status = await main([
       ...TEST_ARGS_PRE,
-      ...TEST_ARGS_CONFIG.slice(0, 3),
+      configPath,
+      configDocs,
+      configName,
       'partial.yml',
       ...TEST_ARGS_RULES,
       ...TEST_ARGS_SOURCE,

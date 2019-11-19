@@ -113,7 +113,7 @@ describeLeaks('schema rule', async () => {
       tags: [],
     });
     const results = await rule.pick(ctx, {
-      foo: [1, 2, 3],
+      foo: [Math.random(), Math.random(), Math.random()],
     });
     expect(Array.isArray(results)).to.equal(true);
   });

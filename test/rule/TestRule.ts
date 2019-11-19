@@ -45,8 +45,10 @@ describeLeaks('rule resolver', async () => {
         includeLevel: [LogLevel.Warn],
       }));
 
-      expect(info.length).to.equal(2);
+      const EXPECTED_RULES = 2;
+      expect(info.length).to.equal(EXPECTED_RULES);
       expect(info[0]).to.equal(TEST_RULES[1]);
+      /* eslint-disable-next-line no-magic-numbers */
       expect(info[1]).to.equal(TEST_RULES[2]);
     });
   });
@@ -68,8 +70,10 @@ describeLeaks('rule resolver', async () => {
         includeTag: ['test'],
       }));
 
-      expect(rules.length).to.equal(2);
+      const EXPECTED_RULES = 2;
+      expect(rules.length).to.equal(EXPECTED_RULES);
       expect(rules[0]).to.equal(TEST_RULES[1]);
+      /* eslint-disable-next-line no-magic-numbers */
       expect(rules[1]).to.equal(TEST_RULES[2]);
     });
   });
@@ -81,8 +85,10 @@ describeLeaks('rule resolver', async () => {
         includeTag: ['all'],
       }));
 
-      expect(rules.length).to.equal(2);
+      const EXPECTED_RULES = 2;
+      expect(rules.length).to.equal(EXPECTED_RULES);
       expect(rules[0]).to.equal(TEST_RULES[1]);
+      /* eslint-disable-next-line no-magic-numbers */
       expect(rules[1]).to.equal(TEST_RULES[2]);
     });
   });

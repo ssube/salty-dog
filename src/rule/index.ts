@@ -200,13 +200,13 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
   for (const r of rules) {
     let active = false;
 
+    const includedTags = intersection(selector.includeTag, r.tags);
     active = active || selector.includeLevel.includes(r.level);
     active = active || selector.includeName.includes(r.name);
-    const includedTags = intersection(selector.includeTag, r.tags);
     active = active || includedTags.length > 0;
 
-    active = active && (!selector.excludeLevel.includes(r.level));
-    active = active && (!selector.excludeName.includes(r.name));
+    active = active && (selector.excludeLevel.includes(r.level) === false);
+    active = active && (selector.excludeName.includes(r.name) === false);
     const excludedTags = intersection(selector.excludeTag, r.tags);
     active = active && (excludedTags.length === 0);
 
