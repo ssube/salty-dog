@@ -3,7 +3,8 @@ import { JSONPath } from 'jsonpath-plus';
 import { Logger } from 'noicejs';
 
 import { VisitorError, VisitorResult } from '.';
-import { doesExist, hasItems } from '../utils';
+import { Rule } from '../rule';
+import { doesExist, hasItems, mustExist } from '../utils';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -18,6 +19,12 @@ export interface VisitorContextOptions {
   schemaOptions: RuleOptions;
 }
 
+export interface VisitorContextFlash {
+  item: unknown;
+  itemIndex: number;
+  rule: Rule;
+}
+
 export class VisitorContext implements VisitorContextOptions, VisitorResult {
   public readonly logger: Logger;
   public readonly schemaOptions: RuleOptions;
@@ -25,7 +32,7 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
   protected readonly ajv: Ajv.Ajv;
   protected readonly changeBuffer: Array<any>;
   protected readonly errorBuffer: Array<VisitorError>;
-  protected data: any;
+  protected data?: VisitorContextFlash;
 
   public get changes(): ReadonlyArray<any> {
     return this.changeBuffer;
@@ -96,15 +103,15 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
   }
 
   /**
-   * store some flash data. this is very much not the right way to do it.
+   * Store some flash data about the item and rule being visited.
    *
-   * @TODO: fix this
+   * TODO: This is not the best way to do it and could use work.
    */
-  public get visitData(): any {
-    return this.data;
+  public get visitData(): VisitorContextFlash {
+    return mustExist(this.data);
   }
 
-  public set visitData(value: any) {
+  public set visitData(value: VisitorContextFlash) {
     this.data = value;
   }
 }

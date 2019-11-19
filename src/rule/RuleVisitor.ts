@@ -48,6 +48,7 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
       let itemIndex = 0;
       for (const item of items) {
         ctx.visitData = {
+          item,
           itemIndex,
           rule,
         };

@@ -201,6 +201,7 @@ function createErrorContext() {
     },
   });
   ctx.visitData = {
+    item: {},
     itemIndex: 0,
     rule,
   };

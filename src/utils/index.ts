@@ -1,7 +1,16 @@
 import { isNil } from 'lodash';
 
+import { NotFoundError } from '../error/NotFoundError';
+
 export function doesExist<T>(val: T | null | undefined): val is T {
   return !isNil(val);
+}
+
+export function mustExist<T>(val: T | null | undefined): T {
+  if (isNil(val)) {
+    throw new NotFoundError();
+  }
+  return val;
 }
 
 /**
