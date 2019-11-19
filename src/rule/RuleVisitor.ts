@@ -1,4 +1,5 @@
 import { applyDiff, diff } from 'deep-diff';
+import { EventEmitter } from 'events';
 import { cloneDeep } from 'lodash';
 
 import { Rule } from '.';
@@ -12,10 +13,18 @@ export interface RuleVisitorOptions {
   rules: ReadonlyArray<Rule>;
 }
 
-export class RuleVisitor implements RuleVisitorOptions, Visitor {
+export enum RuleVisitorEvents {
+  RULE_VISIT = 'rule-visit',
+  RULE_ERROR = 'rule-error',
+  RULE_PASS = 'rule-pass',
+}
+
+export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Visitor {
   public readonly rules: ReadonlyArray<Rule>;
 
   constructor(options: RuleVisitorOptions) {
+    super();
+
     this.rules = Array.from(options.rules);
   }
 
@@ -25,6 +34,10 @@ export class RuleVisitor implements RuleVisitorOptions, Visitor {
 
   public async visit(ctx: VisitorContext, root: any): Promise<VisitorContext> {
     for (const rule of this.rules) {
+      this.emit(RuleVisitorEvents.RULE_VISIT, {
+        rule,
+      });
+
       const items = await rule.pick(ctx, root);
       let itemIndex = 0;
       for (const item of items) {
@@ -48,6 +61,10 @@ export class RuleVisitor implements RuleVisitorOptions, Visitor {
     if (hasItems(ruleResult.errors)) {
       ctx.logger.warn({ count: ruleResult.errors.length, rule }, 'rule failed');
       ctx.mergeResult(ruleResult, ctx.visitData);
+      this.emit(RuleVisitorEvents.RULE_ERROR, {
+        item,
+        rule,
+      });
       return;
     }
 
@@ -64,6 +81,10 @@ export class RuleVisitor implements RuleVisitorOptions, Visitor {
       }
     } else {
       ctx.logger.info({ rule: rule.name }, 'rule passed');
+      this.emit(RuleVisitorEvents.RULE_PASS, {
+        item,
+        rule,
+      });
     }
   }
 }
