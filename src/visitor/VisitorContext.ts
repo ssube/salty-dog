@@ -97,8 +97,6 @@ export class VisitorContext<TData, TError extends TData> implements VisitorConte
 
   /**
    * Store some flash data about the item and rule being visited.
-   *
-   * TODO: This is not the best way to do it and could use work.
    */
   public get visitData(): TData {
     return mustExist(this.data);

@@ -220,32 +220,35 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
   return Array.from(activeRules);
 }
 
-export function validateRules(ctx: RuleVisitorContext, root: any): boolean {
+export function compileValidators(ctx: RuleVisitorContext) {
   const { definitions, name } = ruleSchemaData as any;
 
   const validCtx = new VisitorContext(ctx);
   validCtx.addSchema(name, definitions);
-  const ruleSchema = validCtx.compile(definitions.source);
+  const configSchema = validCtx.compile(definitions.config);
+  const sourceSchema = validCtx.compile(definitions.source);
 
-  if (ruleSchema(root) === true) {
+  return { configSchema, sourceSchema };
+}
+
+export function validateRules(ctx: RuleVisitorContext, root: any): boolean {
+  const { sourceSchema } = compileValidators(ctx);
+
+  if (sourceSchema(root) === true) {
     return true;
   } else {
-    ctx.logger.error({ errors: ruleSchema.errors }, 'error validating rules');
+    ctx.logger.error({ errors: sourceSchema.errors }, 'error validating rules');
     return false;
   }
 }
 
 export function validateConfig(ctx: RuleVisitorContext, root: any): boolean {
-  const { definitions, name } = ruleSchemaData as any;
+  const { configSchema } = compileValidators(ctx);
 
-  const validCtx = new VisitorContext(ctx);
-  validCtx.addSchema(name, definitions);
-  const ruleSchema = validCtx.compile(definitions.config);
-
-  if (ruleSchema(root) === true) {
+  if (configSchema(root) === true) {
     return true;
   } else {
-    ctx.logger.error({ errors: ruleSchema.errors }, 'error validating rules');
+    ctx.logger.error({ errors: configSchema.errors }, 'error validating config');
     return false;
   }
 }
