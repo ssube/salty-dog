@@ -3,7 +3,6 @@ import { JSONPath } from 'jsonpath-plus';
 import { Logger } from 'noicejs';
 
 import { VisitorError, VisitorResult } from '.';
-import { Rule } from '../rule';
 import { doesExist, hasItems, mustExist } from '../utils';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -19,20 +18,14 @@ export interface VisitorContextOptions {
   schemaOptions: RuleOptions;
 }
 
-export interface VisitorContextFlash {
-  item: unknown;
-  itemIndex: number;
-  rule: Rule;
-}
-
-export class VisitorContext implements VisitorContextOptions, VisitorResult {
+export class VisitorContext<TData, TError extends TData> implements VisitorContextOptions, VisitorResult<TError> {
   public readonly logger: Logger;
   public readonly schemaOptions: RuleOptions;
 
   protected readonly ajv: Ajv.Ajv;
   protected readonly changeBuffer: Array<any>;
   protected readonly errorBuffer: Array<VisitorError>;
-  protected data?: VisitorContextFlash;
+  protected data?: TData;
 
   public get changes(): ReadonlyArray<any> {
     return this.changeBuffer;
@@ -107,11 +100,11 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
    *
    * TODO: This is not the best way to do it and could use work.
    */
-  public get visitData(): VisitorContextFlash {
+  public get visitData(): TData {
     return mustExist(this.data);
   }
 
-  public set visitData(value: VisitorContextFlash) {
+  public set visitData(value: TData) {
     this.data = value;
   }
 }

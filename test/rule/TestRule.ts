@@ -1,10 +1,10 @@
 import { expect } from 'chai';
-import { ConsoleLogger, LogLevel, NullLogger } from 'noicejs';
+import { LogLevel } from 'noicejs';
 
 import { createRuleSelector, createRuleSources, resolveRules, validateRules } from '../../src/rule';
 import { SchemaRule } from '../../src/rule/SchemaRule';
-import { VisitorContext } from '../../src/visitor/VisitorContext';
 import { describeLeaks, itLeaks } from '../helpers/async';
+import { testContext } from '../helpers/context';
 
 const TEST_RULES = [new SchemaRule({
   check: {},
@@ -143,15 +143,7 @@ describe('create rule selector helper', () => {
 
 describeLeaks('validate rule helper', async () => {
   itLeaks('should accept valid modules', async () => {
-    const ctx = new VisitorContext({
-      logger: ConsoleLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
-
+    const ctx = testContext();
     expect(validateRules(ctx, {
       name: 'test',
       rules: [],
@@ -159,15 +151,7 @@ describeLeaks('validate rule helper', async () => {
   });
 
   itLeaks('should reject partial modules', async () => {
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
-
+    const ctx = testContext();
     expect(validateRules(ctx, {})).to.equal(false);
     expect(validateRules(ctx, {
       name: '',

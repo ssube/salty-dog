@@ -4,10 +4,22 @@ import { cloneDeep } from 'lodash';
 
 import { Rule } from '.';
 import { hasItems } from '../utils';
-import { Visitor } from '../visitor';
+import { Visitor, VisitorResult } from '../visitor';
 import { VisitorContext } from '../visitor/VisitorContext';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+export interface RuleVisitorData {
+  item: unknown;
+  itemIndex: number;
+  rule: Rule;
+  ruleIndex: number;
+}
+
+export interface RuleVisitorError extends RuleVisitorData {
+  key: string;
+  path: string;
+}
 
 export interface RuleVisitorOptions {
   rules: ReadonlyArray<Rule>;
@@ -23,7 +35,10 @@ export enum RuleVisitorEvents {
   RULE_VISIT = 'rule-visit',
 }
 
-export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Visitor {
+export type RuleVisitorContext = VisitorContext<RuleVisitorData, RuleVisitorError>;
+export type RuleVisitorResult = VisitorResult<RuleVisitorError>;
+
+export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Visitor<RuleVisitorData, RuleVisitorError> {
   public readonly rules: ReadonlyArray<Rule>;
 
   constructor(options: RuleVisitorOptions) {
@@ -32,11 +47,12 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
     this.rules = Array.from(options.rules);
   }
 
-  public async pick(ctx: VisitorContext, root: any): Promise<Array<any>> {
+  public async pick(ctx: RuleVisitorContext, root: any): Promise<Array<any>> {
     return []; // TODO: why is this part of visitor rather than rule?
   }
 
-  public async visit(ctx: VisitorContext, root: any): Promise<VisitorContext> {
+  public async visit(ctx: RuleVisitorContext, root: any): Promise<RuleVisitorResult> {
+    let ruleIndex = 0;
     for (const rule of this.rules) {
       this.emit(RuleVisitorEvents.RULE_VISIT, {
         rule,
@@ -51,6 +67,7 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
           item,
           itemIndex,
           rule,
+          ruleIndex,
         };
 
         await this.visitItem(ctx, item, itemIndex, rule);
@@ -68,12 +85,14 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
           rule,
         });
       }
+
+      ruleIndex += 1;
     }
 
     return ctx;
   }
 
-  public async visitItem(ctx: VisitorContext, item: any, itemIndex: number, rule: Rule): Promise<VisitorContext> {
+  public async visitItem(ctx: RuleVisitorContext, item: any, itemIndex: number, rule: Rule): Promise<RuleVisitorResult> {
     const itemResult = cloneDeep(item);
     const ruleResult = await rule.visit(ctx, itemResult);
 

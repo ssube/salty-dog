@@ -6,25 +6,25 @@ import { VisitorContext } from './VisitorContext';
 /**
  * This is a runtime error, not an exception.
  */
-export interface VisitorError {
-  data: any;
+export interface VisitorError<TData = any> {
+  data: TData;
   level: LogLevel;
   msg: string;
 }
 
-export interface VisitorResult {
-  changes: ReadonlyArray<Diff<any, any>>;
-  errors: ReadonlyArray<VisitorError>;
+export interface VisitorResult<TError = any, TDiffLHS = any, TDiffRHS = any> {
+  changes: ReadonlyArray<Diff<TDiffLHS, TDiffRHS>>;
+  errors: ReadonlyArray<VisitorError<TError>>;
 }
 
-export interface Visitor<TResult extends VisitorResult = VisitorResult> {
+export interface Visitor<TData = any, TError extends TData = any, TResult extends VisitorResult = VisitorResult<TError>> {
   /**
    * Select nodes eligible to be visited.
    **/
-  pick(ctx: VisitorContext, root: any): Promise<Array<any>>;
+  pick(ctx: VisitorContext<TData, TError>, root: any): Promise<Array<any>>;
 
   /**
    * Visit a node.
    */
-  visit(ctx: VisitorContext, node: any): Promise<TResult>;
+  visit(ctx: VisitorContext<TData, TError>, node: any): Promise<TResult>;
 }

@@ -1,10 +1,10 @@
 import { expect } from 'chai';
-import { LogLevel, NullLogger } from 'noicejs';
+import { LogLevel } from 'noicejs';
 import { stub } from 'sinon';
 
 import { friendlyError, SchemaRule } from '../../src/rule/SchemaRule';
-import { VisitorContext } from '../../src/visitor/VisitorContext';
 import { describeLeaks, itLeaks } from '../helpers/async';
+import { testContext } from '../helpers/context';
 
 /* eslint-disable @typescript-eslint/unbound-method */
 
@@ -12,14 +12,7 @@ const TEST_NAME = 'test-rule';
 
 describeLeaks('schema rule', async () => {
   itLeaks('should pick items from the scope', async () => {
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
+    const ctx = testContext();
     const data = {
       foo: 3,
     };
@@ -37,14 +30,7 @@ describeLeaks('schema rule', async () => {
   });
 
   itLeaks('should pick no items', async () => {
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
+    const ctx = testContext();
     const data = {
       bar: 3,
     };
@@ -62,15 +48,7 @@ describeLeaks('schema rule', async () => {
   });
 
   itLeaks('should filter out items', async () => {
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
-
+    const ctx = testContext();
     const data = {
       foo: 3,
     };
@@ -96,14 +74,7 @@ describeLeaks('schema rule', async () => {
   });
 
   itLeaks('should pick items from the root', async () => {
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
+    const ctx = testContext();
     const rule = new SchemaRule({
       check: undefined,
       desc: TEST_NAME,
@@ -119,14 +90,7 @@ describeLeaks('schema rule', async () => {
   });
 
   itLeaks('should visit selected items', async () => {
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
+    const ctx = testContext();
 
     const check = {};
     const checkSpy = stub().returns(true);
@@ -152,14 +116,7 @@ describeLeaks('schema rule', async () => {
   });
 
   itLeaks('should skip filtered items', async () => {
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
+    const ctx = testContext();
 
     const checkSpy = stub().throws(new Error('check spy error'));
     const filterSpy = stub().returns(false);
@@ -192,18 +149,12 @@ function createErrorContext() {
     select: '',
     tags: [TEST_NAME],
   });
-  const ctx = new VisitorContext({
-    logger: NullLogger.global,
-    schemaOptions: {
-      coerce: false,
-      defaults: false,
-      mutate: false,
-    },
-  });
+  const ctx = testContext();
   ctx.visitData = {
     item: {},
     itemIndex: 0,
     rule,
+    ruleIndex: 0,
   };
 
   return { ctx, rule };

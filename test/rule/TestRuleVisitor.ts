@@ -1,22 +1,15 @@
 import { expect } from 'chai';
-import { LogLevel, NullLogger } from 'noicejs';
+import { LogLevel } from 'noicejs';
 import { mock, spy, stub } from 'sinon';
 
 import { RuleVisitor } from '../../src/rule/RuleVisitor';
 import { SchemaRule } from '../../src/rule/SchemaRule';
-import { VisitorContext } from '../../src/visitor/VisitorContext';
 import { describeLeaks, itLeaks } from '../helpers/async';
+import { testContext } from '../helpers/context';
 
 describeLeaks('rule visitor', async () => {
   itLeaks('should only call visit for selected items', async () => {
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
+    const ctx = testContext();
     const data = {};
     const rule = new SchemaRule({
       check: {},
@@ -44,14 +37,7 @@ describeLeaks('rule visitor', async () => {
   });
 
   itLeaks('should call visit for each selected item', async () => {
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
+    const ctx = testContext();
     const data = {};
     const rule = new SchemaRule({
       check: {},
@@ -82,14 +68,7 @@ describeLeaks('rule visitor', async () => {
   });
 
   itLeaks('should visit individual items', async () => {
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
+    const ctx = testContext();
     const data = {
       foo: [Math.random(), Math.random(), Math.random()],
     };
@@ -118,14 +97,7 @@ describeLeaks('rule visitor', async () => {
   });
 
   itLeaks('should visit individual items', async () => {
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
+    const ctx = testContext();
     const data = {
       foo: [Math.random(), Math.random(), Math.random()],
     };
@@ -158,14 +130,7 @@ describeLeaks('rule visitor', async () => {
   });
 
   itLeaks('should not pick items', async () => {
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
+    const ctx = testContext();
     const visitor = new RuleVisitor({
       rules: [],
     });

@@ -10,6 +10,7 @@ import { readFile } from '../source';
 import { doesExist, ensureArray } from '../utils';
 import { VisitorResult } from '../visitor';
 import { VisitorContext } from '../visitor/VisitorContext';
+import { RuleVisitorContext } from './RuleVisitor';
 import { SchemaRule } from './SchemaRule';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -27,6 +28,7 @@ export interface RuleData {
 /* tslint:enable:no-any */
 
 export type Validator = ValidateFunction;
+
 export interface Rule {
   check: Validator;
   desc?: string;
@@ -36,8 +38,8 @@ export interface Rule {
   select: string;
   tags: Array<string>;
 
-  pick(ctx: VisitorContext, root: any): Promise<Array<any>>;
-  visit(ctx: VisitorContext, item: any): Promise<VisitorResult>;
+  pick(ctx: RuleVisitorContext, root: any): Promise<Array<any>>;
+  visit(ctx: RuleVisitorContext, item: any): Promise<VisitorResult>;
 }
 
 /**
@@ -100,7 +102,7 @@ export function isPOJSO(val: any): val is RuleData {
   return Reflect.getPrototypeOf(val) === Reflect.getPrototypeOf({});
 }
 
-export async function loadRuleSource(data: RuleSourceModule, ctx: VisitorContext): Promise<Array<Rule>> {
+export async function loadRuleSource(data: RuleSourceModule, ctx: RuleVisitorContext): Promise<Array<Rule>> {
   if (doesExist(data.definitions)) {
     ctx.addSchema(data.name, data.definitions);
   }
@@ -114,7 +116,7 @@ export async function loadRuleSource(data: RuleSourceModule, ctx: VisitorContext
   });
 }
 
-export async function loadRuleFiles(paths: Array<string>, ctx: VisitorContext): Promise<Array<Rule>> {
+export async function loadRuleFiles(paths: Array<string>, ctx: RuleVisitorContext): Promise<Array<Rule>> {
   const parser = new YamlParser();
   const rules = [];
 
@@ -141,7 +143,7 @@ export async function loadRuleFiles(paths: Array<string>, ctx: VisitorContext): 
   return rules;
 }
 
-export async function loadRulePaths(paths: Array<string>, ctx: VisitorContext): Promise<Array<Rule>> {
+export async function loadRulePaths(paths: Array<string>, ctx: RuleVisitorContext): Promise<Array<Rule>> {
   const match = new Minimatch('**/*.+(json|yaml|yml)', {
     nocase: true,
   });
@@ -163,7 +165,7 @@ export async function loadRulePaths(paths: Array<string>, ctx: VisitorContext): 
   return rules;
 }
 
-export async function loadRuleModules(modules: Array<string>, ctx: VisitorContext, r = require): Promise<Array<Rule>> {
+export async function loadRuleModules(modules: Array<string>, ctx: RuleVisitorContext, r = require): Promise<Array<Rule>> {
   const rules = [];
 
   for (const name of modules) {
@@ -186,7 +188,7 @@ export async function loadRuleModules(modules: Array<string>, ctx: VisitorContex
   return rules;
 }
 
-export async function loadRules(sources: RuleSources, ctx: VisitorContext): Promise<Array<Rule>> {
+export async function loadRules(sources: RuleSources, ctx: RuleVisitorContext): Promise<Array<Rule>> {
   return [
     ...await loadRuleFiles(sources.ruleFile, ctx),
     ...await loadRulePaths(sources.rulePath, ctx),
@@ -218,7 +220,7 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
   return Array.from(activeRules);
 }
 
-export function validateRules(ctx: VisitorContext, root: any): boolean {
+export function validateRules(ctx: RuleVisitorContext, root: any): boolean {
   const { definitions, name } = ruleSchemaData as any;
 
   const validCtx = new VisitorContext(ctx);
@@ -233,7 +235,7 @@ export function validateRules(ctx: VisitorContext, root: any): boolean {
   }
 }
 
-export function validateConfig(ctx: VisitorContext, root: any): boolean {
+export function validateConfig(ctx: RuleVisitorContext, root: any): boolean {
   const { definitions, name } = ruleSchemaData as any;
 
   const validCtx = new VisitorContext(ctx);
