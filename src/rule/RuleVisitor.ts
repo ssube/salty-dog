@@ -58,7 +58,7 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
         rule,
       });
 
-      const errorsBefore = ctx.errors.length;
+      let ruleErrors = 0;
 
       const items = await rule.pick(ctx, root);
       let itemIndex = 0;
@@ -70,12 +70,15 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
           ruleIndex,
         };
 
-        await this.visitItem(ctx, item, itemIndex, rule);
+        const result = await this.visitItem(ctx, item, itemIndex, rule);
+        ctx.mergeResult(result);
+
+        ruleErrors += result.errors.length;
         itemIndex += 1;
       }
 
-      if (ctx.errors.length > errorsBefore) {
-        ctx.logger.info({ rule: rule.name }, 'rule failed');
+      if (ruleErrors > 0) {
+        ctx.logger.warn({ rule: rule.name }, 'rule failed');
         this.emit(RuleVisitorEvents.RULE_ERROR, {
           rule,
         });
@@ -105,8 +108,7 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
       ctx.logger.warn(errorData, 'item failed');
       this.emit(RuleVisitorEvents.ITEM_ERROR, errorData);
 
-      ctx.mergeResult(ruleResult, ctx.visitData);
-      return ctx;
+      return ruleResult;
     }
 
     const itemDiff = diff(item, itemResult);
@@ -131,6 +133,6 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
     ctx.logger.debug(passData, 'item passed');
     this.emit(RuleVisitorEvents.ITEM_PASS, passData);
 
-    return ctx;
+    return ruleResult;
   }
 }
