@@ -1,4 +1,4 @@
-import { applyDiff, diff } from 'deep-diff';
+import { applyDiff, Diff, diff } from 'deep-diff';
 import { EventEmitter } from 'events';
 import { cloneDeep } from 'lodash';
 
@@ -54,23 +54,21 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
   public async visit(ctx: RuleVisitorContext, root: any): Promise<RuleVisitorResult> {
     let ruleIndex = 0;
     for (const rule of this.rules) {
-      this.emit(RuleVisitorEvents.RULE_VISIT, {
+      const ruleData = {
         rule,
-      });
+      };
+      this.emit(RuleVisitorEvents.RULE_VISIT, ruleData);
 
-      let ruleErrors = 0;
-
-      const items = await rule.pick(ctx, root);
       let itemIndex = 0;
+      let ruleErrors = 0;
+      const items = await rule.pick(ctx, root);
       for (const item of items) {
-        ctx.visitData = {
+        const result = await this.visitItem(ctx, {
           item,
           itemIndex,
           rule,
           ruleIndex,
-        };
-
-        const result = await this.visitItem(ctx, item, itemIndex, rule);
+        });
         ctx.mergeResult(result);
 
         ruleErrors += result.errors.length;
@@ -79,14 +77,10 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
 
       if (ruleErrors > 0) {
         ctx.logger.warn({ rule: rule.name }, 'rule failed');
-        this.emit(RuleVisitorEvents.RULE_ERROR, {
-          rule,
-        });
+        this.emit(RuleVisitorEvents.RULE_ERROR, ruleData);
       } else {
         ctx.logger.info({ rule: rule.name }, 'rule passed');
-        this.emit(RuleVisitorEvents.RULE_PASS, {
-          rule,
-        });
+        this.emit(RuleVisitorEvents.RULE_PASS, ruleData);
       }
 
       ruleIndex += 1;
@@ -95,15 +89,16 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
     return ctx;
   }
 
-  public async visitItem(ctx: RuleVisitorContext, item: any, itemIndex: number, rule: Rule): Promise<RuleVisitorResult> {
-    const itemResult = cloneDeep(item);
-    const ruleResult = await rule.visit(ctx, itemResult);
+  public async visitItem(ctx: RuleVisitorContext, data: RuleVisitorData): Promise<RuleVisitorResult> {
+    ctx.visitData = data;
+
+    const itemResult = cloneDeep(data.item);
+    const ruleResult = await data.rule.visit(ctx, itemResult);
 
     if (hasItems(ruleResult.errors)) {
       const errorData = {
+        ...data,
         count: ruleResult.errors.length,
-        item,
-        rule,
       };
       ctx.logger.warn(errorData, 'item failed');
       this.emit(RuleVisitorEvents.ITEM_ERROR, errorData);
@@ -111,28 +106,27 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
       return ruleResult;
     }
 
-    const itemDiff = diff(item, itemResult);
+    const itemDiff = diff(data.item, itemResult);
     if (hasItems(itemDiff)) {
-      const diffData = {
-        diff: itemDiff,
-        item,
-        rule,
-      };
-      ctx.logger.info(diffData, 'item could pass rule with changes');
-      this.emit(RuleVisitorEvents.ITEM_DIFF, diffData);
-
-      if (ctx.schemaOptions.mutate) {
-        applyDiff(item, itemResult);
-      }
+      await this.visitDiff(ctx, data, itemDiff, itemResult);
     }
 
-    const passData = {
-      item,
-      rule,
-    };
-    ctx.logger.debug(passData, 'item passed');
-    this.emit(RuleVisitorEvents.ITEM_PASS, passData);
+    ctx.logger.debug(data, 'item passed');
+    this.emit(RuleVisitorEvents.ITEM_PASS, data);
 
     return ruleResult;
+  }
+
+  public async visitDiff(ctx: RuleVisitorContext, data: RuleVisitorData, itemDiff: Array<Diff<any, any>>, result: any): Promise<void> {
+    const diffData = {
+      ...data,
+      diff: itemDiff,
+    };
+    ctx.logger.info(diffData, 'item could pass rule with changes');
+    this.emit(RuleVisitorEvents.ITEM_DIFF, diffData);
+
+    if (ctx.schemaOptions.mutate) {
+      applyDiff(data.item, result);
+    }
   }
 }
