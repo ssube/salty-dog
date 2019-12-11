@@ -7,7 +7,7 @@ import { doesExist, hasItems, mustExist } from '../utils';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export interface RuleOptions {
+export interface RuleSchemaOptions {
   coerce: boolean;
   defaults: boolean;
   mutate: boolean;
@@ -15,12 +15,12 @@ export interface RuleOptions {
 
 export interface VisitorContextOptions {
   logger: Logger;
-  schemaOptions: RuleOptions;
+  schemaOptions: RuleSchemaOptions;
 }
 
 export class VisitorContext<TData, TError extends TData> implements VisitorContextOptions, VisitorResult<TError> {
   public readonly logger: Logger;
-  public readonly schemaOptions: RuleOptions;
+  public readonly schemaOptions: RuleSchemaOptions;
 
   protected readonly ajv: Ajv.Ajv;
   protected readonly changeBuffer: Array<any>;
