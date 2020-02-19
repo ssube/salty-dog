@@ -3,11 +3,11 @@ import { JSONPath } from 'jsonpath-plus';
 import { Logger } from 'noicejs';
 
 import { VisitorError, VisitorResult } from '.';
-import { doesExist, hasItems } from '../utils';
+import { doesExist, hasItems, mustExist } from '../utils';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export interface RuleOptions {
+export interface RuleSchemaOptions {
   coerce: boolean;
   defaults: boolean;
   mutate: boolean;
@@ -15,17 +15,17 @@ export interface RuleOptions {
 
 export interface VisitorContextOptions {
   logger: Logger;
-  schemaOptions: RuleOptions;
+  schemaOptions: RuleSchemaOptions;
 }
 
-export class VisitorContext implements VisitorContextOptions, VisitorResult {
+export class VisitorContext<TData, TError extends TData> implements VisitorContextOptions, VisitorResult<TError> {
   public readonly logger: Logger;
-  public readonly schemaOptions: RuleOptions;
+  public readonly schemaOptions: RuleSchemaOptions;
 
   protected readonly ajv: Ajv.Ajv;
   protected readonly changeBuffer: Array<any>;
   protected readonly errorBuffer: Array<VisitorError>;
-  protected data: any;
+  protected data?: TData;
 
   public get changes(): ReadonlyArray<any> {
     return this.changeBuffer;
@@ -96,15 +96,13 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
   }
 
   /**
-   * store some flash data. this is very much not the right way to do it.
-   *
-   * @TODO: fix this
+   * Store some flash data about the item and rule being visited.
    */
-  public get visitData(): any {
-    return this.data;
+  public get visitData(): TData {
+    return mustExist(this.data);
   }
 
-  public set visitData(value: any) {
+  public set visitData(value: TData) {
     this.data = value;
   }
 }

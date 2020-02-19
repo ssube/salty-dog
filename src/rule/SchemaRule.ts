@@ -5,7 +5,7 @@ import { LogLevel } from 'noicejs';
 import { Rule, RuleData } from '.';
 import { doesExist, hasItems } from '../utils';
 import { Visitor, VisitorError, VisitorResult } from '../visitor';
-import { VisitorContext } from '../visitor/VisitorContext';
+import { RuleVisitorContext } from './RuleVisitor';
 
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/strict-boolean-expressions */
 
@@ -34,7 +34,7 @@ export class SchemaRule implements Rule, RuleData, Visitor {
     }
   }
 
-  public async pick(ctx: VisitorContext, root: any): Promise<Array<any>> {
+  public async pick(ctx: RuleVisitorContext, root: any): Promise<Array<any>> {
     const items = ctx.pick(this.select, root);
 
     if (items.length === 0) {
@@ -44,7 +44,7 @@ export class SchemaRule implements Rule, RuleData, Visitor {
     return items;
   }
 
-  public async visit(ctx: VisitorContext, node: any): Promise<VisitorResult> {
+  public async visit(ctx: RuleVisitorContext, node: any): Promise<VisitorResult> {
     ctx.logger.debug({ item: node, rule: this }, 'visiting node');
 
     const check = ctx.compile(this.check);
@@ -67,7 +67,7 @@ export class SchemaRule implements Rule, RuleData, Visitor {
     return result;
   }
 
-  protected compileFilter(ctx: VisitorContext): ValidateFunction {
+  protected compileFilter(ctx: RuleVisitorContext): ValidateFunction {
     if (isNil(this.filter)) {
       return DEFAULT_FILTER;
     } else {
@@ -76,7 +76,7 @@ export class SchemaRule implements Rule, RuleData, Visitor {
   }
 }
 
-export function friendlyError(ctx: VisitorContext, err: ErrorObject): VisitorError {
+export function friendlyError(ctx: RuleVisitorContext, err: ErrorObject): VisitorError {
   return {
     data: {
       err,
@@ -86,7 +86,7 @@ export function friendlyError(ctx: VisitorContext, err: ErrorObject): VisitorErr
   };
 }
 
-export function friendlyErrorMessage(ctx: VisitorContext, err: ErrorObject): string {
+export function friendlyErrorMessage(ctx: RuleVisitorContext, err: ErrorObject): string {
   const msg = [err.dataPath];
   if (isNil(err.message)) {
     msg.push(err.keyword);

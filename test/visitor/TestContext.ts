@@ -1,19 +1,11 @@
 import { expect } from 'chai';
-import { LogLevel, NullLogger } from 'noicejs';
+import { LogLevel } from 'noicejs';
 
-import { VisitorContext } from '../../src/visitor/VisitorContext';
+import { testContext } from '../helpers/context';
 
 describe('visitor context', () => {
   it('should merge results', () => {
-    const firstCtx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
-
+    const firstCtx = testContext();
     const nextCtx = firstCtx.mergeResult({
       changes: [{
         kind: 'N',

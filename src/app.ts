@@ -5,7 +5,7 @@ import { loadConfig } from './config';
 import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs } from './config/args';
 import { YamlParser } from './parser/YamlParser';
 import { createRuleSelector, createRuleSources, loadRules, resolveRules, validateConfig } from './rule';
-import { RuleVisitor } from './rule/RuleVisitor';
+import { RuleVisitor, RuleVisitorData, RuleVisitorError } from './rule/RuleVisitor';
 import { readSource, writeSource } from './source';
 import { VERSION_INFO } from './version';
 import { VisitorContext } from './visitor/VisitorContext';
@@ -29,7 +29,7 @@ export async function main(argv: Array<string>): Promise<number> {
   logger.info({ args, mode }, 'main arguments');
 
   // load rules
-  const ctx = new VisitorContext({
+  const ctx = new VisitorContext<RuleVisitorData, RuleVisitorError>({
     logger,
     schemaOptions: {
       coerce: args.coerce,

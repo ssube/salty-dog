@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 import mockFS from 'mock-fs';
-import { LogLevel, NullLogger } from 'noicejs';
+import { LogLevel } from 'noicejs';
 import { spy, stub } from 'sinon';
 
 import { loadRuleFiles, loadRuleModules, loadRulePaths, loadRuleSource } from '../../src/rule';
 import { SchemaRule } from '../../src/rule/SchemaRule';
-import { VisitorContext } from '../../src/visitor/VisitorContext';
 import { describeLeaks, itLeaks } from '../helpers/async';
+import { testContext } from '../helpers/context';
 
 const EXAMPLE_EMPTY = '{name: foo, definitions: {}, rules: []}';
 const EXAMPLE_RULES = `{
@@ -21,31 +21,13 @@ const EXAMPLE_RULES = `{
   }]
 }`;
 
-function testContext() {
-  return new VisitorContext({
-    logger: NullLogger.global,
-    schemaOptions: {
-      coerce: false,
-      defaults: false,
-      mutate: false,
-    },
-  });
-}
-
 describeLeaks('load rule file helper', async () => {
   itLeaks('should add schema', async () => {
     mockFS({
       test: EXAMPLE_EMPTY,
     });
 
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
+    const ctx = testContext();
     const schemaSpy = spy(ctx, 'addSchema');
 
     const rules = await loadRuleFiles([
@@ -63,15 +45,7 @@ describeLeaks('load rule file helper', async () => {
       test: EXAMPLE_RULES,
     });
 
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
-
+    const ctx = testContext();
     const rules = await loadRuleFiles([
       'test',
     ], ctx);
@@ -90,15 +64,7 @@ describeLeaks('load rule file helper', async () => {
       }`
     });
 
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
-
+    const ctx = testContext();
     const rules = await loadRuleFiles([
       'test',
     ], ctx);
@@ -118,15 +84,7 @@ describeLeaks('load rule path helper', async () => {
       },
     });
 
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
-
+    const ctx = testContext();
     const rules = await loadRulePaths([
       'test',
     ], ctx);
@@ -149,15 +107,7 @@ describeLeaks('load rule path helper', async () => {
       },
     });
 
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
-
+    const ctx = testContext();
     const rules = await loadRulePaths([
       'test',
     ], ctx);
