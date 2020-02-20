@@ -145,7 +145,7 @@ docker build -t salty-dog:alpine -f Dockerfile.alpine .
 To run with Docker: `docker run --rm ssube/salty-dog:master`
 
 The latest semi-stable image is `ssube/salty-dog:master`. All
-[tags are listed here](https://cloud.docker.com/repository/docker/ssube/salty-dog/tags).
+[tags are listed here](https://hub.docker.com/r/ssube/salty-dog/tags).
 
 The Docker container is published for each branch and git tag, tagged with the git tag (or branch slug).
 
