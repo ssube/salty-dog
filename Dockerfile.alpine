@@ -1,5 +1,11 @@
 FROM node:11-alpine
 
+# dependencies: log filtering
+RUN apk add --update jq \
+ && rm -rf /var/cache/apk/* \
+ && yarn global add bunyan
+ENV PATH="${PATH}:$(yarn global bin)"
+
 # copy config, which changes rarely
 COPY docs/config-docker.yml /root/.salty-dog.yml
 
@@ -14,7 +20,6 @@ COPY out/index.js /salty-dog/out/index.js
 # set up as global cli tool
 WORKDIR /salty-dog
 RUN yarn global add file:$(pwd)
-ENV PATH="${PATH}:$(yarn global bin)"
 
 COPY rules /salty-dog/rules
 
