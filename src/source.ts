@@ -42,6 +42,7 @@ export async function writeSource(path: string, data: string, stream = process.s
 
 export function writeStream(stream: NodeJS.WriteStream, data: string): Promise<void> {
   return new Promise((res, rej) => {
+    /* eslint-disable-next-line @typescript-eslint/ban-types */
     stream.write(data, (err: Error | null | undefined) => {
       if (isNil(err)) {
         res();

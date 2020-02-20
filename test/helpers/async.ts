@@ -8,6 +8,7 @@ const filterStack = stackTraceFilter();
 type AsyncMochaTest = (this: Mocha.Context | void) => Promise<void>;
 type AsyncMochaSuite = (this: Mocha.Suite) => Promise<void>;
 
+/* eslint-disable-next-line @typescript-eslint/ban-types */
 function isNil<T>(val: T | null | undefined): val is null | undefined {
   /* eslint-disable-next-line no-null/no-null */
   return val === null || val === undefined;

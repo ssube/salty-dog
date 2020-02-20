@@ -1,5 +1,7 @@
 import { isNil } from 'lodash';
 
+/* eslint-disable @typescript-eslint/ban-types */
+
 export function doesExist<T>(val: T | null | undefined): val is T {
   return !isNil(val);
 }
