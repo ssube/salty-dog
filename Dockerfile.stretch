@@ -1,5 +1,12 @@
 FROM node:11-stretch
 
+# dependencies: log filtering
+RUN apt-get update -y \
+ && apt-get install -y jq \
+ && rm -rf /var/lib/apt/lists/* \
+ && yarn global add bunyan
+ENV PATH="${PATH}:$(yarn global bin)"
+
 # copy config, which changes rarely
 COPY docs/config-docker.yml /root/.salty-dog.yml
 
@@ -14,7 +21,6 @@ COPY out/index.js /salty-dog/out/index.js
 # set up as global cli tool
 WORKDIR /salty-dog
 RUN yarn global add file:$(pwd)
-ENV PATH="${PATH}:$(yarn global bin)"
 
 COPY rules /salty-dog/rules
 
