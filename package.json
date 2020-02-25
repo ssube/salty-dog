@@ -46,7 +46,7 @@
     "@types/mocha": "7.0.1",
     "@types/mock-fs": "4.10.0",
     "@types/recursive-readdir": "2.2.0",
-    "@types/sinon": "7.5.1",
+    "@types/sinon": "7.5.2",
     "@types/sinon-chai": "3.2.3",
     "@types/source-map-support": "0.5.1",
     "@types/yargs": "15.0.3",
