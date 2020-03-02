@@ -37,7 +37,7 @@
     "@microsoft/api-documenter": "7.7.12",
     "@microsoft/api-extractor": "7.7.8",
     "@types/bunyan": "1.8.6",
-    "@types/chai": "4.2.9",
+    "@types/chai": "4.2.10",
     "@types/chai-as-promised": "7.1.2",
     "@types/deep-diff": "1.0.0",
     "@types/js-yaml": "3.12.2",
