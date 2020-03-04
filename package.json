@@ -43,7 +43,7 @@
     "@types/js-yaml": "3.12.2",
     "@types/lodash": "4.14.149",
     "@types/minimatch": "3.0.3",
-    "@types/mocha": "7.0.1",
+    "@types/mocha": "7.0.2",
     "@types/mock-fs": "4.10.0",
     "@types/recursive-readdir": "2.2.0",
     "@types/sinon": "7.5.2",
