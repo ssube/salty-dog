@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.1](https://github.com/ssube/salty-dog/compare/v0.8.0...v0.8.1) (2020-03-11)
+
+
+### Features
+
+* **container:** install bunyan and jq for log parsing ([#263](https://github.com/ssube/salty-dog/issues/263)) ([dd37262](https://github.com/ssube/salty-dog/commit/dd372629510feea8da61d9928c443f7ccee08f38))
+* make mutate an option within fix mode (fixes [#144](https://github.com/ssube/salty-dog/issues/144)) ([705af89](https://github.com/ssube/salty-dog/commit/705af893a3271c6e72b01015847c00f89608af2b))
+* short aliases for common options (fixes [#145](https://github.com/ssube/salty-dog/issues/145)) ([f367291](https://github.com/ssube/salty-dog/commit/f367291540dfcdda14f95e08affd10a2f5260996))
+* validate config while loading ([c1ff388](https://github.com/ssube/salty-dog/commit/c1ff388aff9c941aca264a14f91aa55bbfe03d47))
+* validate rules while loading ([dbfe042](https://github.com/ssube/salty-dog/commit/dbfe0429fab64325edb097234342e893feed2a55))
+* **build:** add sonar job ([1fa6bad](https://github.com/ssube/salty-dog/commit/1fa6bada4723fdb22734045fcb5acf1729a9883a))
+* **rules:** add npm package ([42ddb3e](https://github.com/ssube/salty-dog/commit/42ddb3ecd764d6a64be9a925ee9ed41d24bab590))
+* **rules:** add rules to validate json schemas ([0b5fe3d](https://github.com/ssube/salty-dog/commit/0b5fe3d5e5305d81db737e8c9e10acc210d42517))
+* **rules/kubernetes:** add rule to prevent latest tag, rule to ensure pull policy is set ([8254848](https://github.com/ssube/salty-dog/commit/8254848ef84d106d354ca1270e45fa39347e479d))
+* **rules/travis:** add language rule ([9a50046](https://github.com/ssube/salty-dog/commit/9a500461c1e501b1905c53ed81f6039dbab3906d))
+
+
+### Bug Fixes
+
+* **build:** handle unplaced chunks ([7187cac](https://github.com/ssube/salty-dog/commit/7187cac40c2e5bc73363d5fb609bc7a9b2b67465))
+* **config:** accept S regex flag, anchor slashes ([2812254](https://github.com/ssube/salty-dog/commit/2812254ba55075632f526d1a7f683f57d660415d))
+* **docs:** put contents in section, use yarn-global target ([84d2ba4](https://github.com/ssube/salty-dog/commit/84d2ba470ba49ca10319f1589186027bab99d6ec))
+* **lint:** selectively allow null types ([899dac2](https://github.com/ssube/salty-dog/commit/899dac262ec10948a25d182dd58d96518380c2b1))
+* **rules:** remove min length from rule desc ([8c1c45d](https://github.com/ssube/salty-dog/commit/8c1c45dfeba76141cdf7300acaa184b483126cf4))
+* **rules/gitlab:** handle include ([b84e7b8](https://github.com/ssube/salty-dog/commit/b84e7b80c605d62e9e93f0c9868286674bb7436d))
+* **tests:** cover read config, rule module helpers ([c0eb3e0](https://github.com/ssube/salty-dog/commit/c0eb3e0bfc684847edea44dd69af082b94f62673))
+* **tests:** cover rule failures through main ([c053da9](https://github.com/ssube/salty-dog/commit/c053da90514da555fa4e7f3d3f274c7ca667311d))
+* **tests:** cover rule loading from file/path ([85b81ea](https://github.com/ssube/salty-dog/commit/85b81ea86c399a6494438817e32d728aff816118))
+* **tests:** cover rule module error handling, exclude by level ([b3fa9dd](https://github.com/ssube/salty-dog/commit/b3fa9dd9be9898edb686c63770b4ed614bdebaac))
+* **tests:** cover source read and write ([838f87b](https://github.com/ssube/salty-dog/commit/838f87baf521eba6cad2585c9f44f5b0ec0397f5))
+* **tests:** mock config when listing rules ([c9b6c9f](https://github.com/ssube/salty-dog/commit/c9b6c9fe4e7b8501f957dd4a4f837d200d911ea1))
+* log schema names correctly, do not log unmatched files ([02ccffd](https://github.com/ssube/salty-dog/commit/02ccffda6b66f35eb57398eb94c2bfa1d35fb932))
+* manually pass argv to yargs ([11b3bd0](https://github.com/ssube/salty-dog/commit/11b3bd0d09ac5570639495eb3c2fb7218038560a))
+* update log level to use enum ([13d42e8](https://github.com/ssube/salty-dog/commit/13d42e8b6fe16a8a848b229aaa6aae24cb74aac4))
+
 ## [0.8.0](https://github.com/ssube/salty-dog/compare/v0.7.1...v0.8.0) (2019-11-10)
 
 
