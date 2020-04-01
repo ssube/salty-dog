@@ -164,7 +164,6 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
     .alias('version', 'v');
 
   // @TODO: this should not need a cast but the parser's type omits command options and doesn't expose camelCase
-  // tslint:disable-next-line:no-any
   const args = parser.parse(argv) as any;
 
   return {

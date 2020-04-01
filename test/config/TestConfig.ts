@@ -6,10 +6,17 @@ import { loadConfig, readConfig } from '../../src/config';
 import { describeLeaks, itLeaks } from '../helpers/async';
 
 describeLeaks('load config helper', async () => {
-  itLeaks('should load an existing config', async () => {
-    const config = await loadConfig('config-stderr.yml', join(__dirname, '..', 'docs'));
-    expect(config.data.logger.name).to.equal('salty-dog');
-  });
+  itLeaks('should load an existing config', async () =>
+    expect(loadConfig('config-stderr.yml', join(__dirname, '..', 'docs'))).to.eventually.deep.include({
+      data: {
+        logger: {
+          level: 'debug',
+          name: 'salty-dog',
+          stream: process.stderr,
+        },
+      },
+    })
+  );
 
   itLeaks('should throw when config is missing', async () =>
     expect(loadConfig('missing.yml', join(__dirname, '..', 'docs'))).to.eventually.be.rejectedWith(NotFoundError)
