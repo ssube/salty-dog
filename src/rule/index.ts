@@ -1,3 +1,4 @@
+import { doesExist, ensureArray } from '@apextoaster/js-utils';
 import { ValidateFunction } from 'ajv';
 import { Dictionary, intersection } from 'lodash';
 import { Minimatch } from 'minimatch';
@@ -7,7 +8,6 @@ import recursive from 'recursive-readdir';
 import ruleSchemaData from '../../rules/salty-dog.yml';
 import { YamlParser } from '../parser/YamlParser';
 import { readFile } from '../source';
-import { doesExist, ensureArray } from '../utils';
 import { VisitorResult } from '../visitor';
 import { VisitorContext } from '../visitor/VisitorContext';
 import { SchemaRule } from './SchemaRule';

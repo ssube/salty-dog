@@ -1,9 +1,9 @@
+import { doesExist, hasItems } from '@apextoaster/js-utils';
 import { ErrorObject, ValidateFunction } from 'ajv';
 import { cloneDeep, defaultTo, isNil } from 'lodash';
 import { LogLevel } from 'noicejs';
 
 import { Rule, RuleData } from '.';
-import { doesExist, hasItems } from '../utils';
 import { Visitor, VisitorError, VisitorResult } from '../visitor';
 import { VisitorContext } from '../visitor/VisitorContext';
 

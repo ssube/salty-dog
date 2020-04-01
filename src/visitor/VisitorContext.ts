@@ -1,9 +1,9 @@
+import { doesExist, hasItems } from '@apextoaster/js-utils';
 import Ajv from 'ajv';
 import { JSONPath } from 'jsonpath-plus';
 import { Logger } from 'noicejs';
 
 import { VisitorError, VisitorResult } from '.';
-import { doesExist, hasItems } from '../utils';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

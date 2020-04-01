@@ -1,16 +1,13 @@
+import { doesExist, NotFoundError } from '@apextoaster/js-utils';
 import { Stream } from 'bunyan';
 import { isString } from 'lodash';
 import { LogLevel } from 'noicejs';
 import { join } from 'path';
 
-import { NotFoundError } from '../error/NotFoundError';
 import { YamlParser } from '../parser/YamlParser';
 import { readFile } from '../source';
-import { doesExist } from '../utils';
-import { CONFIG_ENV, CONFIG_SCHEMA } from './schema';
-import { includeSchema } from './type/Include';
 
-includeSchema.schema = CONFIG_SCHEMA;
+export const CONFIG_ENV = 'SALTY_HOME';
 
 export interface ConfigData {
   data: {

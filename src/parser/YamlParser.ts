@@ -1,6 +1,6 @@
+import { CONFIG_SCHEMA } from '@apextoaster/js-yaml-schema';
 import { safeDump, safeLoadAll } from 'js-yaml';
 
-import { CONFIG_SCHEMA } from '../config/schema';
 import { Parser } from '../parser';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

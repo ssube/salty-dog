@@ -1,5 +1,5 @@
+import { isNil } from '@apextoaster/js-utils';
 import { readdir, readFile as readBack, writeFile as writeBack } from 'fs';
-import { isNil } from 'lodash';
 import { promisify } from 'util';
 
 export const FILE_ENCODING = 'utf-8';
