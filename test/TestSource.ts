@@ -5,12 +5,11 @@ import { spy, stub } from 'sinon';
 import { PassThrough } from 'stream';
 
 import { readSource, writeSource } from '../src/source';
-import { describeLeaks, itLeaks } from './helpers/async';
 
 export const TEST_STRING = 'hello world';
 
-describeLeaks('load source helper', async () => {
-  itLeaks('should read from stdin', async () => {
+describe('load source helper', async () => {
+  it('should read from stdin', async () => {
     const pt = new PassThrough();
 
     const futureSource = readSource('-', pt);
@@ -42,7 +41,7 @@ describeLeaks('load source helper', async () => {
   });
 });
 
-describeLeaks('write source helper', async () => {
+describe('write source helper', async () => {
   it('should write to a file', async () => {
     mockFs({
       test: 'empty',

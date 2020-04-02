@@ -6,7 +6,6 @@ import { spy, stub } from 'sinon';
 import { loadRuleFiles, loadRuleModules, loadRulePaths, loadRuleSource } from '../../src/rule';
 import { SchemaRule } from '../../src/rule/SchemaRule';
 import { VisitorContext } from '../../src/visitor/VisitorContext';
-import { describeLeaks, itLeaks } from '../helpers/async';
 
 const EXAMPLE_EMPTY = '{name: foo, definitions: {}, rules: []}';
 const EXAMPLE_RULES = `{
@@ -32,8 +31,8 @@ function testContext() {
   });
 }
 
-describeLeaks('load rule file helper', async () => {
-  itLeaks('should add schema', async () => {
+describe('load rule file helper', async () => {
+  it('should add schema', async () => {
     mockFS({
       test: EXAMPLE_EMPTY,
     });
@@ -58,7 +57,7 @@ describeLeaks('load rule file helper', async () => {
     expect(rules.length).to.equal(0);
   });
 
-  itLeaks('should load rules', async () => {
+  it('should load rules', async () => {
     mockFS({
       test: EXAMPLE_RULES,
     });
@@ -81,7 +80,7 @@ describeLeaks('load rule file helper', async () => {
     expect(rules.length).to.equal(1);
   });
 
-  itLeaks('should validate rule files', async () => {
+  it('should validate rule files', async () => {
     mockFS({
       test: `{
         name: foo,
@@ -109,8 +108,8 @@ describeLeaks('load rule file helper', async () => {
   });
 });
 
-describeLeaks('load rule path helper', async () => {
-  itLeaks('should only load matching rule files', async () => {
+describe('load rule path helper', async () => {
+  it('should only load matching rule files', async () => {
     mockFS({
       test: {
         'bin.nope': '{}', // will parse but throw on lack of rules
@@ -136,7 +135,7 @@ describeLeaks('load rule path helper', async () => {
     expect(rules.length).to.equal(1);
   });
 
-  itLeaks('should recursively load rule files', async () => {
+  it('should recursively load rule files', async () => {
     mockFS({
       test: {
         'bar-dir': {
@@ -169,8 +168,8 @@ describeLeaks('load rule path helper', async () => {
   });
 });
 
-describeLeaks('load rule module helper', async () => {
-  itLeaks('should load rule modules', async () => {
+describe('load rule module helper', async () => {
+  it('should load rule modules', async () => {
     const ctx = testContext();
     const requireStub = stub().withArgs('test').returns({
       name: 'test',
@@ -187,7 +186,7 @@ describeLeaks('load rule module helper', async () => {
     expect(rules.length).to.equal(1);
   });
 
-  itLeaks('should handle errors loading rule modules', async () => {
+  it('should handle errors loading rule modules', async () => {
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     const requireStub = stub().throws(new Error('could not load this module')) as any;
     const ctx = testContext();
@@ -195,7 +194,7 @@ describeLeaks('load rule module helper', async () => {
     return expect(loadRuleModules(['test'], ctx, requireStub)).to.eventually.deep.equal([]);
   });
 
-  itLeaks('should validate rule module exports', async () => {
+  it('should validate rule module exports', async () => {
     const requireStub = stub().returns({
       name: 'test-rules',
       rules: {},
@@ -206,7 +205,7 @@ describeLeaks('load rule module helper', async () => {
     return expect(loadRuleModules(['test'], ctx, requireStub)).to.eventually.deep.equal([]);
   });
 
-  itLeaks('should load module definitions', async () => {
+  it('should load module definitions', async () => {
     const requireStub = stub().returns({
       definitions: {
         foo: {
@@ -229,7 +228,7 @@ describeLeaks('load rule module helper', async () => {
     expect(schema('foo')).to.equal(true);
   });
 
-  itLeaks('should not instantiate class instances', async () => {
+  it('should not instantiate class instances', async () => {
     class TestRule extends SchemaRule {}
     const ctx = testContext();
 

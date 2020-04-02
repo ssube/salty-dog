@@ -5,10 +5,9 @@ import { mock, spy, stub } from 'sinon';
 import { RuleVisitor } from '../../src/rule/RuleVisitor';
 import { SchemaRule } from '../../src/rule/SchemaRule';
 import { VisitorContext } from '../../src/visitor/VisitorContext';
-import { describeLeaks, itLeaks } from '../helpers/async';
 
-describeLeaks('rule visitor', async () => {
-  itLeaks('should only call visit for selected items', async () => {
+describe('rule visitor', async () => {
+  it('should only call visit for selected items', async () => {
     const ctx = new VisitorContext({
       logger: NullLogger.global,
       schemaOptions: {
@@ -43,7 +42,7 @@ describeLeaks('rule visitor', async () => {
     expect(ctx.errors.length).to.equal(0);
   });
 
-  itLeaks('should call visit for each selected item', async () => {
+  it('should call visit for each selected item', async () => {
     const ctx = new VisitorContext({
       logger: NullLogger.global,
       schemaOptions: {
@@ -81,7 +80,7 @@ describeLeaks('rule visitor', async () => {
     expect(ctx.errors.length).to.equal(0);
   });
 
-  itLeaks('should visit individual items', async () => {
+  it('should visit individual items', async () => {
     const ctx = new VisitorContext({
       logger: NullLogger.global,
       schemaOptions: {
@@ -117,7 +116,7 @@ describeLeaks('rule visitor', async () => {
     expect(visitStub).to.have.callCount(data.foo.length);
   });
 
-  itLeaks('should visit individual items', async () => {
+  it('should visit individual items', async () => {
     const ctx = new VisitorContext({
       logger: NullLogger.global,
       schemaOptions: {
@@ -157,7 +156,7 @@ describeLeaks('rule visitor', async () => {
     expect(ctx.errors.length).to.equal(EXPECTED_VISITS);
   });
 
-  itLeaks('should not pick items', async () => {
+  it('should not pick items', async () => {
     const ctx = new VisitorContext({
       logger: NullLogger.global,
       schemaOptions: {

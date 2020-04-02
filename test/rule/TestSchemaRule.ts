@@ -4,14 +4,13 @@ import { stub } from 'sinon';
 
 import { friendlyError, SchemaRule } from '../../src/rule/SchemaRule';
 import { VisitorContext } from '../../src/visitor/VisitorContext';
-import { describeLeaks, itLeaks } from '../helpers/async';
 
 /* eslint-disable @typescript-eslint/unbound-method */
 
 const TEST_NAME = 'test-rule';
 
-describeLeaks('schema rule', async () => {
-  itLeaks('should pick items from the scope', async () => {
+describe('schema rule', async () => {
+  it('should pick items from the scope', async () => {
     const ctx = new VisitorContext({
       logger: NullLogger.global,
       schemaOptions: {
@@ -36,7 +35,7 @@ describeLeaks('schema rule', async () => {
     expect(results).to.deep.equal([data.foo]);
   });
 
-  itLeaks('should pick no items', async () => {
+  it('should pick no items', async () => {
     const ctx = new VisitorContext({
       logger: NullLogger.global,
       schemaOptions: {
@@ -61,7 +60,7 @@ describeLeaks('schema rule', async () => {
     expect(results).to.deep.equal([]);
   });
 
-  itLeaks('should filter out items', async () => {
+  it('should filter out items', async () => {
     const ctx = new VisitorContext({
       logger: NullLogger.global,
       schemaOptions: {
@@ -95,7 +94,7 @@ describeLeaks('schema rule', async () => {
     expect(results.errors.length).to.equal(0);
   });
 
-  itLeaks('should pick items from the root', async () => {
+  it('should pick items from the root', async () => {
     const ctx = new VisitorContext({
       logger: NullLogger.global,
       schemaOptions: {
@@ -118,7 +117,7 @@ describeLeaks('schema rule', async () => {
     expect(Array.isArray(results)).to.equal(true);
   });
 
-  itLeaks('should visit selected items', async () => {
+  it('should visit selected items', async () => {
     const ctx = new VisitorContext({
       logger: NullLogger.global,
       schemaOptions: {
@@ -151,7 +150,7 @@ describeLeaks('schema rule', async () => {
     expect(checkSpy, 'check spy should have been called with data').to.have.callCount(1).and.been.calledWithExactly(data);
   });
 
-  itLeaks('should skip filtered items', async () => {
+  it('should skip filtered items', async () => {
     const ctx = new VisitorContext({
       logger: NullLogger.global,
       schemaOptions: {
