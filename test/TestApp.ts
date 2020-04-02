@@ -3,7 +3,6 @@ import mockFs from 'mock-fs';
 
 import { main, STATUS_ERROR, STATUS_SUCCESS } from '../src/app';
 import { readSource } from '../src/source';
-import { describeLeaks, itLeaks } from './helpers/async';
 
 const TEST_ARGS_PRE = ['node', 'test'];
 const TEST_ARGS_CONFIG = ['--config-path', 'docs', '--config-name', 'config.yml'];
@@ -37,13 +36,13 @@ const TEST_FILES = {
   'test.yml': 'hello world',
 };
 
-describeLeaks('main app', async () => {
-  itLeaks('completion should succeed', async () => {
+describe('main app', async () => {
+  it('completion should succeed', async () => {
     const status = await main(['node', 'test', 'complete']);
     expect(status).to.equal(STATUS_SUCCESS);
   });
 
-  itLeaks('should list rules and exit', async () => {
+  it('should list rules and exit', async () => {
     mockFs(TEST_FILES);
 
     const status = await main([
@@ -57,7 +56,7 @@ describeLeaks('main app', async () => {
     expect(status).to.equal(STATUS_SUCCESS);
   });
 
-  itLeaks('should load the source', async () => {
+  it('should load the source', async () => {
     mockFs(TEST_FILES);
 
     const status = await main([
@@ -71,7 +70,7 @@ describeLeaks('main app', async () => {
     expect(status).to.equal(STATUS_SUCCESS);
   });
 
-  itLeaks('should exit with rule errors', async () => {
+  it('should exit with rule errors', async () => {
     mockFs(TEST_FILES);
 
     const status = await main([
@@ -86,7 +85,7 @@ describeLeaks('main app', async () => {
     expect(status).to.equal(STATUS_ERROR);
   });
 
-  itLeaks('should exit with error count', async () => {
+  it('should exit with error count', async () => {
     mockFs(TEST_FILES);
 
     const status = await main([

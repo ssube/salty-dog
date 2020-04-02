@@ -4,7 +4,6 @@ import { ConsoleLogger, LogLevel, NullLogger } from 'noicejs';
 import { createRuleSelector, createRuleSources, resolveRules, validateRules } from '../../src/rule';
 import { SchemaRule } from '../../src/rule/SchemaRule';
 import { VisitorContext } from '../../src/visitor/VisitorContext';
-import { describeLeaks, itLeaks } from '../helpers/async';
 
 const TEST_RULES = [new SchemaRule({
   check: {},
@@ -29,9 +28,9 @@ const TEST_RULES = [new SchemaRule({
   tags: ['all', 'test'],
 })];
 
-describeLeaks('rule resolver', async () => {
-  describeLeaks('include by level', async () => {
-    itLeaks('should include info rules', async () => {
+describe('rule resolver', async () => {
+  describe('include by level', async () => {
+    it('should include info rules', async () => {
       const info = await resolveRules(TEST_RULES, createRuleSelector({
         includeLevel: [LogLevel.Info],
       }));
@@ -40,7 +39,7 @@ describeLeaks('rule resolver', async () => {
       expect(info[0]).to.equal(TEST_RULES[0]);
     });
 
-    itLeaks('should include warn rules', async () => {
+    it('should include warn rules', async () => {
       const info = await resolveRules(TEST_RULES, createRuleSelector({
         includeLevel: [LogLevel.Warn],
       }));
@@ -53,8 +52,8 @@ describeLeaks('rule resolver', async () => {
     });
   });
 
-  describeLeaks('include by name', async () => {
-    itLeaks('should include foo rules', async () => {
+  describe('include by name', async () => {
+    it('should include foo rules', async () => {
       const rules = await resolveRules(TEST_RULES, createRuleSelector({
         includeName: ['foo'],
       }));
@@ -64,8 +63,8 @@ describeLeaks('rule resolver', async () => {
     });
   });
 
-  describeLeaks('include by tag', async () => {
-    itLeaks('should include test rules', async () => {
+  describe('include by tag', async () => {
+    it('should include test rules', async () => {
       const rules = await resolveRules(TEST_RULES, createRuleSelector({
         includeTag: ['test'],
       }));
@@ -78,8 +77,8 @@ describeLeaks('rule resolver', async () => {
     });
   });
 
-  describeLeaks('exclude by name', async () => {
-    itLeaks('should exclude foo rules', async () => {
+  describe('exclude by name', async () => {
+    it('should exclude foo rules', async () => {
       const rules = await resolveRules(TEST_RULES, createRuleSelector({
         excludeName: ['foo'],
         includeTag: ['all'],
@@ -93,8 +92,8 @@ describeLeaks('rule resolver', async () => {
     });
   });
 
-  describeLeaks('exclude by tag', async () => {
-    itLeaks('should exclude test rules', async () => {
+  describe('exclude by tag', async () => {
+    it('should exclude test rules', async () => {
       const rules = await resolveRules(TEST_RULES, createRuleSelector({
         excludeTag: ['test'],
         includeTag: ['all'],
@@ -105,8 +104,8 @@ describeLeaks('rule resolver', async () => {
     });
   });
 
-  describeLeaks('exclude by level', async () => {
-    itLeaks('should exclude warn rules', async () => {
+  describe('exclude by level', async () => {
+    it('should exclude warn rules', async () => {
       const rules = await resolveRules(TEST_RULES, createRuleSelector({
         excludeLevel: [LogLevel.Warn],
         includeTag: ['all'],
@@ -141,8 +140,8 @@ describe('create rule selector helper', () => {
   });
 });
 
-describeLeaks('validate rule helper', async () => {
-  itLeaks('should accept valid modules', async () => {
+describe('validate rule helper', async () => {
+  it('should accept valid modules', async () => {
     const ctx = new VisitorContext({
       logger: ConsoleLogger.global,
       schemaOptions: {
@@ -158,7 +157,7 @@ describeLeaks('validate rule helper', async () => {
     })).to.equal(true);
   });
 
-  itLeaks('should reject partial modules', async () => {
+  it('should reject partial modules', async () => {
     const ctx = new VisitorContext({
       logger: NullLogger.global,
       schemaOptions: {
