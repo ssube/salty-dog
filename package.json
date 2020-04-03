@@ -74,7 +74,7 @@
     "mocha": "7.1.1",
     "mock-fs": "4.11.0",
     "noicejs": "3.0.1",
-    "nyc": "15.0.0",
+    "nyc": "15.0.1",
     "recursive-readdir": "2.2.2",
     "rollup": "2.3.2",
     "rollup-plugin-commonjs": "10.1.0",
