@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.2](https://github.com/ssube/salty-dog/compare/v0.8.1...v0.8.2) (2020-04-17)
+
+
+### Bug Fixes
+
+* **test:** leaking config load ([2fc7d76](https://github.com/ssube/salty-dog/commit/2fc7d7683c22ca81a46b12254a431b89b62cec18))
+
 ### [0.8.1](https://github.com/ssube/salty-dog/compare/v0.8.0...v0.8.1) (2020-03-11)
 
 
