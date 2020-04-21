@@ -76,7 +76,7 @@
     "noicejs": "3.0.1",
     "nyc": "15.0.1",
     "recursive-readdir": "2.2.2",
-    "rollup": "2.6.1",
+    "rollup": "2.7.0",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-eslint": "7.0.0",
     "rollup-plugin-json": "4.0.0",
