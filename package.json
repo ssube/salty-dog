@@ -71,7 +71,7 @@
     "jsonpath-plus": "4.0.0",
     "lodash": "4.17.15",
     "minimatch": "3.0.4",
-    "mocha": "7.1.1",
+    "mocha": "7.1.2",
     "mock-fs": "4.11.0",
     "noicejs": "3.0.1",
     "nyc": "15.0.1",
