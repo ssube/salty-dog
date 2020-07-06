@@ -37,7 +37,7 @@
     "@apextoaster/js-yaml-schema": "0.2.0",
     "@istanbuljs/nyc-config-typescript": "1.0.1",
     "@microsoft/api-documenter": "7.8.21",
-    "@microsoft/api-extractor": "7.8.15",
+    "@microsoft/api-extractor": "7.9.1",
     "@types/bunyan": "1.8.6",
     "@types/chai": "4.2.11",
     "@types/chai-as-promised": "7.1.2",
