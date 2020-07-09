@@ -7,10 +7,10 @@
   resolved "https://artifacts.apextoaster.com/repository/group-npm/@apextoaster/js-utils/-/js-utils-0.2.0.tgz#d7051ccf03c6212f779a3541d9d6122c84ee33c4"
   integrity sha512-boEa7Ig68l91YP+NUvr+BKo/+NmroCrec2TJ16Y31PMi1XGMmJO1UlKvQfdpvrUgJe3sraff2zQZN7wNLw+Vbg==
 
-"@apextoaster/js-yaml-schema@0.2.0":
-  version "0.2.0"
-  resolved "https://artifacts.apextoaster.com/repository/group-npm/@apextoaster/js-yaml-schema/-/js-yaml-schema-0.2.0.tgz#af69f7782ceb7b909e598f0a360fdada06d6693d"
-  integrity sha512-qIqIb6tsY0acv/LZqkWNyB1kooq2mwf7AS3Acs568zvSG6bN82UwBXf8r3yJh6F/0Yjeqp/UZyxTvNPsLizh/w==
+"@apextoaster/js-yaml-schema@0.3.0":
+  version "0.3.0"
+  resolved "https://artifacts.apextoaster.com/repository/group-npm/@apextoaster/js-yaml-schema/-/js-yaml-schema-0.3.0.tgz#d7e25521a7c8318cb6223eadafbe05a7d246a37d"
+  integrity sha512-rNqZgYXh9jxcZtrsb+Zj1AgKjq4bd2y8/jRNmerjW7Xjlr3sBysNTjrqlnYRUxfkgaT3aOw3zfea4uEovf6RjQ==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.5.5":
   version "7.5.5"
