@@ -11,7 +11,10 @@
     "cloneDeep",
     "defaultTo",
     "intersection",
+    "isFunction",
+    "isMap",
     "isNil",
+    "isObject",
     "isString",
     "kebabCase"
   ],
