@@ -1,5 +1,7 @@
 import { doesExist, NotFoundError } from '@apextoaster/js-utils';
+import { CONFIG_SCHEMA, includeSchema } from '@apextoaster/js-yaml-schema';
 import { Stream } from 'bunyan';
+import { existsSync, readFileSync, realpathSync } from 'fs';
 import { isString } from 'lodash';
 import { LogLevel } from 'noicejs';
 import { join } from 'path';
@@ -18,6 +20,11 @@ export interface ConfigData {
     };
   };
 }
+
+includeSchema.exists = existsSync;
+includeSchema.read = readFileSync;
+includeSchema.resolve = realpathSync;
+includeSchema.schema = CONFIG_SCHEMA;
 
 /**
  * With the given name, generate all potential config paths in their complete, absolute form.
