@@ -20,6 +20,16 @@ describe('load config helper', async () => {
   it('should throw when config is missing', () =>
     expect(loadConfig('missing.yml', join(__dirname, '..', 'docs'))).to.eventually.be.rejectedWith(NotFoundError)
   );
+
+  it('should load included config', () =>
+    expect(loadConfig('config-include.yml', join(__dirname, '..', 'docs'))).to.eventually.deep.include({
+      data: {
+        include: {
+          foo: 'bar',
+        },
+      },
+    })
+  );
 });
 
 describe('read config helper', async () => {

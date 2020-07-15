@@ -1,0 +1,2 @@
+data:
+  include: !include docs/partial-include.yml
