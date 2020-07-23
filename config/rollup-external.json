@@ -3,6 +3,8 @@
 		"async_hooks",
 		"chai",
 		"dtrace-provider",
-		"sinon"
+		"sinon",
+		"source-map",
+		"source-map-support"
 	]
 }
