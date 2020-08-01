@@ -2,7 +2,6 @@ import { doesExist, NotFoundError } from '@apextoaster/js-utils';
 import { CONFIG_SCHEMA, includeSchema } from '@apextoaster/js-yaml-schema';
 import { Stream } from 'bunyan';
 import { existsSync, readFileSync, realpathSync } from 'fs';
-import { isString } from 'lodash';
 import { LogLevel } from 'noicejs';
 import { join } from 'path';
 
@@ -36,16 +35,16 @@ export function completePaths(name: string, extras: Array<string>): Array<string
   const paths = [];
 
   const env = process.env[CONFIG_ENV];
-  if (isString(env)) {
+  if (typeof env === 'string') {
     paths.push(join(env, name));
   }
 
   const home = process.env.HOME;
-  if (isString(home)) {
+  if (typeof home === 'string') {
     paths.push(join(home, name));
   }
 
-  if (isString(__dirname)) {
+  if (__dirname !== '') {
     paths.push(join(__dirname, name));
   }
 

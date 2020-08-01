@@ -1,6 +1,6 @@
 import { doesExist, ensureArray } from '@apextoaster/js-utils';
 import { ValidateFunction } from 'ajv';
-import { Dictionary, intersection } from 'lodash';
+import { intersection } from 'lodash';
 import { Minimatch } from 'minimatch';
 import { LogLevel } from 'noicejs';
 import recursive from 'recursive-readdir';
@@ -66,13 +66,13 @@ export interface RuleSources {
 }
 
 export interface RuleSourceData {
-  definitions?: Dictionary<any>;
+  definitions?: Record<string, any>;
   name: string;
   rules: Array<RuleData>;
 }
 
 export interface RuleSourceModule {
-  definitions?: Dictionary<any>;
+  definitions?: Record<string, any>;
   name: string;
   rules: Array<Rule | RuleData>;
 }

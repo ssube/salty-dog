@@ -1,6 +1,6 @@
 import { doesExist, hasItems } from '@apextoaster/js-utils';
 import { ErrorObject, ValidateFunction } from 'ajv';
-import { cloneDeep, defaultTo, isNil } from 'lodash';
+import { cloneDeep, defaultTo } from 'lodash';
 import { LogLevel } from 'noicejs';
 
 import { Rule, RuleData } from '.';
@@ -68,10 +68,10 @@ export class SchemaRule implements Rule, RuleData, Visitor {
   }
 
   protected compileFilter(ctx: VisitorContext): ValidateFunction {
-    if (isNil(this.filter)) {
-      return DEFAULT_FILTER;
-    } else {
+    if (doesExist(this.filter)) {
       return ctx.compile(this.filter);
+    } else {
+      return DEFAULT_FILTER;
     }
   }
 }
@@ -88,10 +88,10 @@ export function friendlyError(ctx: VisitorContext, err: ErrorObject): VisitorErr
 
 export function friendlyErrorMessage(ctx: VisitorContext, err: ErrorObject): string {
   const msg = [err.dataPath];
-  if (isNil(err.message)) {
-    msg.push(err.keyword);
-  } else {
+  if (doesExist(err.message)) {
     msg.push(err.message);
+  } else {
+    msg.push(err.keyword);
   }
   msg.push('at', 'item', ctx.visitData.itemIndex.toString());
   msg.push('of', ctx.visitData.rule.select);
