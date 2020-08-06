@@ -1,11 +1,8 @@
 import { loadConfig } from '@apextoaster/js-config';
-import { CONFIG_SCHEMA, includeSchema } from '@apextoaster/js-yaml-schema';
-import { createLogger, Stream } from 'bunyan';
-import { existsSync, readFileSync, realpathSync } from 'fs';
-import { LogLevel } from 'noicejs';
-import { join } from 'path';
+import { createLogger } from 'bunyan';
 import { showCompletionScript } from 'yargs';
 
+import { ConfigData, initConfig } from './config';
 import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs } from './config/args';
 import { YamlParser } from './parser/YamlParser';
 import { createRuleSelector, createRuleSources, loadRules, resolveRules, validateConfig } from './rule';
@@ -19,25 +16,9 @@ export const STATUS_SUCCESS = 0;
 export const STATUS_ERROR = 1;
 export const STATUS_MAX = 255;
 
-export const CONFIG_ENV = 'SALTY_HOME';
-
-export interface ConfigData {
-  data: {
-    logger: {
-      level: LogLevel;
-      name: string;
-      streams: Array<Stream>;
-    };
-  };
-}
-
-includeSchema.exists = existsSync;
-includeSchema.join = join;
-includeSchema.read = readFileSync;
-includeSchema.resolve = realpathSync;
-includeSchema.schema = CONFIG_SCHEMA;
-
 export async function main(argv: Array<string>): Promise<number> {
+  initConfig();
+
   const { args, mode } = await parseArgs(argv.slice(ARGS_START));
   if (mode === MODE.complete) {
     showCompletionScript();
