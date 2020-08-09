@@ -1,8 +1,7 @@
 import { createSchema } from '@apextoaster/js-yaml-schema';
-import { existsSync, readFileSync, realpathSync } from 'fs';
-import { DEFAULT_SAFE_SCHEMA, safeDump, safeLoadAll, Schema } from 'js-yaml';
-import { join } from 'path';
+import { safeDump, safeLoadAll, Schema } from 'js-yaml';
 
+import { INCLUDE_OPTIONS } from '../config';
 import { Parser } from '../parser';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -13,11 +12,7 @@ export class YamlParser implements Parser {
   constructor() {
     this.schema = createSchema({
       include: {
-        exists: existsSync,
-        join,
-        read: readFileSync,
-        resolve: realpathSync,
-        schema: DEFAULT_SAFE_SCHEMA,
+        ...INCLUDE_OPTIONS,
       }
     });
   }

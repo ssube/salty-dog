@@ -1,5 +1,5 @@
 import { Config } from '@apextoaster/js-config';
-import { createSchema } from '@apextoaster/js-yaml-schema';
+import { createSchema, IncludeOptions } from '@apextoaster/js-yaml-schema';
 import Ajv from 'ajv';
 import { Stream } from 'bunyan';
 import { existsSync, readFileSync, realpathSync } from 'fs';
@@ -21,13 +21,17 @@ export interface ConfigData {
   };
 }
 
+export const INCLUDE_OPTIONS: IncludeOptions = {
+  exists: existsSync,
+  join,
+  read: readFileSync,
+  resolve: realpathSync,
+  schema: DEFAULT_SAFE_SCHEMA,
+};
+
 export function initConfig(paths: Array<string>, filename: string) {
   const include = {
-    exists: existsSync,
-    join,
-    read: readFileSync,
-    resolve: realpathSync,
-    schema: DEFAULT_SAFE_SCHEMA,
+    ...INCLUDE_OPTIONS,
   };
 
   createSchema({
