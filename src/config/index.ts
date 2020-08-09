@@ -30,11 +30,8 @@ export const INCLUDE_OPTIONS: IncludeOptions = {
   schema: DEFAULT_SAFE_SCHEMA,
 };
 
-export function initConfig(extras: Array<string>, filename: string) {
-  const include = {
-    ...INCLUDE_OPTIONS,
-  };
-
+export function initConfig(extras: Array<string>, name: string) {
+  const include = {...INCLUDE_OPTIONS};
   createSchema({
     include,
   });
@@ -59,7 +56,7 @@ export function initConfig(extras: Array<string>, filename: string) {
     sources: [{
       include,
       key: '',
-      name: filename,
+      name,
       paths,
       type: 'file',
     }],
