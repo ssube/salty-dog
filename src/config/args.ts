@@ -28,7 +28,7 @@ export interface Args {
 
 export interface ParsedArgs extends RuleSelector, RuleSources {
   [CONFIG_ARGS_NAME]: string;
-  [CONFIG_ARGS_PATH]: string;
+  [CONFIG_ARGS_PATH]: Array<string>;
   coerce: boolean;
   count: boolean;
   defaults: boolean;

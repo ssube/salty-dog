@@ -1,8 +1,7 @@
-import { loadConfig } from '@apextoaster/js-config';
 import { createLogger } from 'bunyan';
 import { showCompletionScript } from 'yargs';
 
-import { ConfigData, initConfig } from './config';
+import { initConfig } from './config';
 import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs } from './config/args';
 import { YamlParser } from './parser/YamlParser';
 import { createRuleSelector, createRuleSources, loadRules, resolveRules, validateConfig } from './rule';
@@ -17,15 +16,13 @@ export const STATUS_ERROR = 1;
 export const STATUS_MAX = 255;
 
 export async function main(argv: Array<string>): Promise<number> {
-  initConfig();
-
   const { args, mode } = await parseArgs(argv.slice(ARGS_START));
   if (mode === MODE.complete) {
     showCompletionScript();
     return STATUS_SUCCESS;
   }
 
-  const config = loadConfig<ConfigData>(args[CONFIG_ARGS_NAME], ...args[CONFIG_ARGS_PATH]);
+  const config = initConfig(args[CONFIG_ARGS_PATH], args[CONFIG_ARGS_NAME]);
 
   const logger = createLogger(config.data.logger);
   logger.info(VERSION_INFO, 'version info');

@@ -33,9 +33,9 @@
   "author": "ssube",
   "license": "MIT",
   "devDependencies": {
-    "@apextoaster/js-config": "^0.1.2-1",
+    "@apextoaster/js-config": "^0.1.2-3",
     "@apextoaster/js-utils": "0.2.1",
-    "@apextoaster/js-yaml-schema": "0.4.0-1",
+    "@apextoaster/js-yaml-schema": "0.4.0-3",
     "@istanbuljs/nyc-config-typescript": "1.0.1",
     "@microsoft/api-documenter": "7.8.22",
     "@microsoft/api-extractor": "7.9.3",
