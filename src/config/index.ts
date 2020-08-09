@@ -1,4 +1,5 @@
 import { Config } from '@apextoaster/js-config';
+import { doesExist } from '@apextoaster/js-utils';
 import { createSchema, IncludeOptions } from '@apextoaster/js-yaml-schema';
 import Ajv from 'ajv';
 import { Stream } from 'bunyan';
@@ -9,7 +10,7 @@ import { join } from 'path';
 
 import ruleSchemaData from '../../rules/salty-dog.yml';
 
-export const CONFIG_ENV = 'SALTY_HOME';
+export const CONFIG_ENV_HOME = 'SALTY_HOME';
 
 export interface ConfigData {
   data: {
@@ -29,7 +30,7 @@ export const INCLUDE_OPTIONS: IncludeOptions = {
   schema: DEFAULT_SAFE_SCHEMA,
 };
 
-export function initConfig(paths: Array<string>, filename: string) {
+export function initConfig(extras: Array<string>, filename: string) {
   const include = {
     ...INCLUDE_OPTIONS,
   };
@@ -45,6 +46,12 @@ export function initConfig(paths: Array<string>, filename: string) {
     $id,
     definitions,
   });
+
+  const paths = [...extras];
+  const altHome = process.env[CONFIG_ENV_HOME];
+  if (doesExist(altHome)) {
+    paths.push(altHome);
+  }
 
   const config = new Config<ConfigData>({
     key: '',
