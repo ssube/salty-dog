@@ -69,7 +69,7 @@
     "eslint-plugin-sonarjs": "0.5.0",
     "js-yaml": "3.14.0",
     "jsonpath-plus": "4.0.0",
-    "lodash": "4.17.19",
+    "lodash": "4.17.20",
     "minimatch": "3.0.4",
     "mocha": "8.1.1",
     "mock-fs": "4.12.0",
@@ -103,7 +103,7 @@
     "extends": "@istanbuljs/nyc-config-typescript"
   },
   "resolutions": {
-    "lodash": "4.17.19"
+    "lodash": "4.17.20"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
