@@ -3,7 +3,6 @@ import { Options, usage } from 'yargs';
 import { RuleSelector, RuleSources } from '../rule';
 import { VERSION_INFO } from '../version';
 
-/* eslint-disable-next-line no-shadow */
 export enum MODE {
   check = 'check',
   complete = 'complete',
