@@ -55,7 +55,7 @@
     "@typescript-eslint/eslint-plugin": "4.4.0",
     "@typescript-eslint/eslint-plugin-tslint": "4.4.0",
     "@typescript-eslint/parser": "4.4.0",
-    "ajv": "6.12.5",
+    "ajv": "6.12.6",
     "bunyan": "1.8.14",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
