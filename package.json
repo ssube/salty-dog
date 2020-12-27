@@ -67,7 +67,7 @@
     "eslint-plugin-mocha": "8.0.0",
     "eslint-plugin-no-null": "1.0.2",
     "eslint-plugin-sonarjs": "0.5.0",
-    "js-yaml": "3.14.0",
+    "js-yaml": "3.14.1",
     "jsonpath-plus": "4.0.0",
     "lodash": "4.17.20",
     "minimatch": "3.0.4",
