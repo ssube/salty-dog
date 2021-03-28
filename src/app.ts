@@ -1,5 +1,4 @@
 import { createLogger } from 'bunyan';
-import { showCompletionScript } from 'yargs';
 
 import { loadConfig } from './config';
 import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs } from './config/args';
@@ -10,6 +9,9 @@ import { readSource, writeSource } from './source';
 import { VERSION_INFO } from './version';
 import { VisitorContext } from './visitor/VisitorContext';
 
+/* eslint-disable-next-line @typescript-eslint/no-var-requires */
+const yargs = require('yargs');
+
 const ARGS_START = 2;
 export const STATUS_SUCCESS = 0;
 export const STATUS_ERROR = 1;
@@ -18,7 +20,7 @@ export const STATUS_MAX = 255;
 export async function main(argv: Array<string>): Promise<number> {
   const { args, mode } = await parseArgs(argv.slice(ARGS_START));
   if (mode === MODE.complete) {
-    showCompletionScript();
+    yargs.showCompletionScript();
     return STATUS_SUCCESS;
   }
 

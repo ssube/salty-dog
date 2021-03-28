@@ -1,7 +1,8 @@
-import { Options, usage } from 'yargs';
-
 import { RuleSelector, RuleSources } from '../rule';
 import { VERSION_INFO } from '../version';
+
+/* eslint-disable-next-line @typescript-eslint/no-var-requires */
+const yargs = require('yargs');
 
 export enum MODE {
   check = 'check',
@@ -15,7 +16,7 @@ export enum MODE {
 export const CONFIG_ARGS_NAME = 'config-name';
 export const CONFIG_ARGS_PATH = 'config-path';
 
-const RULE_OPTION: Options = {
+const RULE_OPTION = {
   default: [],
   group: 'Rules:',
   type: 'array',
@@ -49,7 +50,7 @@ export interface ParseResults {
 export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
   let mode: MODE = MODE.check;
 
-  const parser = usage('Usage: salty-dog <mode> [options]')
+  const parser = yargs.usage('Usage: salty-dog <mode> [options]')
     .command({
       command: ['check', '*'],
       describe: 'validate the source documents',
@@ -58,7 +59,7 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
       },
     })
     .command({
-      builder: (yargs: any) => yargs.options({
+      builder: (cmd: any) => cmd.options({
         coerce: {
           default: false,
           type: 'boolean',

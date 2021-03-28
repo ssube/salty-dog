@@ -51,7 +51,7 @@
     "@types/sinon": "9.0.11",
     "@types/sinon-chai": "3.2.5",
     "@types/source-map-support": "0.5.3",
-    "@types/yargs": "15.0.13",
+    "@types/yargs": "16.0.1",
     "@typescript-eslint/eslint-plugin": "4.19.0",
     "@typescript-eslint/eslint-plugin-tslint": "4.19.0",
     "@typescript-eslint/parser": "4.19.0",
@@ -96,7 +96,7 @@
     "tslint-microsoft-contrib": "6.2.0",
     "tslint-sonarts": "1.9.0",
     "typescript": "4.1.3",
-    "yargs": "15.4.1"
+    "yargs": "16.2.0"
   },
   "dependencies": {},
   "nyc": {
