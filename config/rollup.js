@@ -1,10 +1,11 @@
+import alias from '@rollup/plugin-alias';
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
 import { join, sep } from 'path';
-import commonjs from 'rollup-plugin-commonjs';
 import { eslint } from 'rollup-plugin-eslint';
 import json from 'rollup-plugin-json';
 import multiEntry from 'rollup-plugin-multi-entry';
 import externals from 'rollup-plugin-node-externals';
-import resolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
 import typescript from 'rollup-plugin-typescript2';
 import yaml from 'rollup-plugin-yaml';
@@ -72,6 +73,11 @@ const bundle = {
 		multiEntry(),
 		json(),
 		yaml(),
+    alias({
+      entries: {
+        'yargs': './node_modules/yargs/index.cjs'
+      },
+    }),
 		externals({
 			builtins: true,
 			deps: true,
