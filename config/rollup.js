@@ -28,7 +28,6 @@ const bundle = {
 	external,
 	input: {
 		include: [
-			// join(rootPath, 'rules', '*.yml'),
 			join(rootPath, 'src', 'index.ts'),
 			join(rootPath, 'test', 'harness.ts'),
 			join(rootPath, 'test', '**', 'Test*.ts'),
