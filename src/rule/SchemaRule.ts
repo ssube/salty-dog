@@ -71,7 +71,7 @@ export class SchemaRule implements Rule, RuleData, Visitor {
     if (doesExist(this.filter)) {
       return ctx.compile(this.filter);
     } else {
-      return DEFAULT_FILTER;
+      return DEFAULT_FILTER as any; // TODO: return something with schema/schemaEnv props
     }
   }
 }
@@ -87,7 +87,7 @@ export function friendlyError(ctx: VisitorContext, err: ErrorObject): VisitorErr
 }
 
 export function friendlyErrorMessage(ctx: VisitorContext, err: ErrorObject): string {
-  const msg = [err.dataPath];
+  const msg = [err.instancePath];
   if (doesExist(err.message)) {
     msg.push(err.message);
   } else {
