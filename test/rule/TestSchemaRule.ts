@@ -211,7 +211,7 @@ describe('friendly errors', () => {
   it('should have a message', () => {
     const { ctx } = createErrorContext();
     const err = friendlyError(ctx, {
-      dataPath: 'test-path',
+      instancePath: 'test-path',
       keyword: TEST_NAME,
       params: { /* ? */ },
       schemaPath: 'test-path',
@@ -223,7 +223,7 @@ describe('friendly errors', () => {
     const { ctx } = createErrorContext();
     const TEST_MESSAGE = 'test-message';
     const err = friendlyError(ctx, {
-      dataPath: 'test-path',
+      instancePath: 'test-path',
       keyword: TEST_NAME,
       message: TEST_MESSAGE,
       params: { /* ? */ },

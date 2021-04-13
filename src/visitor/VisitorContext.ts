@@ -1,5 +1,5 @@
 import { doesExist, hasItems } from '@apextoaster/js-utils';
-import Ajv from 'ajv';
+import Ajv, { ValidateFunction } from 'ajv';
 import { JSONPath } from 'jsonpath-plus';
 import { Logger } from 'noicejs';
 
@@ -22,7 +22,7 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
   public readonly logger: Logger;
   public readonly schemaOptions: RuleOptions;
 
-  protected readonly ajv: Ajv.Ajv;
+  protected readonly ajv: Ajv;
   protected readonly changeBuffer: Array<any>;
   protected readonly errorBuffer: Array<VisitorError>;
   protected data: any;
@@ -61,7 +61,7 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
     });
   }
 
-  public compile(schema: any): Ajv.ValidateFunction {
+  public compile(schema: any): ValidateFunction {
     return this.ajv.compile(schema);
   }
 
