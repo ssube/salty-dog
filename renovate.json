@@ -4,5 +4,17 @@
     ":semanticCommitTypeAll(update)",
     ":semanticCommitScopeDisabled"
   ],
-  "branchPrefix": "update/"
+  "branchPrefix": "update/",
+  "packageRules": [{
+    "matchPackageNames": ["aws-sdk"],
+    "extends": ["schedule:earlyMondays"]
+  }, {
+    "matchPackageNames": ["@microsoft/api-documenter", "@microsoft/api-extractor"],
+    "extends": ["schedule:earlyMondays"],
+    "groupName": "rushstack"
+  }, {
+    "matchPackagePatterns": ["rollup", "@rollup/plugin-.+"],
+    "extends": ["schedule:earlyMondays"],
+    "groupName": "rollup"
+  }]
 }
