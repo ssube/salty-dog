@@ -6,15 +6,22 @@
   ],
   "branchPrefix": "update/",
   "packageRules": [{
-    "matchPackageNames": ["aws-sdk"],
-    "extends": ["schedule:earlyMondays"]
-  }, {
     "matchPackageNames": ["@microsoft/api-documenter", "@microsoft/api-extractor"],
     "extends": ["schedule:earlyMondays"],
     "groupName": "rushstack"
   }, {
+    "matchPackageNames": ["aws-sdk"],
+    "extends": ["schedule:earlyMondays"]
+  }, {
+    "matchPackagePatterns": [
+      "eslint",
+      "eslint-plugin-.+"
+    ],
+    "extends": ["schedule:earlyMondays"],
+    "groupName": "eslint-plugins"
+  }, {
     "matchPackagePatterns": ["rollup", "@rollup/plugin-.+"],
     "extends": ["schedule:earlyMondays"],
-    "groupName": "rollup"
+    "groupName": "rollup-plugins"
   }]
 }
