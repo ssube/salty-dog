@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.3](https://github.com/ssube/salty-dog/compare/v0.8.2...v0.8.3) (2021-07-10)
+
+
+### Features
+
+* **build:** configure auto merge bot ([f93ccb2](https://github.com/ssube/salty-dog/commit/f93ccb283507bb57fa119a8d512a678663e7ed63))
+
+
+### Bug Fixes
+
+* **build:** build images from cached version ([c615a00](https://github.com/ssube/salty-dog/commit/c615a00efa318e43059266efe6b22123faaffdd0))
+* **build:** correct base image name ([792a355](https://github.com/ssube/salty-dog/commit/792a355a862ae692246fe807d2b785871976b339))
+* group test updates, automerge dev deps ([26ee49a](https://github.com/ssube/salty-dog/commit/26ee49a5e20b4582a26ecbb4ecff35d4aa48b36d))
+* reduce renovate noise ([91cea7f](https://github.com/ssube/salty-dog/commit/91cea7f36ef62a237a2622379bd1e108c2f109dd))
+* reduce renovate noise for eslint ([d9eb200](https://github.com/ssube/salty-dog/commit/d9eb20008c946a3511c435d83b400fe43190b734))
+* remove redundant rollup plugins ([6baa04f](https://github.com/ssube/salty-dog/commit/6baa04f9458a040de49e4781b3aa4868857f9130))
+* **build:** disable warnings for shadowing of private global types ([c3ad926](https://github.com/ssube/salty-dog/commit/c3ad9267fa6f51f0b777a81d6e0676134bb14f40))
+* **build:** externalize source map modules to fix requires ([bd75fd0](https://github.com/ssube/salty-dog/commit/bd75fd01adb9cae5d5108e5e8d55ac8f47f79cdb))
+* **build:** pull dind from nexus ([7926d17](https://github.com/ssube/salty-dog/commit/7926d1740a107bfdbfd58a2772f113623595fc10))
+* **build:** pull images from nexus ([caface1](https://github.com/ssube/salty-dog/commit/caface1e93b3174c98ea4809883152159f1539e6))
+* **build:** update eslint for typescript-eslint 4 rules ([75819b7](https://github.com/ssube/salty-dog/commit/75819b76cc23d3b625b7c28814408c5ca1a94202))
+* **config:** bundle yargs module again ([bd56752](https://github.com/ssube/salty-dog/commit/bd56752cebf0d5724e49f8f529faf978dbc57fa8))
+* **image:** remove yargs from bundle, add to image ([14a51ee](https://github.com/ssube/salty-dog/commit/14a51eefaa216026c8e970cb64800a69b1111c3c))
+* require commonjs version of yargs to resolve named exports ([234b277](https://github.com/ssube/salty-dog/commit/234b27738eae9aa08a06baa9313e64a15331b268))
+* **config:** update lint to naming-convention rule ([6646c32](https://github.com/ssube/salty-dog/commit/6646c32704fc7a98736d5dcc6e0e67ef84e4f864))
+* **test:** cover includes in config ([5cd1ab6](https://github.com/ssube/salty-dog/commit/5cd1ab6fb5716f645f88f548b941f3047da4390e))
+* register new lodash exports ([37b8e32](https://github.com/ssube/salty-dog/commit/37b8e326aa519d93a70a716a50422356237eb1f0))
+
 ### [0.8.2](https://github.com/ssube/salty-dog/compare/v0.8.1...v0.8.2) (2020-04-17)
 
 
