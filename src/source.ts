@@ -1,14 +1,60 @@
-import { isNil } from '@apextoaster/js-utils';
-import { readdir, readFile as readBack, writeFile as writeBack } from 'fs';
-import { promisify } from 'util';
+import { isNil, mustExist } from '@apextoaster/js-utils';
+import { promises } from 'fs';
+import { join } from 'path';
+import { Readable, Writable } from 'stream';
+
+let { readdir, readFile, writeFile } = promises;
 
 export const FILE_ENCODING = 'utf-8';
 
-export const readDir = promisify(readdir);
-export const readFile = promisify(readBack);
-export const writeFile = promisify(writeBack);
+export type Filesystem = Pick<typeof promises, 'readdir' | 'readFile' | 'writeFile'>;
 
-export async function readSource(path: string, stream = process.stdin): Promise<string> {
+/**
+ * Hook for tests to override the fs fns.
+ */
+export function setFs(fs: Filesystem) {
+  const originalList = readdir;
+  const originalRead = readFile;
+  const originalWrite = writeFile;
+
+  readdir = fs.readdir;
+  readFile = fs.readFile;
+  writeFile = fs.writeFile;
+
+  return () => {
+    readdir = originalList;
+    readFile = originalRead;
+    writeFile = originalWrite;
+  };
+}
+
+export async function listFiles(path: string): Promise<Array<string>> {
+  const dirs: Array<string> = [path];
+  const files: Array<string> = [];
+
+  while (dirs.length > 0) {
+    const dir = mustExist(dirs.shift());
+
+    const contents = await readdir(dir, {
+      withFileTypes: true,
+    });
+
+    for (const item of contents) {
+      const fullName = join(dir, item.name);
+      if (item.isDirectory()) {
+        dirs.push(fullName);
+      }
+
+      if (item.isFile()) {
+        files.push(fullName);
+      }
+    }
+  }
+
+  return files;
+}
+
+export async function readSource(path: string, stream: Readable = process.stdin): Promise<string> {
   if (path === '-') {
     return readStream(stream, FILE_ENCODING);
   } else {
@@ -18,7 +64,7 @@ export async function readSource(path: string, stream = process.stdin): Promise<
   }
 }
 
-export function readStream(stream: NodeJS.ReadStream, encoding: string): Promise<string> {
+export function readStream(stream: Readable, encoding: BufferEncoding): Promise<string> {
   return new Promise((res, rej) => {
     const chunks: Array<Buffer> = [];
     stream.on('data', (chunk) => chunks.push(chunk));
@@ -30,7 +76,7 @@ export function readStream(stream: NodeJS.ReadStream, encoding: string): Promise
   });
 }
 
-export async function writeSource(path: string, data: string, stream = process.stdout): Promise<void> {
+export async function writeSource(path: string, data: string, stream: Writable = process.stdout): Promise<void> {
   if (path === '-') {
     return writeStream(stream, data);
   } else {
@@ -40,7 +86,7 @@ export async function writeSource(path: string, data: string, stream = process.s
   }
 }
 
-export function writeStream(stream: NodeJS.WriteStream, data: string): Promise<void> {
+export function writeStream(stream: Writable, data: string): Promise<void> {
   return new Promise((res, rej) => {
     /* eslint-disable-next-line @typescript-eslint/ban-types */
     stream.write(data, (err: Error | null | undefined) => {

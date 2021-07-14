@@ -4,7 +4,7 @@ import { LogLevel } from 'noicejs';
 import { join } from 'path';
 
 import { YamlParser } from '../parser/YamlParser';
-import { readFile } from '../source';
+import { readSource } from '../source';
 
 export const CONFIG_ENV = 'SALTY_HOME';
 
@@ -67,9 +67,7 @@ export async function readConfig(path: string): Promise<string | undefined> {
   try {
     // need to await this read to catch the error, need to catch the error to check the code
     /* eslint-disable-next-line sonarjs/prefer-immediate-return */
-    const data = await readFile(path, {
-      encoding: 'utf-8',
-    });
+    const data = await readSource(path);
     return data;
   } catch (err) {
     if (err.code === 'ENOENT') {

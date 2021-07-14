@@ -1,8 +1,8 @@
 import { expect } from 'chai';
-import mockFs from 'mock-fs';
+import { vol } from 'memfs';
 
 import { main, STATUS_ERROR, STATUS_SUCCESS } from '../src/app';
-import { readSource } from '../src/source';
+import { Filesystem, readSource, setFs } from '../src/source';
 
 const TEST_ARGS_PRE = ['node', 'test'];
 const TEST_ARGS_CONFIG = ['--config-path', 'docs', '--config-name', 'config.yml'];
@@ -10,11 +10,9 @@ const TEST_ARGS_RULES = ['--rule-file', 'rules.yml', '--tag', 'test'];
 const TEST_ARGS_SOURCE = ['--source', 'test.yml'];
 
 const TEST_FILES = {
-  'docs': {
-    'config.yml': 'data: {logger: {level: debug, name: test, stream: !stream stderr}}',
-    'partial.yml': 'data: {logger: {name: test}}',
-  },
-  'rules.yml': `{
+  './docs/config.yml': 'data: {logger: {level: debug, name: test, stream: !stream stderr}}',
+  './docs/partial.yml': 'data: {logger: {name: test}}',
+  './rules.yml': `{
     name: test,
     rules: [{
       name: test,
@@ -33,17 +31,22 @@ const TEST_FILES = {
       }
     }]
   }`,
-  'test.yml': 'hello world',
+  './test.yml': 'hello world',
 };
 
 describe('main app', async () => {
+  beforeEach(() => {
+    vol.reset();
+  });
+
   it('completion should succeed', async () => {
     const status = await main(['node', 'test', 'complete']);
     expect(status).to.equal(STATUS_SUCCESS);
   });
 
   it('should list rules and exit', async () => {
-    mockFs(TEST_FILES);
+    vol.fromJSON(TEST_FILES);
+    const restore = setFs(vol.promises as Filesystem);
 
     const status = await main([
       ...TEST_ARGS_PRE,
@@ -51,13 +54,14 @@ describe('main app', async () => {
       ...TEST_ARGS_CONFIG,
     ]);
 
-    mockFs.restore();
+    restore();
 
     expect(status).to.equal(STATUS_SUCCESS);
   });
 
   it('should load the source', async () => {
-    mockFs(TEST_FILES);
+    vol.fromJSON(TEST_FILES);
+    const restore = setFs(vol.promises as Filesystem);
 
     const status = await main([
       ...TEST_ARGS_PRE,
@@ -65,13 +69,14 @@ describe('main app', async () => {
       ...TEST_ARGS_SOURCE,
     ]);
 
-    mockFs.restore();
+    restore();
 
     expect(status).to.equal(STATUS_SUCCESS);
   });
 
   it('should exit with rule errors', async () => {
-    mockFs(TEST_FILES);
+    vol.fromJSON(TEST_FILES);
+    const restore = setFs(vol.promises as Filesystem);
 
     const status = await main([
       ...TEST_ARGS_PRE,
@@ -80,13 +85,14 @@ describe('main app', async () => {
       ...TEST_ARGS_RULES,
     ]);
 
-    mockFs.restore();
+    restore();
 
     expect(status).to.equal(STATUS_ERROR);
   });
 
   it('should exit with error count', async () => {
-    mockFs(TEST_FILES);
+    vol.fromJSON(TEST_FILES);
+    const restore = setFs(vol.promises as Filesystem);
 
     const status = await main([
       ...TEST_ARGS_PRE,
@@ -96,16 +102,17 @@ describe('main app', async () => {
       '--count',
     ]);
 
-    mockFs.restore();
+    restore();
 
     expect(status).to.equal(STATUS_ERROR);
   });
 
   it('should fix up partial documents', async () => {
-    mockFs({
+    vol.fromJSON({
       ...TEST_FILES,
       'test.yml': '{}',
     });
+    const restore = setFs(vol.promises as Filesystem);
 
     const status = await main([
       ...TEST_ARGS_PRE,
@@ -117,14 +124,15 @@ describe('main app', async () => {
     ]);
     const result = await readSource('test-dest');
 
-    mockFs.restore();
+    restore();
 
     expect(status).to.equal(STATUS_SUCCESS);
     expect(result).to.equal('foo: 4\n');
   });
 
   it('should validate config before running', async () => {
-    mockFs(TEST_FILES);
+    vol.fromJSON(TEST_FILES);
+    const restore = setFs(vol.promises as Filesystem);
 
     const [configPath, configDocs, configName] = TEST_ARGS_CONFIG;
     const status = await main([
@@ -137,7 +145,7 @@ describe('main app', async () => {
       ...TEST_ARGS_SOURCE,
     ]);
 
-    mockFs.restore();
+    restore();
 
     expect(status).to.equal(STATUS_ERROR);
   });

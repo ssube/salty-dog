@@ -1,14 +1,18 @@
 import { expect } from 'chai';
-import mockFs from 'mock-fs';
+import { vol } from 'memfs';
 import { BaseError } from 'noicejs';
 import { spy, stub } from 'sinon';
 import { PassThrough } from 'stream';
 
-import { readSource, writeSource } from '../src/source';
+import { Filesystem, readSource, setFs, writeSource } from '../src/source';
 
 export const TEST_STRING = 'hello world';
 
 describe('load source helper', async () => {
+  beforeEach(() => {
+    vol.reset();
+  });
+
   it('should read from stdin', async () => {
     const pt = new PassThrough();
 
@@ -22,12 +26,15 @@ describe('load source helper', async () => {
   });
 
   it('should read from a file', async () => {
-    mockFs({
+    vol.fromJSON({
       test: TEST_STRING,
     });
 
+    const restore = setFs(vol.promises as Filesystem);
+
     const source = await readSource('test');
-    mockFs.restore();
+
+    restore();
 
     expect(source).to.equal(TEST_STRING);
   });
@@ -43,13 +50,16 @@ describe('load source helper', async () => {
 
 describe('write source helper', async () => {
   it('should write to a file', async () => {
-    mockFs({
+    vol.fromJSON({
       test: 'empty',
     });
 
+    const restore = setFs(vol.promises as Filesystem);
+
     await writeSource('test', TEST_STRING);
     const source = await readSource('test');
-    mockFs.restore();
+
+    restore();
 
     expect(source).to.equal(TEST_STRING);
   });

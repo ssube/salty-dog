@@ -7,7 +7,7 @@ import recursive from 'recursive-readdir';
 
 import ruleSchemaData from '../../rules/salty-dog.yml';
 import { YamlParser } from '../parser/YamlParser';
-import { readFile } from '../source';
+import { listFiles, readSource } from '../source';
 import { VisitorResult } from '../visitor';
 import { VisitorContext } from '../visitor/VisitorContext';
 import { SchemaRule } from './SchemaRule';
@@ -119,9 +119,7 @@ export async function loadRuleFiles(paths: Array<string>, ctx: VisitorContext): 
   const rules = [];
 
   for (const path of paths) {
-    const contents = await readFile(path, {
-      encoding: 'utf-8',
-    });
+    const contents = await readSource(path);
 
     const docs = parser.parse(contents) as Array<RuleSourceData>;
 
@@ -148,7 +146,7 @@ export async function loadRulePaths(paths: Array<string>, ctx: VisitorContext): 
   const rules = [];
 
   for (const path of paths) {
-    const allFiles = await recursive(path);
+    const allFiles = await listFiles(path);
     // skip files that start with `.`, limit to json and yaml/yml
     const files = allFiles
       .filter((name) => name[0] !== '.')

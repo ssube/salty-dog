@@ -1,10 +1,11 @@
 import { expect } from 'chai';
-import mockFS from 'mock-fs';
+import { vol } from 'memfs';
 import { LogLevel, NullLogger } from 'noicejs';
 import { spy, stub } from 'sinon';
 
 import { loadRuleFiles, loadRuleModules, loadRulePaths, loadRuleSource } from '../../src/rule';
 import { SchemaRule } from '../../src/rule/SchemaRule';
+import { Filesystem, setFs } from '../../src/source';
 import { VisitorContext } from '../../src/visitor/VisitorContext';
 
 const EXAMPLE_EMPTY = '{name: foo, definitions: {}, rules: []}';
@@ -32,10 +33,15 @@ function testContext() {
 }
 
 describe('load rule file helper', async () => {
+  beforeEach(() => {
+    vol.reset();
+  });
+
   it('should add schema', async () => {
-    mockFS({
+    vol.fromJSON({
       test: EXAMPLE_EMPTY,
     });
+    const restore = setFs(vol.promises as Filesystem);
 
     const ctx = new VisitorContext({
       logger: NullLogger.global,
@@ -51,16 +57,17 @@ describe('load rule file helper', async () => {
       'test',
     ], ctx);
 
-    mockFS.restore();
+    restore();
 
     expect(schemaSpy).to.have.been.calledWith('foo');
     expect(rules.length).to.equal(0);
   });
 
   it('should load rules', async () => {
-    mockFS({
+    vol.fromJSON({
       test: EXAMPLE_RULES,
     });
+    const restore = setFs(vol.promises as Filesystem);
 
     const ctx = new VisitorContext({
       logger: NullLogger.global,
@@ -75,19 +82,20 @@ describe('load rule file helper', async () => {
       'test',
     ], ctx);
 
-    mockFS.restore();
+    restore();
 
     expect(rules.length).to.equal(1);
   });
 
   it('should validate rule files', async () => {
-    mockFS({
+    vol.fromJSON({
       test: `{
         name: foo,
         definitions: [],
         rules: {}
       }`
     });
+    const restore = setFs(vol.promises as Filesystem);
 
     const ctx = new VisitorContext({
       logger: NullLogger.global,
@@ -102,20 +110,25 @@ describe('load rule file helper', async () => {
       'test',
     ], ctx);
 
-    mockFS.restore();
+    restore();
 
     expect(rules.length).to.equal(0);
   });
 });
 
 describe('load rule path helper', async () => {
+  beforeEach(() => {
+    vol.reset();
+  });
+
   it('should only load matching rule files', async () => {
-    mockFS({
-      test: {
-        'bin.nope': '{}', // will parse but throw on lack of rules
-        'foo.yml': EXAMPLE_RULES,
-      },
-    });
+    vol.fromJSON({
+      // eslint-disable-next-line
+      'test': null,
+      'test/bin.nope': '{}', // will parse but throw on lack of rules
+      'test/foo.yml': EXAMPLE_RULES,
+    }, __dirname);
+    const restore = setFs(vol.promises as Filesystem);
 
     const ctx = new VisitorContext({
       logger: NullLogger.global,
@@ -127,26 +140,23 @@ describe('load rule path helper', async () => {
     });
 
     const rules = await loadRulePaths([
-      'test',
+      `${__dirname}/test`,
     ], ctx);
 
-    mockFS.restore();
+    restore();
 
     expect(rules.length).to.equal(1);
   });
 
   it('should recursively load rule files', async () => {
-    mockFS({
-      test: {
-        'bar-dir': {
-          'bar.yml': EXAMPLE_RULES.replace(/foo/g, 'bar'),
-        },
-        'bin.nope': '{}', // will parse but throw on lack of rules
-        'some-dir': {
-          'foo.yml': EXAMPLE_RULES,
-        },
-      },
-    });
+    vol.fromJSON({
+      // eslint-disable-next-line
+      'test': null,
+      'test/bar-dir/bar.yml': EXAMPLE_RULES.replace(/foo/g, 'bar'),
+      'test/bin.nope': '{}', // will parse but throw on lack of rules
+      'test/some-dir/foo.yml': EXAMPLE_RULES,
+    }, __dirname);
+    const restore = setFs(vol.promises as Filesystem);
 
     const ctx = new VisitorContext({
       logger: NullLogger.global,
@@ -158,10 +168,10 @@ describe('load rule path helper', async () => {
     });
 
     const rules = await loadRulePaths([
-      'test',
+      `${__dirname}/test`,
     ], ctx);
 
-    mockFS.restore();
+    restore();
 
     const EXPECTED_RULES = 2;
     expect(rules.length).to.equal(EXPECTED_RULES);
@@ -229,7 +239,7 @@ describe('load rule module helper', async () => {
   });
 
   it('should not instantiate class instances', async () => {
-    class TestRule extends SchemaRule {}
+    class TestRule extends SchemaRule { }
     const ctx = testContext();
 
     const rules = await loadRuleSource({
