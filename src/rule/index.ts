@@ -3,7 +3,6 @@ import { ValidateFunction } from 'ajv';
 import { intersection } from 'lodash';
 import { Minimatch } from 'minimatch';
 import { LogLevel } from 'noicejs';
-import recursive from 'recursive-readdir';
 
 import ruleSchemaData from '../../rules/salty-dog.yml';
 import { YamlParser } from '../parser/YamlParser';
