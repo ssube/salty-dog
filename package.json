@@ -44,7 +44,7 @@
     "@types/bunyan": "1.8.6",
     "@types/chai": "4.2.21",
     "@types/chai-as-promised": "7.1.4",
-    "@types/deep-diff": "1.0.0",
+    "@types/deep-diff": "1.0.1",
     "@types/js-yaml": "4.0.1",
     "@types/lodash": "4.14.170",
     "@types/minimatch": "3.0.4",
