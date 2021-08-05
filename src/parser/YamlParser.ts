@@ -1,4 +1,4 @@
-import { createSchema } from '@apextoaster/js-yaml-schema';
+import { createInclude, createSchema } from '@apextoaster/js-yaml-schema';
 import { existsSync, readFileSync, realpathSync } from 'fs';
 import { DEFAULT_SCHEMA, dump, loadAll, Schema } from 'js-yaml';
 import { join } from 'path';
@@ -11,15 +11,19 @@ export class YamlParser implements Parser {
   protected schema: Schema;
 
   constructor() {
-    this.schema = createSchema({
-      include: {
-        exists: existsSync,
-        join,
-        read: readFileSync,
-        resolve: realpathSync,
-        schema: DEFAULT_SCHEMA,
-      },
+    const include = createInclude({
+      exists: existsSync,
+      join,
+      read: readFileSync,
+      resolve: realpathSync,
+      schema: DEFAULT_SCHEMA,
     });
+
+    this.schema = createSchema({}).extend([
+      include.includeType,
+    ]);
+
+    include.setSchema(this.schema);
   }
 
   public dump(...data: Array<any>): string {
