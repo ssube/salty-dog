@@ -1,5 +1,7 @@
 #! /bin/sh
 
+mkdir -p ./out/test/examples
+
 EXAMPLES="$(find ./test/examples -name '*.yml')"
 
 for example in ${EXAMPLES};
@@ -19,17 +21,43 @@ do
   echo "Using tags: ${USE_TAGS}"
   echo "Expected status: ${EXPECTED_STATUS}"
 
+  STDOUT_PATH=./out/${example}-stdout.log
+  STDERR_PATH=./out/${example}-stderr.log
+
   node out/index.js \
     --config-path ./docs \
     --config-name config-stderr.yml \
     --count \
     --rules "rules/${USE_RULES}.yml" \
     --tag "${USE_TAGS}" \
-    --source "${example}"
+    --source "${example}" \
+    1> ${STDOUT_PATH} \
+    2> ${STDERR_PATH}
 
   ACTUAL_STATUS=$?
 
-  echo "Actual status: ${ACTUAL_STATUS}"
+  if [[ -s ${STDOUT_PATH} ]];
+  then
+    echo "Test output:"
+    echo "==="
+    echo ""
+    tail -n5 ${STDOUT_PATH}
+    echo ""
+    echo "==="
+  fi
+
+  if [[ -s ${STDERR_PATH} ]];
+  then
+    echo "Test errors:"
+    echo "==="
+    echo ""
+    tail -n5 ${STDERR_PATH}
+    echo ""
+    echo "==="
+  fi
+
+
+  echo "Test status: ${ACTUAL_STATUS}"
 
   if [ "${ACTUAL_STATUS}" != "${EXPECTED_STATUS}" ];
   then
