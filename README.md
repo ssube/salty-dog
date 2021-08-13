@@ -78,7 +78,7 @@ ingress.extensions/gitlab created (dry run)
 [![Open issue count](https://img.shields.io/github/issues-raw/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/issues?q=is%3Aopen+is%3Aissue)
 [![Closed issue count](https://img.shields.io/github/issues-closed-raw/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/issues?q=is%3Aissue+is%3Aclosed)
 
-[![Renovate badge](https://badges.renovateapi.com/github/ssube/salty-dog)](https://renovatebot.com)
+[![Renovate badge](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com)
 [![Dependency status](https://img.shields.io/david/ssube/salty-dog.svg)](https://david-dm.org/ssube/salty-dog)
 [![Dev dependency status](https://img.shields.io/david/dev/ssube/salty-dog.svg)](https://david-dm.org/ssube/salty-dog?type=dev)
 [![Known vulnerabilities](https://snyk.io/test/github/ssube/salty-dog/badge.svg)](https://snyk.io/test/github/ssube/salty-dog)
@@ -93,14 +93,14 @@ ingress.extensions/gitlab created (dry run)
 
 [![github release link](https://img.shields.io/badge/github-release-blue?logo=github)](https://github.com/ssube/salty-dog/releases)
 [![github release version](https://img.shields.io/github/tag/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/releases)
-[![github commits since release](https://img.shields.io/github/commits-since/ssube/salty-dog/v0.8.0.svg)](https://github.com/ssube/salty-dog/compare/v0.8.0...master)
+[![github commits since release](https://img.shields.io/github/commits-since/ssube/salty-dog/v0.8.3.svg)](https://github.com/ssube/salty-dog/compare/v0.8.0...master)
 
 [![npm package link](https://img.shields.io/badge/npm-package-blue?logo=npm)](https://www.npmjs.com/package/salty-dog)
 [![npm release version](https://img.shields.io/npm/v/salty-dog.svg)](https://www.npmjs.com/package/salty-dog)
 [![Typescript definitions](https://img.shields.io/npm/types/salty-dog.svg)](https://www.npmjs.com/package/salty-dog)
 
 [![docker image link](https://img.shields.io/badge/docker-image-blue?logo=docker)](https://hub.docker.com/r/ssube/salty-dog)
-[![docker image size](https://images.microbadger.com/badges/image/ssube/salty-dog:master.svg)](https://microbadger.com/images/ssube/salty-dog:master)
+[![docker image size](https://img.shields.io/docker/image-size/ssube/salty-dog?sort=semver)](https://microbadger.com/images/ssube/salty-dog:master)
 
 ## Build
 
