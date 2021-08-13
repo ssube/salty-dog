@@ -56,7 +56,6 @@ do
     echo "==="
   fi
 
-
   echo "Test status: ${ACTUAL_STATUS}"
 
   if [ "${ACTUAL_STATUS}" != "${EXPECTED_STATUS}" ];

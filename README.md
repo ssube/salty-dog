@@ -1,21 +1,26 @@
-# SALTY Dog
+# Salty Dog
 
 Rule-based JSON/YAML validator using JSON schemas. Capable of filtering elements to validate partial documents,
 supports multiple documents per stream or file, inserting defaults, and other magic.
 
 ## Getting Started
 
-`salty-dog` is distributed as a package and container, and can be installed or pulled:
+`salty-dog` is distributed as both a Docker container and an npm package, so it can be installed or pulled:
 
 ```shell
+# docker image
 > docker pull ssube/salty-dog:master
+
+# npm project install
 > yarn add -D salty-dog
+
+# npm global install
 > yarn global add salty-dog
 ```
 
 **Note:** while the container is the preferred way of running `salty-dog`, it has a serious limitation: `docker run`
-combines `stdout` and `stderr`, making it impossible to separate logs and the output document. Writing either the logs
-or dest to a file works around this.
+combines `stdout` and `stderr`, making it difficult to separate logs and the output document. Writing either the logs
+or data to a file works around this.
 
 To download, validate, and apply a Kubernetes resource:
 
@@ -34,7 +39,7 @@ ingress.extensions/gitlab created (dry run)
 
 ## Contents
 
-- [SALTY Dog](#salty-dog)
+- [Salty Dog](#salty-dog)
   - [Getting Started](#getting-started)
   - [Contents](#contents)
   - [Status](#status)
