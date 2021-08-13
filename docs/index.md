@@ -1,29 +1,126 @@
 # Salty Dog
 
-`salty-dog` is a tool to validate JSON and YAML data using JSON schema rules.
+`salty-dog` is a tool to validate JSON and YAML data using JSON schema rules. It can filter elements and validate
+select parts of the document, supports multiple documents in the same stream or file, and can insert defaults during
+validation.
+
+## Getting Started
+
+`salty-dog` is distributed as both a Docker container and an npm package, so it can be installed or pulled:
+
+```shell
+# docker image
+> docker pull ssube/salty-dog:master
+
+# npm project install
+> yarn add -D salty-dog
+
+# npm global install
+> yarn global add salty-dog
+```
+
+**Note:** while the container is the preferred way of running `salty-dog`, it has a serious limitation: `docker run`
+combines `stdout` and `stderr`, making it difficult to separate logs and the output document. Writing either the logs
+or data to a file works around this.
+
+To download, validate, and apply a Kubernetes resource:
+
+```shell
+> curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml | \
+    salty-dog \
+      --rules rules/kubernetes.yml \
+      --source - \
+      --tag kubernetes | \
+    kubectl apply --dry-run -f -
+
+...
+{"name":"salty-dog","hostname":"cerberus","pid":7860,"level":30,"msg":"all rules passed","time":"2019-06-16T02:04:37.797Z","v":0}
+ingress.extensions/gitlab created (dry run)
+```
+
+## Contents
 
 - [Salty Dog](#salty-dog)
+  - [Getting Started](#getting-started)
+  - [Contents](#contents)
+  - [Build](#build)
+    - [Local Build](#local-build)
+    - [Container Build](#container-build)
   - [Usage](#usage)
-    - [Container](#container)
-    - [Package](#package)
-      - [Project](#project)
-      - [Global](#global)
+    - [Using The Container](#using-the-container)
+    - [Using The Package](#using-the-package)
+      - [Project Package](#project-package)
+      - [Global Package](#global-package)
+    - [Usage Modes](#usage-modes)
   - [Rules](#rules)
-    - [Sources](#sources)
-    - [Tags](#tags)
+    - [Loading Rule Sources](#loading-rule-sources)
+    - [Using Rule Tags](#using-rule-tags)
+    - [Validating Rules](#validating-rules)
   - [Output](#output)
-    - [Data](#data)
-    - [Logs](#logs)
+    - [Using Data Output](#using-data-output)
+      - [Inserting Default Values](#inserting-default-values)
+    - [Formatting Log Output](#formatting-log-output)
+
+## Build
+
+### Local Build
+
+`salty-dog` is written in Typescript and requires `make`, `node`, and `yarn` to build.
+
+```shell
+> git clone git@github.com:ssube/salty-dog.git
+> cd salty-dog
+> make
+```
+
+After building, run with `node out/index.js` or install globally with `make yarn-global`.
+
+`make` targets are provided for some example arguments:
+
+```shell
+> curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml | \
+    make run-stream \
+    1> >(kubectl apply --dry-run -f -) \
+    2> >($(yarn bin)/bunyan)
+
+...
+[2019-06-16T03:23:56.645Z]  INFO: salty-dog/8015 on cerberus: all rules passed
+ingress.extensions/gitlab created (dry run)
+```
+
+### Container Build
+
+This method does not require the usual dependencies to be installed, only `docker` itself.
+
+Build with Docker:
+
+```shell
+# Stretch
+docker run --rm -v "$(pwd):/salty-dog" -w /salty-dog node:16-stretch make
+docker build -t salty-dog:stretch -f Dockerfile.stretch .
+
+# Alpine
+docker run --rm -v "$(pwd):/salty-dog" -w /salty-dog node:16-alpine sh -c "apk add build-base && make"
+docker build -t salty-dog:alpine -f Dockerfile.alpine .
+```
 
 ## Usage
 
-`salty-dog` is distributed as a package or container.
+`salty-dog` is distributed as a docker container and an npm package.
 
-While the container is the preferred way of running `salty-dog`, it has a serious limitation: `docker run` combines
+While the container is the preferred way of running `salty-dog`, it has one limitation: `docker run` combines
 `stdout` and `stderr`, making it impossible to separate logs and the output document. Writing either the logs or dest
 to a file works around this.
 
-### Container
+### Using The Container
+
+To run the Docker container: `docker run --rm ssube/salty-dog:master`
+
+The latest semi-stable image is published to `ssube/salty-dog:master`. Containers are published based on both Alpine
+Linux and Debian (currently Stretch). All of the [available tags are listed here](https://hub.docker.com/r/ssube/salty-dog/tags).
+
+Rules are provided in the image at `/salty-dog/rules`. To use custom rules in the container, mount them with
+`-v $(pwd)/rules:/salty-dog/rules:ro` and load them with `--rules /rules/foo.yml`.
 
 The `ssube/salty-dog` container image can be run normally or interactively.
 
@@ -43,11 +140,12 @@ You can also launch a shell within the container, using local rules:
     ssube/salty-dog:master
 ```
 
-### Package
+### Using The Package
 
-`salty-dog` can be installed from npm and used as a binary or programmatically.
+`salty-dog` is also published as [an npm package](https://www.npmjs.com/package/salty-dog) with a binary, so it can
+be used as a CLI command or programmatically.
 
-#### Project
+#### Project Package
 
 To install `salty-dog` for the current project:
 
@@ -56,7 +154,7 @@ To install `salty-dog` for the current project:
 > $(yarn bin)/salty-dog --help
 ```
 
-#### Global
+#### Global Package
 
 It is also possible to install `salty-dog` globally, rather than within a project. However, this is
 not recommended.
@@ -66,6 +164,10 @@ not recommended.
 > export PATH="${PATH}:$(yarn global bin)"
 > salty-dog --help
 ```
+
+### Usage Modes
+
+TODO
 
 ## Rules
 
@@ -95,19 +197,48 @@ rules:
 
 The complete rule format [is documented here](./rules.md).
 
-### Sources
+Rules combine a jsonpath expression and JSON schema to select and validate the document.
 
-Rules can be loaded from YAML files, directories thereof, and Node modules.
+The rule's `select` expression is used to select nodes that should be validated, which are `filter`ed, then `check`ed.
 
-### Tags
+The structure of rule files and the rules within them [are documented here](docs/rules.md).
 
-Not all of the loaded rules need to be used. They can be selected by tags.
+### Loading Rule Sources
+
+Rules can be loaded from a file, module, or path.
+
+To load a file by name, `--rule-file foo.yml`. This will accept any extension.
+
+To load a module, `--rule-module foo`. The required module exports [are documented here](./docs/rules.md#from-module).
+
+To load a path, `--rule-path foo/`. This will recursively load any files matching `*.+(json|yaml|yml)`.
+
+### Using Rule Tags
+
+All rules are disabled by default and must be enabled by name, level, or tag.
+
+To enable a single rule by name, `--include-name foo-rule`.
+
+To enable a group of rules by level, `--include-level warn`.
+
+To enable a group of rules by tag, `--include-tag foo`.
+
+### Validating Rules
+
+To validate the rules in the `rules/` directory using the meta-rules:
+
+```shell
+> make test-rules
+
+...
+{"name":"salty-dog","hostname":"cerberus","pid":29403,"level":30,"msg":"all rules passed","time":"2019-06-16T00:56:55.132Z","v":0}
+```
 
 ## Output
 
 `salty-dog` outputs two streams: valid input data and error logs.
 
-### Data
+### Using Data Output
 
 Valid input data is written back out to `stdout`, allowing `salty-dog` to be used inline with piped shell commands.
 
@@ -126,10 +257,16 @@ For example, to validate a kubernetes resource before applying it:
 ingress.extensions/gitlab created (dry run)
 ```
 
-### Logs
+#### Inserting Default Values
 
-Log messages are written in JSON using the bunyan library, and can be pretty-printed with `bunyan` or `jq` (both of
-which are installed in the `salty-dog` container).
+Properties that appear in the schema with the `default` key set will be added to each element as it is checked. Rules
+apply in order, as do their defaults.
+
+### Formatting Log Output
+
+`salty-dog` uses [node-bunyan](https://github.com/trentm/node-bunyan) for logging and prints structured JSON output.
+Logs can be pretty-printed by redirecting `stderr` through `bunyan` itself or `jq`, both of which are installed in
+the `salty-dog` container.
 
 To filter out error messages, then format the errors they contain:
 

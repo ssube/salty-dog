@@ -1,7 +1,8 @@
 # Salty Dog
 
-Rule-based JSON/YAML validator using JSON schemas. Capable of filtering elements to validate partial documents,
-supports multiple documents per stream or file, inserting defaults, and other magic.
+`salty-dog` is a tool to validate JSON and YAML data using JSON schema rules. It can filter elements and validate
+select parts of the document, supports multiple documents in the same stream or file, and can insert defaults during
+validation.
 
 ## Getting Started
 
@@ -45,25 +46,22 @@ ingress.extensions/gitlab created (dry run)
   - [Status](#status)
   - [Releases](#releases)
   - [Build](#build)
-    - [Local Build](#local-build)
-    - [Docker Build](#docker-build)
-  - [Install](#install)
-    - [Docker Install](#docker-install)
-    - [Yarn Install](#yarn-install)
-      - [Global](#global)
-      - [Project](#project)
   - [Usage](#usage)
-    - [Logs](#logs)
-    - [Modes](#modes)
+    - [Using The Container](#using-the-container)
+    - [Using The Package](#using-the-package)
+      - [Project Package](#project-package)
+      - [Global Package](#global-package)
+    - [Usage Modes](#usage-modes)
       - [Check Mode](#check-mode)
       - [Fix Mode](#fix-mode)
         - [Default Values](#default-values)
         - [Coercing Values](#coercing-values)
       - [List Mode](#list-mode)
-    - [Rules](#rules)
-      - [Enable Rules](#enable-rules)
-      - [Load Rules](#load-rules)
-      - [Validate Rules](#validate-rules)
+    - [Formatting Logs](#formatting-logs)
+  - [Rules](#rules)
+    - [Loading Rule Sources](#loading-rule-sources)
+    - [Using Rule Tags](#using-rule-tags)
+    - [Validating Rules](#validating-rules)
   - [License](#license)
 
 ## Status
@@ -104,136 +102,73 @@ ingress.extensions/gitlab created (dry run)
 
 ## Build
 
-### Local Build
+`salty-dog` is written in Typescript and requires `make`, `node`, and `yarn` to build. It can be built locally or in
+a container.
 
-This project is written in Typescript and requires `make`, `node`, and `yarn` to build.
+[Please see the build docs](./docs/index.md#build) for more details.
+
+## Usage
+
+`salty-dog` is distributed as a docker container and an npm package.
+
+While the container is the preferred way of running `salty-dog`, it has one limitation: `docker run` combines
+`stdout` and `stderr`, making it impossible to separate logs and the output document. Writing either the logs or dest
+to a file works around this.
+
+### Using The Container
+
+To run the Docker container: `docker run --rm ssube/salty-dog:master`
+
+The latest semi-stable image is published to `ssube/salty-dog:master`. Containers are published based on both Alpine
+Linux and Debian (currently Stretch). All of the [available tags are listed here](https://hub.docker.com/r/ssube/salty-dog/tags).
+
+Rules are provided in the image at `/salty-dog/rules`. To use custom rules in the container, mount them with
+`-v $(pwd)/rules:/salty-dog/rules:ro` and load them with `--rules /rules/foo.yml`.
+
+The `ssube/salty-dog` container image can be run normally or interactively.
+
+To validate a file or input normally:
 
 ```shell
-> git clone git@github.com:ssube/salty-dog.git
-> cd salty-dog
-> make
+> docker run --rm ssube/salty-dog:master --help
 ```
 
-After building, run with `node out/index.js` or install globally with `make yarn-global`.
-
-`make` targets are provided for some example arguments:
+You can also launch a shell within the container, using local rules:
 
 ```shell
-> curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml | \
-    make run-stream 2> >($(yarn bin)/bunyan) > >(kubectl apply --dry-run -f -)
-
-...
-[2019-06-16T03:23:56.645Z]  INFO: salty-dog/8015 on cerberus: all rules passed
-ingress.extensions/gitlab created (dry run)
+> docker run \
+    --rm \
+    -it \
+    --entrypoint bash \
+    ssube/salty-dog:master
 ```
 
-### Docker Build
+### Using The Package
 
-This method does not require the usual dependencies to be installed, only `docker` itself.
+`salty-dog` is also published as [an npm package](https://www.npmjs.com/package/salty-dog) with a binary, so it can
+be used as a CLI command or programmatically.
 
-Build with Docker:
+#### Project Package
+
+To install `salty-dog` for the current project:
 
 ```shell
-# Stretch
-docker run --rm -v "$(pwd):/salty-dog" -w /salty-dog node:11-stretch make
-docker build -t salty-dog:stretch -f Dockerfile.stretch .
-
-# Alpine
-docker run --rm -v "$(pwd):/salty-dog" -w /salty-dog node:11-alpine sh -c "apk add build-base && make"
-docker build -t salty-dog:alpine -f Dockerfile.alpine .
+> yarn add -D salty-dog
+> $(yarn bin)/salty-dog --help
 ```
 
-## Install
+#### Global Package
 
-### Docker Install
-
-To run with Docker: `docker run --rm ssube/salty-dog:master`
-
-The latest semi-stable image is `ssube/salty-dog:master`. All
-[tags are listed here](https://hub.docker.com/r/ssube/salty-dog/tags).
-
-The Docker container is published for each branch and git tag, tagged with the git tag (or branch slug).
-
-Rules are baked into the image in `/salty-dog/rules`. To use custom rules, mount them with
-`-v $(pwd)/rules:/salty-dog/rules:ro` and load with `--rules /rules/foo.yml`.
-
-### Yarn Install
-
-#### Global
-
-To install with Yarn as a global CLI tool: `yarn global add salty-dog`
-
-To run with Node:
+It is also possible to install `salty-dog` globally, rather than within a project. However, this is
+not recommended.
 
 ```shell
+> yarn global add salty-dog
 > export PATH="${PATH}:$(yarn global bin)"
 > salty-dog --help
 ```
 
-#### Project
-
-To install with Yarn for a single project: `yarn add -D salty-dog`
-
-To run with Node:
-
-```shell
-> export PATH="${PATH}:$(yarn bin)"
-> salty-dog --help
-```
-
-## Usage
-
-### Logs
-
-`salty-dog` uses [node-bunyan](https://github.com/trentm/node-bunyan) for logging and prints JSON logs. These are not
-the easiest to read, and can be pretty-printed by redirecting `stderr` through `bunyan` itself or `jq`:
-
-```shell
-> cat resource.yml | salty-dog --rules rules/kubernetes.yml --tag kubernetes 2> >(bunyan)
-
-...
-[2019-06-15T23:53:34.223Z]  INFO: salty-dog/19839 on cerberus: all rules passed
-
-> cat resource.yml | salty-dog --rules rules/kubernetes.yml --tag kubernetes 2> >(jq)
-
-...
-{
-  "name": "salty-dog",
-  "hostname": "cerberus",
-  "pid": 19839,
-  "level": 30,
-  "msg": "all rules passed",
-  "time": "2019-06-15T23:53:34.223Z",
-  "v": 0
-}
-```
-
-Using `jq` allows for additional filtering and formatting. For example, `>(jq 'select(.level > 30)')` will only print
-warnings and errors (log level is also part of the configuration file).
-
-To print the last line's message and error messages: `>(tail -1 | jq '[.msg, ((.errors // [])[] | .msg)]')`
-
-```shell
-> cat test/examples/kubernetes-resources-high.yml | salty-dog \
-    --rules rules/kubernetes.yml \
-    --tag kubernetes 2> >(tail -1 | jq '[.msg, ((.errors // [])[] | .msg)]')
-
-[
-  "all rules passed"
-]
-
-> cat test/examples/kubernetes-resources-some.yml | salty-dog \
-    --rules rules/kubernetes.yml \
-    --tag kubernetes 2> >(tail -1 | jq '[.msg, ((.errors // [])[] | .msg)]')
-
-[
-  "some rules failed",
-  ".resources.limits should have required property 'memory' at $.spec.template.spec.containers[*] for kubernetes-resources",
-  ".metadata should have required property 'labels' at $ for kubernetes-labels"
-]
-```
-
-### Modes
+### Usage Modes
 
 `salty-dog` can run in a few different modes: `check` mode will report errors, `fix` mode will attempt to modify the
 input document, and `list` mode will print the active set of rules.
@@ -319,7 +254,58 @@ ignored in `list` mode.
     ]
 ```
 
-### Rules
+### Formatting Logs
+
+`salty-dog` uses [node-bunyan](https://github.com/trentm/node-bunyan) for logging and prints structured JSON output.
+Logs can be pretty-printed by redirecting `stderr` through `bunyan` itself or `jq`, both of which are installed in
+the `salty-dog` container:
+
+```shell
+> cat resource.yml | salty-dog --rules rules/kubernetes.yml --tag kubernetes 2> >(bunyan)
+
+...
+[2019-06-15T23:53:34.223Z]  INFO: salty-dog/19839 on cerberus: all rules passed
+
+> cat resource.yml | salty-dog --rules rules/kubernetes.yml --tag kubernetes 2> >(jq)
+
+...
+{
+  "name": "salty-dog",
+  "hostname": "cerberus",
+  "pid": 19839,
+  "level": 30,
+  "msg": "all rules passed",
+  "time": "2019-06-15T23:53:34.223Z",
+  "v": 0
+}
+```
+
+Using `jq` allows for additional filtering and formatting. For example, `jq 'select(.level > 30)'` will only print
+warnings and errors (the minimum log level to print can be set in the configuration file).
+
+To print the last line's message and error messages: `tail -1 | jq '[.msg, try (.errors[] | .msg)]'`
+
+```shell
+> cat test/examples/kubernetes-resources-high.yml | salty-dog \
+    --rules rules/kubernetes.yml \
+    --tag kubernetes 2> >(tail -1 | jq '[.msg, try (.errors[] | .msg)]')
+
+[
+  "all rules passed"
+]
+
+> cat test/examples/kubernetes-resources-some.yml | salty-dog \
+    --rules rules/kubernetes.yml \
+    --tag kubernetes 2> >(tail -1 | jq '[.msg, try (.errors[] | .msg)]')
+
+[
+  "some rules failed",
+  ".resources.limits should have required property 'memory' at $.spec.template.spec.containers[*] for kubernetes-resources",
+  ".metadata should have required property 'labels' at $ for kubernetes-labels"
+]
+```
+
+## Rules
 
 Rules combine a jsonpath expression and JSON schema to select and validate the document.
 
@@ -327,17 +313,7 @@ The rule's `select` expression is used to select nodes that should be validated,
 
 The structure of rule files and the rules within them [are documented here](docs/rules.md).
 
-#### Enable Rules
-
-All rules are disabled by default and must be enabled by name, level, or tag.
-
-To enable a single rule by name, `--include-name foo-rule`.
-
-To enable a group of rules by level, `--include-level warn`.
-
-To enable a group of rules by tag, `--include-tag foo`.
-
-#### Load Rules
+### Loading Rule Sources
 
 Rules can be loaded from a file, module, or path.
 
@@ -347,7 +323,17 @@ To load a module, `--rule-module foo`. The required module exports [are document
 
 To load a path, `--rule-path foo/`. This will recursively load any files matching `*.+(json|yaml|yml)`.
 
-#### Validate Rules
+### Using Rule Tags
+
+All rules are disabled by default and must be enabled by name, level, or tag.
+
+To enable a single rule by name, `--include-name foo-rule`.
+
+To enable a group of rules by level, `--include-level warn`.
+
+To enable a group of rules by tag, `--include-tag foo`.
+
+### Validating Rules
 
 To validate the rules in the `rules/` directory using the meta-rules:
 
