@@ -35,8 +35,9 @@ do
     2> ${STDERR_PATH}
 
   ACTUAL_STATUS=$?
+  echo "Test status: ${ACTUAL_STATUS}"
 
-  if [[ -s ${STDOUT_PATH} ]];
+  if [ -s ${STDOUT_PATH} ];
   then
     echo "Test output:"
     echo "==="
@@ -46,7 +47,7 @@ do
     echo "==="
   fi
 
-  if [[ -s ${STDERR_PATH} ]];
+  if [ -s ${STDERR_PATH} ];
   then
     echo "Test errors:"
     echo "==="
@@ -55,8 +56,6 @@ do
     echo ""
     echo "==="
   fi
-
-  echo "Test status: ${ACTUAL_STATUS}"
 
   if [ "${ACTUAL_STATUS}" != "${EXPECTED_STATUS}" ];
   then
