@@ -33,10 +33,10 @@ test-rules: build-bundle
 	done
 
 local-alpine:
-	docker run --rm -v "$(shell pwd):/salty-dog" -w /salty-dog node:11-stretch make ci
+	docker run --rm -v "$(shell pwd):/salty-dog" -w /salty-dog node:16-stretch make ci
 
 local-stretch:
-	docker run --rm -v "$(shell pwd):/salty-dog" -w /salty-dog node:11-alpine sh -c "apk add build-base git && make ci"
+	docker run --rm -v "$(shell pwd):/salty-dog" -w /salty-dog node:16-alpine sh -c "apk add build-base git && make ci"
 
 local-chown-leaks: ## clean up root-owned files the containers may leak
 	sudo chown -R ${USER}:${USER} $(ROOT_PATH)
