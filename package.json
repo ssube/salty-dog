@@ -78,7 +78,7 @@
     "mocha": "9.0.3",
     "noicejs": "4.0.0",
     "nyc": "15.1.0",
-    "rollup": "2.56.1",
+    "rollup": "2.56.2",
     "rollup-plugin-eslint": "7.0.0",
     "rollup-plugin-json": "4.0.0",
     "rollup-plugin-multi-entry": "2.1.0",
