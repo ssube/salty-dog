@@ -73,7 +73,7 @@
     "js-yaml": "4.1.0",
     "jsonpath-plus": "6.0.1",
     "lodash": "4.17.21",
-    "memfs": "3.2.2",
+    "memfs": "3.2.4",
     "minimatch": "3.0.4",
     "mocha": "9.1.1",
     "noicejs": "4.0.0",
