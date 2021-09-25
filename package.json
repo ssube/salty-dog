@@ -50,7 +50,7 @@
     "@types/minimatch": "3.0.5",
     "@types/mocha": "9.0.0",
     "@types/node": "16.3.2",
-    "@types/sinon": "10.0.3",
+    "@types/sinon": "10.0.4",
     "@types/sinon-chai": "3.2.5",
     "@types/source-map-support": "0.5.4",
     "@types/yargs": "17.0.3",
