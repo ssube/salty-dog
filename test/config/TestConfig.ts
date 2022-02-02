@@ -8,7 +8,7 @@ const __dirname = dirName();
 
 describe('load config helper', async () => {
   it('should load an existing config', async () =>
-    expect(loadConfig('config-stderr.yml', join(__dirname, '..', 'docs'))).to.eventually.deep.include({
+    expect(loadConfig('config-stderr.yml', join(__dirname, 'docs'))).to.eventually.deep.include({
       data: {
         logger: {
           level: 'debug',
@@ -20,11 +20,11 @@ describe('load config helper', async () => {
   );
 
   it('should throw when config is missing', async () =>
-    expect(loadConfig('missing.yml', join(__dirname, '..', 'docs'))).to.eventually.be.rejectedWith(NotFoundError)
+    expect(loadConfig('missing.yml', join(__dirname, 'docs'))).to.eventually.be.rejectedWith(NotFoundError)
   );
 
   it('should load included config', async () =>
-    expect(loadConfig('config-include.yml', join(__dirname, '..', 'docs'))).to.eventually.deep.include({
+    expect(loadConfig('config-include.yml', join(__dirname, 'docs'))).to.eventually.deep.include({
       data: {
         include: {
           foo: 'bar',

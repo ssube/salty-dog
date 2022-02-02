@@ -1,17 +1,23 @@
-import { doesExist, ensureArray } from '@apextoaster/js-utils';
+import { doesExist, ensureArray, NotFoundError } from '@apextoaster/js-utils';
 import { ValidateFunction } from 'ajv';
+import { readFileSync } from 'fs';
 import lodash from 'lodash';
-const { intersection } = lodash;
 import minimatch from 'minimatch';
-const { Minimatch } = minimatch;
 import { LogLevel } from 'noicejs';
+import { join } from 'path';
 
-// import ruleSchemaData from '../../rules/salty-dog.yml';
+import { dirName } from '../config/index.js';
 import { YamlParser } from '../parser/YamlParser.js';
 import { listFiles, readSource } from '../source.js';
 import { VisitorResult } from '../visitor/index.js';
 import { VisitorContext } from '../visitor/VisitorContext.js';
 import { SchemaRule } from './SchemaRule.js';
+
+/* eslint-disable-next-line @typescript-eslint/unbound-method */
+const { intersection } = lodash;
+const { Minimatch } = minimatch;
+
+// import ruleSchemaData from '../../rules/salty-dog.yml';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface RuleData {
@@ -227,8 +233,23 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
   return Array.from(activeRules);
 }
 
+export function loadSchema(): any {
+  const path = join(dirName(), 'rules', 'salty-dog.yml');
+  const data = readFileSync(path, { encoding: 'utf-8' });
+
+  if (doesExist(data)) {
+    const parser = new YamlParser();
+    const [schema] = parser.parse(data);
+
+    // TODO: parse schema data before returning
+    return schema;
+  }
+
+  throw new NotFoundError('');
+}
+
 export function validateRules(ctx: VisitorContext, root: any): boolean {
-  const { definitions, name } = { definitions: { config: {} } } as any; // ruleSchemaData as any;
+  const { definitions, name } = loadSchema();
 
   const validCtx = new VisitorContext(ctx);
   validCtx.addSchema(name, definitions);
@@ -243,7 +264,7 @@ export function validateRules(ctx: VisitorContext, root: any): boolean {
 }
 
 export function validateConfig(ctx: VisitorContext, root: any): boolean {
-  const { definitions, name } = { definitions: { config: {} } } as any; // ruleSchemaData as any;
+  const { definitions, name } = loadSchema();
 
   const validCtx = new VisitorContext(ctx);
   validCtx.addSchema(name, definitions);

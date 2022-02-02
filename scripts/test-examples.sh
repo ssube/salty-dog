@@ -24,7 +24,7 @@ do
   STDOUT_PATH=./out/${example}-stdout.log
   STDERR_PATH=./out/${example}-stderr.log
 
-  node out/index.js \
+  node out/src/index.js \
     --config-path ./docs \
     --config-name config-stderr.yml \
     --count \

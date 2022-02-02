@@ -19,8 +19,11 @@ export interface ConfigData {
   };
 }
 
+/**
+ * Path to project root directory.
+ */
 export function dirName(): string {
-  return dirname(fileURLToPath(import.meta.url));
+  return join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 }
 
 /**
@@ -63,7 +66,7 @@ export async function loadConfig(name: string, ...extras: Array<string>): Promis
       const parser = new YamlParser();
       const [head] = parser.parse(data);
 
-      /* eslint-disable-next-line sonarjs/prefer-immediate-return */
+      /* eslint-disable-next-line sonarjs/prefer-immediate-return,@typescript-eslint/no-explicit-any */
       return head as any; // TODO: validate config
     }
   }

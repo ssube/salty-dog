@@ -7,8 +7,8 @@ import { Visitor, VisitorError, VisitorResult } from '../visitor/index.js';
 import { VisitorContext } from '../visitor/VisitorContext.js';
 import { Rule, RuleData } from './index.js';
 
+/* eslint-disable-next-line @typescript-eslint/unbound-method */
 const { cloneDeep, defaultTo } = lodash;
-
 
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/strict-boolean-expressions */
 

@@ -1,12 +1,14 @@
 import { hasItems } from '@apextoaster/js-utils';
 import deepDiff from 'deep-diff';
-const { applyDiff, diff } = deepDiff;
 import lodash from 'lodash';
-const { cloneDeep } = lodash;
 
 import { Rule } from './index.js';
 import { Visitor } from '../visitor/index.js';
 import { VisitorContext } from '../visitor/VisitorContext.js';
+
+const { applyDiff, diff } = deepDiff;
+/* eslint-disable-next-line @typescript-eslint/unbound-method */
+const { cloneDeep } = lodash;
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

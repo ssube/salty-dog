@@ -19,7 +19,7 @@ clean-deps: ## clean up the node_modules directory
 	rm -rf node_modules/
 
 COVER_ARGS := --all \
-	--100 \
+	--check-coverage \
 	--exclude ".eslintrc.js" \
 	--exclude "bundle/**" \
 	--exclude "config/**" \
