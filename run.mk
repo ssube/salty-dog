@@ -1,6 +1,4 @@
-ci: build test-cover test-rules test-examples
-
-local: build test-cover run-help
+local: build cover run-help
 
 # run targets
 run-help: ## print the help
@@ -20,11 +18,11 @@ test-examples: ## run medium (feature) tests
 	$(SCRIPT_PATH)/test-examples.sh
 
 test-rules: ## validate the rules directory
-test-rules: build-bundle
+test-rules: build
 	find $(ROOT_PATH)/rules -maxdepth 1 -name '*.yml' | while read file; \
 	do \
 		echo "Validating $${file}..."; \
-		node out/index.js \
+		node out/src/index.js \
 			--config-path $(ROOT_PATH)/docs \
 			--config-name config-stderr.yml \
 			--rules $(ROOT_PATH)/rules/salty-dog.yml \
@@ -32,13 +30,13 @@ test-rules: build-bundle
 			--tag salty-dog > /dev/null || exit 1; \
 	done
 
-DOCKER_OPTIONS ?=
+IMAGE_OPTIONS ?=
 
 local-alpine:
-	docker run $(DOCKER_OPTIONS) --rm -v "$(shell pwd):/salty-dog" -w /salty-dog node:16-alpine sh -c "apk add build-base git && make ci"
+	podman run $(IMAGE_OPTIONS) --rm -v "$(shell pwd):/salty-dog" -w /salty-dog docker.io/node:16-alpine sh -c "apk add bash build-base git && make ci"
 
 local-stretch:
-	docker run $(DOCKER_OPTIONS) --rm -v "$(shell pwd):/salty-dog" -w /salty-dog node:16-stretch bash -c "make ci"
+	podman run $(IMAGE_OPTIONS) --rm -v "$(shell pwd):/salty-dog" -w /salty-dog docker.io/node:16-stretch bash -c "make ci"
 
 local-chown-leaks: ## clean up root-owned files the containers may leak
 	sudo chown -R ${USER}:${USER} $(ROOT_PATH)
