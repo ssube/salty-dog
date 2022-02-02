@@ -1,6 +1,8 @@
 import { hasItems } from '@apextoaster/js-utils';
-import { applyDiff, diff } from 'deep-diff';
-import { cloneDeep } from 'lodash';
+import deepDiff from 'deep-diff';
+const { applyDiff, diff } = deepDiff;
+import lodash from 'lodash';
+const { cloneDeep } = lodash;
 
 import { Rule } from './index.js';
 import { Visitor } from '../visitor/index.js';

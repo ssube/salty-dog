@@ -28,6 +28,12 @@ export function setFs(fs: Filesystem) {
   };
 }
 
+export function resetFs() {
+  readdir = promises.readdir;
+  readFile = promises.readFile;
+  writeFile = promises.writeFile;
+}
+
 export async function listFiles(path: string): Promise<Array<string>> {
   const dirs: Array<string> = [path];
   const files: Array<string> = [];

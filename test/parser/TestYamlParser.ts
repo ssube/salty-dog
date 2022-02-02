@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 
-import { YamlParser } from '../../src/parser/YamlParser';
+import { YamlParser } from '../../src/parser/YamlParser.js';
 
 describe('yaml parser', () => {
   describe('dump documents', () => {
-    it('should dump multiple documents', () => {
+    it('should dump multiple documents', async () => {
       const parser = new YamlParser();
       const data = parser.dump({}, {});
 
@@ -13,7 +13,7 @@ describe('yaml parser', () => {
   });
 
   describe('parse documents', () => {
-    it('should parse multiple documents', () => {
+    it('should parse multiple documents', async () => {
       const parser = new YamlParser();
       const data = parser.parse(`
 foo: {}

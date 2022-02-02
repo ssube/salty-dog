@@ -3,10 +3,10 @@ import { vol } from 'memfs';
 import { LogLevel, NullLogger } from 'noicejs';
 import { spy, stub } from 'sinon';
 
-import { loadRuleFiles, loadRuleModules, loadRulePaths, loadRuleSource } from '../../src/rule';
-import { SchemaRule } from '../../src/rule/SchemaRule';
-import { Filesystem, setFs } from '../../src/source';
-import { VisitorContext } from '../../src/visitor/VisitorContext';
+import { loadRuleFiles, loadRuleModules, loadRulePaths, loadRuleSource } from '../../src/rule/index.js';
+import { SchemaRule } from '../../src/rule/SchemaRule.js';
+import { Filesystem, setFs } from '../../src/source.js';
+import { VisitorContext } from '../../src/visitor/VisitorContext.js';
 
 const EXAMPLE_EMPTY = '{name: foo, definitions: {}, rules: []}';
 const EXAMPLE_RULES = `{

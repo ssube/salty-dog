@@ -1,7 +1,9 @@
 import { doesExist, ensureArray } from '@apextoaster/js-utils';
 import { ValidateFunction } from 'ajv';
-import { intersection } from 'lodash';
-import { Minimatch } from 'minimatch';
+import lodash from 'lodash';
+const { intersection } = lodash;
+import minimatch from 'minimatch';
+const { Minimatch } = minimatch;
 import { LogLevel } from 'noicejs';
 
 // import ruleSchemaData from '../../rules/salty-dog.yml';

@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import { LogLevel, NullLogger } from 'noicejs';
 import { stub } from 'sinon';
 
-import { friendlyError, SchemaRule } from '../../src/rule/SchemaRule';
-import { VisitorContext } from '../../src/visitor/VisitorContext';
+import { friendlyError, SchemaRule } from '../../src/rule/SchemaRule.js';
+import { VisitorContext } from '../../src/visitor/VisitorContext.js';
 
 /* eslint-disable @typescript-eslint/unbound-method */
 
@@ -208,7 +208,7 @@ function createErrorContext() {
 }
 
 describe('friendly errors', () => {
-  it('should have a message', () => {
+  it('should have a message', async () => {
     const { ctx } = createErrorContext();
     const err = friendlyError(ctx, {
       instancePath: 'test-path',
@@ -219,7 +219,7 @@ describe('friendly errors', () => {
     expect(err.msg).to.include(TEST_NAME);
   });
 
-  it('should handle errors with an existing message', () => {
+  it('should handle errors with an existing message', async () => {
     const { ctx } = createErrorContext();
     const TEST_MESSAGE = 'test-message';
     const err = friendlyError(ctx, {

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { vol } from 'memfs';
 
 import { main, STATUS_ERROR, STATUS_SUCCESS } from '../src/app.js';
-import { Filesystem, readSource, setFs } from '../src/source.js';
+import { Filesystem, readSource, resetFs, setFs } from '../src/source.js';
 
 const TEST_ARGS_PRE = ['node', 'test'];
 const TEST_ARGS_CONFIG = ['--config-path', 'docs', '--config-name', 'config.yml'];
@@ -37,6 +37,10 @@ const TEST_FILES = {
 describe('main app', async () => {
   beforeEach(() => {
     vol.reset();
+  });
+
+  afterEach(() => {
+    resetFs();
   });
 
   it('completion should succeed', async () => {

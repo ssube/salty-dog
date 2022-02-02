@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import { LogLevel, NullLogger } from 'noicejs';
 
-import { VisitorContext } from '../../src/visitor/VisitorContext';
+import { VisitorContext } from '../../src/visitor/VisitorContext.js';
 
 describe('visitor context', () => {
-  it('should merge results', () => {
+  it('should merge results', async () => {
     const firstCtx = new VisitorContext({
       logger: NullLogger.global,
       schemaOptions: {

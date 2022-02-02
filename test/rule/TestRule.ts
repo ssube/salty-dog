@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import { ConsoleLogger, LogLevel, NullLogger } from 'noicejs';
 
-import { createRuleSelector, createRuleSources, resolveRules, validateRules } from '../../src/rule';
-import { SchemaRule } from '../../src/rule/SchemaRule';
-import { VisitorContext } from '../../src/visitor/VisitorContext';
+import { createRuleSelector, createRuleSources, resolveRules, validateRules } from '../../src/rule/index.js';
+import { SchemaRule } from '../../src/rule/SchemaRule.js';
+import { VisitorContext } from '../../src/visitor/VisitorContext.js';
 
 const TEST_RULES = [new SchemaRule({
   check: {},
@@ -118,7 +118,7 @@ describe('rule resolver', async () => {
 });
 
 describe('create rule sources helper', () => {
-  it('should ensure every field is an array', () => {
+  it('should ensure every field is an array', async () => {
     const sources = createRuleSources({});
 
     expect(sources).to.have.deep.property('ruleFile', []);
@@ -128,7 +128,7 @@ describe('create rule sources helper', () => {
 });
 
 describe('create rule selector helper', () => {
-  it('should ensure every field is an array', () => {
+  it('should ensure every field is an array', async () => {
     const sources = createRuleSelector({});
 
     expect(sources).to.have.deep.property('excludeLevel', []);

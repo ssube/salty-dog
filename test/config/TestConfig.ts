@@ -2,10 +2,10 @@ import { NotFoundError } from '@apextoaster/js-utils';
 import { expect } from 'chai';
 import { join } from 'path';
 
-import { loadConfig, readConfig } from '../../src/config';
+import { loadConfig, readConfig } from '../../src/config/index.js';
 
 describe('load config helper', async () => {
-  it('should load an existing config', () =>
+  it('should load an existing config', async () =>
     expect(loadConfig('config-stderr.yml', join(__dirname, '..', 'docs'))).to.eventually.deep.include({
       data: {
         logger: {
@@ -17,11 +17,11 @@ describe('load config helper', async () => {
     })
   );
 
-  it('should throw when config is missing', () =>
+  it('should throw when config is missing', async () =>
     expect(loadConfig('missing.yml', join(__dirname, '..', 'docs'))).to.eventually.be.rejectedWith(NotFoundError)
   );
 
-  it('should load included config', () =>
+  it('should load included config', async () =>
     expect(loadConfig('config-include.yml', join(__dirname, '..', 'docs'))).to.eventually.deep.include({
       data: {
         include: {
@@ -33,11 +33,11 @@ describe('load config helper', async () => {
 });
 
 describe('read config helper', async () => {
-  it('should consume enoent errors', () =>
+  it('should consume enoent errors', async () =>
     expect(readConfig(join('docs', 'missing.yml'))).to.eventually.equal(undefined)
   );
 
-  it('should rethrow unknown errors', () =>
+  it('should rethrow unknown errors', async () =>
     expect(readConfig('test')).to.eventually.be.rejectedWith(Error)
   );
 });

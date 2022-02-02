@@ -1,5 +1,6 @@
 import { createLogger } from 'bunyan';
-import { showCompletionScript } from 'yargs';
+import yargs from 'yargs';
+const { showCompletionScript } = yargs;
 
 import { loadConfig } from './config/index.js';
 import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs } from './config/args.js';

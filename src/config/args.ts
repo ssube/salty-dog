@@ -1,4 +1,5 @@
-import { Options, usage } from 'yargs';
+import yargs, { Options } from 'yargs';
+const { usage } = yargs;
 
 import { RuleSelector, RuleSources } from '../rule/index.js';
 import { VERSION_INFO } from '../version.js';

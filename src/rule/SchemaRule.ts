@@ -1,11 +1,14 @@
 import { doesExist, hasItems } from '@apextoaster/js-utils';
 import { ErrorObject, ValidateFunction } from 'ajv';
-import { cloneDeep, defaultTo } from 'lodash';
 import { LogLevel } from 'noicejs';
 
 import { Rule, RuleData } from './index.js';
 import { Visitor, VisitorError, VisitorResult } from '../visitor/index.js';
 import { VisitorContext } from '../visitor/VisitorContext.js';
+
+import lodash from 'lodash';
+const { cloneDeep, defaultTo } = lodash;
+
 
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/strict-boolean-expressions */
 

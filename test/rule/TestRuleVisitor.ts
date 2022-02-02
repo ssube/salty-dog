@@ -2,9 +2,9 @@ import { expect } from 'chai';
 import { LogLevel, NullLogger } from 'noicejs';
 import { mock, spy, stub } from 'sinon';
 
-import { RuleVisitor } from '../../src/rule/RuleVisitor';
-import { SchemaRule } from '../../src/rule/SchemaRule';
-import { VisitorContext } from '../../src/visitor/VisitorContext';
+import { RuleVisitor } from '../../src/rule/RuleVisitor.js';
+import { SchemaRule } from '../../src/rule/SchemaRule.js';
+import { VisitorContext } from '../../src/visitor/VisitorContext.js';
 
 describe('rule visitor', async () => {
   it('should only call visit for selected items', async () => {
