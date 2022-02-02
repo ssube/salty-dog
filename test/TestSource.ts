@@ -4,7 +4,7 @@ import { BaseError } from 'noicejs';
 import { spy, stub } from 'sinon';
 import { PassThrough } from 'stream';
 
-import { Filesystem, readSource, setFs, writeSource } from '../src/source';
+import { Filesystem, readSource, setFs, writeSource } from '../src/source.js';
 
 export const TEST_STRING = 'hello world';
 

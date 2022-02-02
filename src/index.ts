@@ -1,4 +1,4 @@
-import { main } from './app';
+import { main } from './app.js';
 
 const STATUS_ERROR = 1;
 

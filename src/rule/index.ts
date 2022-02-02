@@ -4,12 +4,12 @@ import { intersection } from 'lodash';
 import { Minimatch } from 'minimatch';
 import { LogLevel } from 'noicejs';
 
-import ruleSchemaData from '../../rules/salty-dog.yml';
-import { YamlParser } from '../parser/YamlParser';
-import { listFiles, readSource } from '../source';
-import { VisitorResult } from '../visitor';
-import { VisitorContext } from '../visitor/VisitorContext';
-import { SchemaRule } from './SchemaRule';
+// import ruleSchemaData from '../../rules/salty-dog.yml';
+import { YamlParser } from '../parser/YamlParser.js';
+import { listFiles, readSource } from '../source.js';
+import { VisitorResult } from '../visitor/index.js';
+import { VisitorContext } from '../visitor/VisitorContext.js';
+import { SchemaRule } from './SchemaRule.js';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface RuleData {
@@ -216,7 +216,7 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
 }
 
 export function validateRules(ctx: VisitorContext, root: any): boolean {
-  const { definitions, name } = ruleSchemaData as any;
+  const { definitions, name } = {} as any; // ruleSchemaData as any; // TODO: fix this
 
   const validCtx = new VisitorContext(ctx);
   validCtx.addSchema(name, definitions);
@@ -231,7 +231,7 @@ export function validateRules(ctx: VisitorContext, root: any): boolean {
 }
 
 export function validateConfig(ctx: VisitorContext, root: any): boolean {
-  const { definitions, name } = ruleSchemaData as any;
+  const { definitions, name } = {} as any; // ruleSchemaData as any;
 
   const validCtx = new VisitorContext(ctx);
   validCtx.addSchema(name, definitions);

@@ -3,9 +3,9 @@ import { ErrorObject, ValidateFunction } from 'ajv';
 import { cloneDeep, defaultTo } from 'lodash';
 import { LogLevel } from 'noicejs';
 
-import { Rule, RuleData } from '.';
-import { Visitor, VisitorError, VisitorResult } from '../visitor';
-import { VisitorContext } from '../visitor/VisitorContext';
+import { Rule, RuleData } from './index.js';
+import { Visitor, VisitorError, VisitorResult } from '../visitor/index.js';
+import { VisitorContext } from '../visitor/VisitorContext.js';
 
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/strict-boolean-expressions */
 

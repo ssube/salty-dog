@@ -3,7 +3,7 @@ import Ajv, { ValidateFunction } from 'ajv';
 import { JSONPath } from 'jsonpath-plus';
 import { Logger } from 'noicejs';
 
-import { VisitorError, VisitorResult } from '.';
+import { VisitorError, VisitorResult } from './index.js';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

@@ -3,7 +3,7 @@ import { existsSync, readFileSync, realpathSync } from 'fs';
 import { DEFAULT_SCHEMA, dump, loadAll, Schema } from 'js-yaml';
 import { join } from 'path';
 
-import { Parser } from '../parser';
+import { Parser } from './index.js';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

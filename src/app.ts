@@ -1,14 +1,14 @@
 import { createLogger } from 'bunyan';
 import { showCompletionScript } from 'yargs';
 
-import { loadConfig } from './config';
-import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs } from './config/args';
-import { YamlParser } from './parser/YamlParser';
-import { createRuleSelector, createRuleSources, loadRules, resolveRules, validateConfig } from './rule';
-import { RuleVisitor } from './rule/RuleVisitor';
-import { readSource, writeSource } from './source';
-import { VERSION_INFO } from './version';
-import { VisitorContext } from './visitor/VisitorContext';
+import { loadConfig } from './config/index.js';
+import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs } from './config/args.js';
+import { YamlParser } from './parser/YamlParser.js';
+import { createRuleSelector, createRuleSources, loadRules, resolveRules, validateConfig } from './rule/index.js';
+import { RuleVisitor } from './rule/RuleVisitor.js';
+import { readSource, writeSource } from './source.js';
+import { VERSION_INFO } from './version.js';
+import { VisitorContext } from './visitor/VisitorContext.js';
 
 const ARGS_START = 2;
 export const STATUS_SUCCESS = 0;

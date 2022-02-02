@@ -3,8 +3,8 @@ import { Stream } from 'bunyan';
 import { LogLevel } from 'noicejs';
 import { join } from 'path';
 
-import { YamlParser } from '../parser/YamlParser';
-import { readSource } from '../source';
+import { YamlParser } from '../parser/YamlParser.js';
+import { readSource } from '../source.js';
 
 export const CONFIG_ENV = 'SALTY_HOME';
 

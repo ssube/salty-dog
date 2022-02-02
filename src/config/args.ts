@@ -1,7 +1,7 @@
 import { Options, usage } from 'yargs';
 
-import { RuleSelector, RuleSources } from '../rule';
-import { VERSION_INFO } from '../version';
+import { RuleSelector, RuleSources } from '../rule/index.js';
+import { VERSION_INFO } from '../version.js';
 
 export enum MODE {
   check = 'check',

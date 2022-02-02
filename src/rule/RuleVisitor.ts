@@ -2,9 +2,9 @@ import { hasItems } from '@apextoaster/js-utils';
 import { applyDiff, diff } from 'deep-diff';
 import { cloneDeep } from 'lodash';
 
-import { Rule } from '.';
-import { Visitor } from '../visitor';
-import { VisitorContext } from '../visitor/VisitorContext';
+import { Rule } from './index.js';
+import { Visitor } from '../visitor/index.js';
+import { VisitorContext } from '../visitor/VisitorContext.js';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

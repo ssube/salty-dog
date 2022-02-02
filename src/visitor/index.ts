@@ -1,7 +1,7 @@
 import { Diff } from 'deep-diff';
 import { LogLevel } from 'noicejs';
 
-import { VisitorContext } from './VisitorContext';
+import { VisitorContext } from './VisitorContext.js';
 
 /**
  * This is a runtime error, not an exception.

@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { vol } from 'memfs';
 
-import { main, STATUS_ERROR, STATUS_SUCCESS } from '../src/app';
-import { Filesystem, readSource, setFs } from '../src/source';
+import { main, STATUS_ERROR, STATUS_SUCCESS } from '../src/app.js';
+import { Filesystem, readSource, setFs } from '../src/source.js';
 
 const TEST_ARGS_PRE = ['node', 'test'];
 const TEST_ARGS_CONFIG = ['--config-path', 'docs', '--config-name', 'config.yml'];
