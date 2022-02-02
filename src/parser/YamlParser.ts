@@ -26,8 +26,8 @@ export class YamlParser implements Parser {
     include.setSchema(this.schema);
   }
 
-  public dump(...data: Array<any>): string {
-    const docs: Array<any> = [];
+  public dump(...data: Array<unknown>): string {
+    const docs: Array<unknown> = [];
     for (const doc of data) {
       const part = dump(doc, {
         schema: this.schema,
@@ -37,9 +37,9 @@ export class YamlParser implements Parser {
     return docs.join('\n---\n\n');
   }
 
-  public parse(body: string): Array<any> {
-    const docs: Array<any> = [];
-    loadAll(body, (doc: any) => docs.push(doc), {
+  public parse(body: string): Array<unknown> {
+    const docs: Array<unknown> = [];
+    loadAll(body, (doc: unknown) => docs.push(doc), {
       schema: this.schema,
     });
     return docs;

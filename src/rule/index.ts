@@ -162,13 +162,23 @@ export async function loadRulePaths(paths: Array<string>, ctx: VisitorContext): 
   return rules;
 }
 
-export async function loadRuleModules(modules: Array<string>, ctx: VisitorContext, r = require): Promise<Array<Rule>> {
+type LoadBack = (path: string) => Promise<unknown>;
+
+export async function loadRuleModules(modules: Array<string>, ctx: VisitorContext, load?: LoadBack): Promise<Array<Rule>> {
   const rules = [];
+
+  function loadModule(path: string) {
+    if (doesExist(load)) {
+      return load(path);
+    } else {
+      return import(path);
+    }
+  }
 
   for (const name of modules) {
     try {
       /* eslint-disable-next-line @typescript-eslint/no-var-requires */
-      const data: RuleSourceModule = r(name);
+      const data: RuleSourceModule = await loadModule(name);
       if (!validateRules(ctx, data)) {
         ctx.logger.error({
           module: name,
@@ -218,7 +228,7 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
 }
 
 export function validateRules(ctx: VisitorContext, root: any): boolean {
-  const { definitions, name } = {} as any; // ruleSchemaData as any; // TODO: fix this
+  const { definitions, name } = { definitions: { config: {} } } as any; // ruleSchemaData as any;
 
   const validCtx = new VisitorContext(ctx);
   validCtx.addSchema(name, definitions);
@@ -233,7 +243,7 @@ export function validateRules(ctx: VisitorContext, root: any): boolean {
 }
 
 export function validateConfig(ctx: VisitorContext, root: any): boolean {
-  const { definitions, name } = {} as any; // ruleSchemaData as any;
+  const { definitions, name } = { definitions: { config: {} } } as any; // ruleSchemaData as any;
 
   const validCtx = new VisitorContext(ctx);
   validCtx.addSchema(name, definitions);

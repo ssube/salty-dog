@@ -1,7 +1,8 @@
 import { doesExist, NotFoundError } from '@apextoaster/js-utils';
 import { Stream } from 'bunyan';
 import { LogLevel } from 'noicejs';
-import { join } from 'path';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 
 import { YamlParser } from '../parser/YamlParser.js';
 import { readSource } from '../source.js';
@@ -16,6 +17,10 @@ export interface ConfigData {
       streams: Array<Stream>;
     };
   };
+}
+
+export function dirName(): string {
+  return dirname(fileURLToPath(import.meta.url));
 }
 
 /**
@@ -37,8 +42,9 @@ export function completePaths(name: string, extras: Array<string>): Array<string
     paths.push(join(home, name));
   }
 
-  if (__dirname !== '') {
-    paths.push(join(__dirname, name));
+  const cwd = dirName();
+  if (cwd !== '') {
+    paths.push(join(cwd, name));
   }
 
   for (const e of extras) {
@@ -56,7 +62,9 @@ export async function loadConfig(name: string, ...extras: Array<string>): Promis
     if (doesExist(data)) {
       const parser = new YamlParser();
       const [head] = parser.parse(data);
-      return head;
+
+      /* eslint-disable-next-line sonarjs/prefer-immediate-return */
+      return head as any; // TODO: validate config
     }
   }
 

@@ -1,12 +1,12 @@
 import { doesExist, hasItems } from '@apextoaster/js-utils';
 import { ErrorObject, ValidateFunction } from 'ajv';
+import lodash from 'lodash';
 import { LogLevel } from 'noicejs';
 
-import { Rule, RuleData } from './index.js';
 import { Visitor, VisitorError, VisitorResult } from '../visitor/index.js';
 import { VisitorContext } from '../visitor/VisitorContext.js';
+import { Rule, RuleData } from './index.js';
 
-import lodash from 'lodash';
 const { cloneDeep, defaultTo } = lodash;
 
 

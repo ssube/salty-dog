@@ -1,5 +1,4 @@
 import yargs, { Options } from 'yargs';
-const { usage } = yargs;
 
 import { RuleSelector, RuleSources } from '../rule/index.js';
 import { VERSION_INFO } from '../version.js';
@@ -11,8 +10,6 @@ export enum MODE {
   list = 'list',
 }
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 export const CONFIG_ARGS_NAME = 'config-name';
 export const CONFIG_ARGS_PATH = 'config-path';
 
@@ -23,6 +20,7 @@ const RULE_OPTION: Options = {
 };
 
 export interface Args {
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   args: any;
   mode: string;
 }
@@ -50,15 +48,16 @@ export interface ParseResults {
 export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
   let mode: MODE = MODE.check;
 
-  const parser = usage('Usage: salty-dog <mode> [options]')
+  const parser = yargs(argv).usage('Usage: salty-dog <mode> [options]')
     .command({
       command: ['check', '*'],
       describe: 'validate the source documents',
-      handler: (argi: any) => {
+      handler: (argi: unknown) => {
         mode = MODE.check;
       },
     })
     .command({
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       builder: (cmd: any) => cmd.options({
         coerce: {
           default: false,
@@ -75,21 +74,21 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
       }),
       command: ['fix'],
       describe: 'validate the source document and insert defaults',
-      handler: (argi: any) => {
+      handler: (argi: unknown) => {
         mode = MODE.fix;
       },
     })
     .command({
       command: ['list'],
       describe: 'list active rules',
-      handler: (argi: any) => {
+      handler: (argi: unknown) => {
         mode = MODE.list;
       },
     })
     .command({
       command: ['complete'],
       describe: 'generate tab completion script for bash or zsh',
-      handler: (argi: any) => {
+      handler: (argi: unknown) => {
         mode = MODE.complete;
       },
     })
@@ -165,6 +164,7 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
     .alias('version', 'v');
 
   // @TODO: this should not need a cast but the parser's type omits command options and doesn't expose camelCase
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const args = parser.parse(argv) as any;
 
   return {

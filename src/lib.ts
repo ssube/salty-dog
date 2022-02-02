@@ -1,5 +1,5 @@
 import { VERSION_INFO } from './version.js';
 
-export default {
+export {
   VERSION_INFO,
 };

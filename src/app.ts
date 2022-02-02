@@ -1,6 +1,5 @@
 import { createLogger } from 'bunyan';
 import yargs from 'yargs';
-const { showCompletionScript } = yargs;
 
 import { loadConfig } from './config/index.js';
 import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs } from './config/args.js';
@@ -19,7 +18,7 @@ export const STATUS_MAX = 255;
 export async function main(argv: Array<string>): Promise<number> {
   const { args, mode } = await parseArgs(argv.slice(ARGS_START));
   if (mode === MODE.complete) {
-    showCompletionScript();
+    yargs(argv).showCompletionScript();
     return STATUS_SUCCESS;
   }
 

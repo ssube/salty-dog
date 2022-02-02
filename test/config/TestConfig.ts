@@ -2,7 +2,9 @@ import { NotFoundError } from '@apextoaster/js-utils';
 import { expect } from 'chai';
 import { join } from 'path';
 
-import { loadConfig, readConfig } from '../../src/config/index.js';
+import { dirName, loadConfig, readConfig } from '../../src/config/index.js';
+
+const __dirname = dirName();
 
 describe('load config helper', async () => {
   it('should load an existing config', async () =>

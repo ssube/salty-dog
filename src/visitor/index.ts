@@ -3,6 +3,8 @@ import { LogLevel } from 'noicejs';
 
 import { VisitorContext } from './VisitorContext.js';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /**
  * This is a runtime error, not an exception.
  */
@@ -20,7 +22,7 @@ export interface VisitorResult {
 export interface Visitor<TResult extends VisitorResult = VisitorResult> {
   /**
    * Select nodes eligible to be visited.
-   **/
+   */
   pick(ctx: VisitorContext, root: any): Promise<Array<any>>;
 
   /**
