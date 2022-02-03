@@ -23,7 +23,11 @@ export interface ConfigData {
  * Path to project root directory.
  */
 export function dirName(): string {
-  return join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
+  if (doesExist(import.meta) && doesExist(import.meta.url)) {
+    return join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
+  } else {
+    return process.cwd();
+  }
 }
 
 /**

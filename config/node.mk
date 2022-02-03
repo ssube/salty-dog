@@ -15,6 +15,9 @@ build: ## build the app
 build: node_modules
 	yarn tsc
 
+bundle: build
+	node config/esbuild.mjs
+
 clean-deps: ## clean up the node_modules directory
 	rm -rf node_modules/
 
