@@ -1,15 +1,16 @@
+/* eslint-disable no-template-curly-in-string */
 export const VERSION_INFO = {
   build: {
-      job: '${BUILD_JOB}',
-      node: '${NODE_VERSION}',
-      runner: '${BUILD_RUNNER}',
+    job: '${BUILD_JOB}',
+    node: '${NODE_VERSION}',
+    runner: '${BUILD_RUNNER}',
   },
   git: {
-      branch: '${GIT_BRANCH}',
-      commit: '${GIT_COMMIT}',
+    branch: '${GIT_BRANCH}',
+    commit: '${GIT_COMMIT}',
   },
   package: {
-      name: '${PACKAGE_NAME}',
-      version: '${PACKAGE_VERSION}',
+    name: '${PACKAGE_NAME}',
+    version: '${PACKAGE_VERSION}',
   },
 };
