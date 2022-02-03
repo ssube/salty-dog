@@ -1,9 +1,10 @@
 # node options
-NODE_BIN = $(ROOT_PATH)node_modules/.bin
 NODE_CMD ?= $(shell env node)
 NODE_DEBUG ?= --inspect-brk=$(DEBUG_BIND):$(DEBUG_PORT) --nolazy
 
-export NODE_VERSION   := $(shell node -v 2>/dev/null || echo "none")
+export NODE_VERSION := $(shell node -v 2>/dev/null || echo "none")
+export PACKAGE_NAME := $(shell jq -r '.name' package.json)
+export PACKAGE_VERSION := $(shell jq -r '.version' package.json)
 
 # directory targets
 node_modules: deps
@@ -14,6 +15,8 @@ out: build
 build: ## build the app
 build: node_modules
 	yarn tsc
+	cat $(TARGET_PATH)/src/version.js | envsubst > $(TARGET_PATH)/src/version-out.js
+	mv $(TARGET_PATH)/src/version-out.js $(TARGET_PATH)/src/version.js
 
 bundle: build
 	node config/esbuild.mjs
