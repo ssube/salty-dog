@@ -1,5 +1,4 @@
 import { build } from 'esbuild';
-import IgnorePlugin from 'esbuild-plugin-ignore';
 import { join } from 'path';
 
 const root = process.cwd();

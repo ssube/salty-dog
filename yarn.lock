@@ -1509,11 +1509,6 @@ esbuild-openbsd-64@0.14.18:
   resolved "https://artifacts.apextoaster.com/repository/group-npm/esbuild-openbsd-64/-/esbuild-openbsd-64-0.14.18.tgz#96a42615f5548529b7bb32d024bb9c6fb542778c"
   integrity sha512-vdymE2jyuH/FRmTvrguCYSrq81/rUwuhMYyvt/6ibv9ac7xQ674c8qTdT+RH73sR9/2WUD/NsYxrBA/wUVTxcg==
 
-esbuild-plugin-ignore@^1.1.1:
-  version "1.1.1"
-  resolved "https://artifacts.apextoaster.com/repository/group-npm/esbuild-plugin-ignore/-/esbuild-plugin-ignore-1.1.1.tgz#a83be27a9a1b742700b547c1e50a9f2ec3775f02"
-  integrity sha512-RVh45nlpiFiBJuw687Qh935VQvSzIA4rkBBytYYb5M3bTQcxokULQFQW6Sj0YHbFR6thNWmQYFkBghEQt5D3jg==
-
 esbuild-sunos-64@0.14.18:
   version "0.14.18"
   resolved "https://artifacts.apextoaster.com/repository/group-npm/esbuild-sunos-64/-/esbuild-sunos-64-0.14.18.tgz#869723d73a5f35ba2a4a6c043694d952bd4f831b"
