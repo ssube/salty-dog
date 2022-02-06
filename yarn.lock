@@ -1529,7 +1529,7 @@ esbuild-windows-arm64@0.14.18:
   resolved "https://artifacts.apextoaster.com/repository/group-npm/esbuild-windows-arm64/-/esbuild-windows-arm64-0.14.18.tgz#c1991848fca7b051d1d036d0723406da9696105d"
   integrity sha512-Mh8lZFcPLat13dABN7lZThGUOn9YxoH5RYkhBq0U3WqQohHzKRhllYh7ibFixnkpMLnv8OZEbl8bGLMy03MpfA==
 
-esbuild@^0.14.18:
+esbuild@0.14.18:
   version "0.14.18"
   resolved "https://artifacts.apextoaster.com/repository/group-npm/esbuild/-/esbuild-0.14.18.tgz#9c5f58c506ec9e0ec335d20bcb3f9dbd086d0648"
   integrity sha512-vCUoISSltnX7ax01w70pWOSQT+e55o+2P/a+A9MSTukJAt3T4aDZajcjeG4fnZbkvOEv+dkKgdkvljz6vVQD4A==
