@@ -170,21 +170,21 @@ export async function loadRulePaths(paths: Array<string>, ctx: VisitorContext): 
 
 type LoadBack = (path: string) => Promise<unknown>;
 
+export async function importRuleModule(path: string, load?: LoadBack) {
+  if (doesExist(load)) {
+    return load(path);
+  } else {
+    return import(path);
+  }
+}
+
 export async function loadRuleModules(modules: Array<string>, ctx: VisitorContext, load?: LoadBack): Promise<Array<Rule>> {
   const rules = [];
-
-  function loadModule(path: string) {
-    if (doesExist(load)) {
-      return load(path);
-    } else {
-      return import(path);
-    }
-  }
 
   for (const name of modules) {
     try {
       /* eslint-disable-next-line @typescript-eslint/no-var-requires */
-      const data: RuleSourceModule = await loadModule(name);
+      const data: RuleSourceModule = await importRuleModule(name, load);
       if (!validateRules(ctx, data)) {
         ctx.logger.error({
           module: name,
