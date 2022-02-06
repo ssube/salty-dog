@@ -6,10 +6,9 @@ include $(shell find $(ROOT_PATH) -name '*.mk' | grep -v node_modules)
 .PHONY: push git-stats git-push
 .PHONY: node_modules out build cover deps docs lint test test-watch yarn-global yarn-update
 
-build-bundle: node_modules
-	$(NODE_BIN)/rollup --config $(CONFIG_PATH)/rollup.js
-	sed -i '1s;^;#! /usr/bin/env node\n\n;' $(TARGET_PATH)/index.js
-	chmod ug+x $(TARGET_PATH)/index.js
+bundle-shebang: node_modules
+	sed -i '1s;^;#! /usr/bin/env node\n\n;' $(TARGET_PATH)/bundle/index.cjs
+	chmod ug+x $(TARGET_PATH)/bundle/index.cjs
 
 test-cover: ## run mocha unit tests with coverage reports
 test-cover: test-check

@@ -68,7 +68,7 @@ release: node_modules
 		echo "Please merge to master before releasing."; \
 		exit 1; \
 	fi
-	$(NODE_BIN)/standard-version $(RELEASE_ARGS)
+	yarn standard-version $(RELEASE_ARGS)
 	GIT_ARGS=--follow-tags $(MAKE) push
 
 release-dry: ## test creating a release
