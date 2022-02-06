@@ -18,12 +18,12 @@ COPY yarn.lock /salty-dog/yarn.lock
 RUN yarn install --production
 
 # copy build
-COPY out/src/ /salty-dog/out/
+COPY out/bundle/ /salty-dog/out/bundle/
 
 # set up as global cli tool
 RUN yarn global add file:$(pwd)
 
 COPY rules /salty-dog/rules
 
-ENTRYPOINT [ "node", "/salty-dog/out/index.js" ]
+ENTRYPOINT [ "node", "/salty-dog/out/bundle/index.cjs" ]
 CMD [ "--help" ]

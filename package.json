@@ -21,7 +21,7 @@
   "type": "module",
   "main": "out/index.js",
   "bin": {
-    "salty-dog": "out/index.js"
+    "salty-dog": "out/bundle/index.cjs"
   },
   "directories": {
     "doc": "docs",
