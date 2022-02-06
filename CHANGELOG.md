@@ -2,6 +2,51 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.9.0-0](https://github.com/ssube/salty-dog/compare/v0.8.3...v0.9.0-0) (2022-02-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* this is not breaking for users, but for library users,
+some bundling or a runtime supporting ES modules is now required.
+* updates Ajv from v6 to v8, with the breaking
+changes included there (https://ajv.js.org/v6-to-v8-migration.html).
+This removes support for JSON-Schema draft-04 and adds new
+drafts and keywords.
+* this changes how directories are listed, by replacing
+the recursive-readdir module with node's readdir method, and a custom
+implementation that is compatible with the changes to Node 16's fs
+implementation for testing.
+
+### Features
+
+* **build:** bundle with esbuild ([4188452](https://github.com/ssube/salty-dog/commit/41884525dab702f47202d7036fee74a01497954d))
+* convert to ES modules, C8 for coverage ([cea8c8a](https://github.com/ssube/salty-dog/commit/cea8c8abffad162766cc0f5568d718950054439d))
+* list files using node's fs module instead of recursive-readdir ([e7e42ee](https://github.com/ssube/salty-dog/commit/e7e42eee896c3eda0eb8c207fbbef285f181dc6d))
+* update Ajv, schema rule usage thereof ([41b5a39](https://github.com/ssube/salty-dog/commit/41b5a395ee91b9622d5b744ad35cd04f6e9348c9))
+
+
+### Bug Fixes
+
+* **build:** build file include paths ([07cd12b](https://github.com/ssube/salty-dog/commit/07cd12bed50c289e9a65d69f9f8a645107168033))
+* **build:** interpolate bundle with version metadata ([2893437](https://github.com/ssube/salty-dog/commit/2893437718b7006d8cdada7a868e4668366d3e99))
+* **build:** make example test script compatible with container build targets ([bbadd3e](https://github.com/ssube/salty-dog/commit/bbadd3e82cb4b56af5f68d5ff0c376fb433c9687))
+* **build:** paths for API docs/types, podman and lockfile for image targets ([557d285](https://github.com/ssube/salty-dog/commit/557d2851a81c63dd55af1f425eaaa41aff143477))
+* **build:** reduce output from example tests ([a6b05d9](https://github.com/ssube/salty-dog/commit/a6b05d9c764fcc4d844718ed674ebdb49e23eb63))
+* **build:** restore codeclimate target ([b6a515d](https://github.com/ssube/salty-dog/commit/b6a515d08e19057eb247a53b59783e4027d6591e))
+* **build:** set docker TLS options ([dd9023e](https://github.com/ssube/salty-dog/commit/dd9023ec8b16c46f96bf1226a7288c71fd3261cc))
+* **build:** use node 16 for container build targets ([2970837](https://github.com/ssube/salty-dog/commit/29708372153abece305c9c44d97b49851cce6330))
+* **build:** use yarn to run release script, remove rollup ref from shebang target ([a55d09e](https://github.com/ssube/salty-dog/commit/a55d09e7a2a6d15649bfc0eca2d9efd8aa281349))
+* **docs:** expand on usage, add section on log formatting ([3a1275c](https://github.com/ssube/salty-dog/commit/3a1275cf8c0ce7cc36e03ad7fd6f0a40c69e176f))
+* **docs:** make readme and GH pages more similar ([ea562fa](https://github.com/ssube/salty-dog/commit/ea562fa143c712c3ecde40360af01c7212019232))
+* **docs:** update broken badges ([58d37a8](https://github.com/ssube/salty-dog/commit/58d37a83166ef5c3d1c2a752621ecb49f79bf23f))
+* **image:** only copy bundle files into image ([65410ce](https://github.com/ssube/salty-dog/commit/65410ceaa34dda7af479b82dd1fd0c823f8f7600))
+* **lint:** indentation in version metadata ([8d8d3da](https://github.com/ssube/salty-dog/commit/8d8d3da8418f1caf4823d2d6a352d07b9a40ed2a))
+* **rule:** improve error messaging for empty schema files ([9c433fd](https://github.com/ssube/salty-dog/commit/9c433fd02b96c1f83fc8038ea1016c0d731d6329))
+* **tests:** correct paths to schema, test config ([ed26185](https://github.com/ssube/salty-dog/commit/ed26185e31e12cb5fc06362071ad95824fd02318))
+* more ES imports, some corresponding import changes, reset mock FS after every test ([052ca73](https://github.com/ssube/salty-dog/commit/052ca736d2df34370d81ce2d24dba23e556f032e))
+* usage of __dirname, lint rules and corresponding fixes ([3b7e48a](https://github.com/ssube/salty-dog/commit/3b7e48a49437efdc9a21b869241b403b95b963e1))
+
 ### [0.8.3](https://github.com/ssube/salty-dog/compare/v0.8.2...v0.8.3) (2021-07-10)
 
 
