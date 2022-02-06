@@ -11,17 +11,17 @@ IMAGE_FULL="${IMAGE_NAME}:${IMAGE_TAG}-${IMAGE_ARCH}"
 
 echo "Building image: ${IMAGE_FULL}"
 
-docker build -f "Dockerfile.${IMAGE_ARCH}" -t "${IMAGE_FULL}" .
+docker build -f "Dockerfile.${IMAGE_ARCH}" -t "${IMAGE_FULL}" . || echo "Failed to build image!" && exit 1
 
 if [[ "${IMAGE_PUSH}" == "--push" ]];
 then
   echo "Pushing image: ${IMAGE_FULL}"
-  docker push "${IMAGE_FULL}"
+  docker push "${IMAGE_FULL}" || echo "Failed to push image!" && exit 1
 fi
 
 if [[ "${IMAGE_DEFAULT}" == "--default" ]];
 then
   echo "Pushing image (default architecture): ${IMAGE_SHORT}"
   docker tag "${IMAGE_FULL}" "${IMAGE_SHORT}"
-  docker push "${IMAGE_SHORT}"
+  docker push "${IMAGE_SHORT}" || echo "Failed to push image!" && exit 1
 fi
