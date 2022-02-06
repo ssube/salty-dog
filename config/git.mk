@@ -1,3 +1,5 @@
+.PHONY: push git-stats git-push
+
 push: git-push
 
 # from https://gist.github.com/amitchhajer/4461043#gistcomment-2349917

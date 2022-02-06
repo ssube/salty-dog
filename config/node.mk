@@ -1,10 +1,17 @@
-# node options
+export NODE_VERSION := $(shell node -v 2>/dev/null || echo "none")
+export PACKAGE_NAME := $(shell jq -r '.name' package.json || echo "unknown")
+export PACKAGE_VERSION := $(shell jq -r '.version' package.json || echo "unknown")
+export RUNNER_VERSION := $(CI_RUNNER_VERSION)
+
+# Debug
+export DEBUG_BIND ?= 127.0.0.1
+export DEBUG_PORT ?= 9229
+
+# Node options
 NODE_CMD ?= $(shell env node)
 NODE_DEBUG ?= --inspect-brk=$(DEBUG_BIND):$(DEBUG_PORT) --nolazy
 
-export NODE_VERSION := $(shell node -v 2>/dev/null || echo "none")
-export PACKAGE_NAME := $(shell jq -r '.name' package.json)
-export PACKAGE_VERSION := $(shell jq -r '.version' package.json)
+.PHONY: build bundle ci clean-deps cover deps docs lint test yarn-global yarn-upgrade
 
 # directory targets
 node_modules: deps
@@ -20,6 +27,8 @@ build: node_modules
 
 bundle: build
 	node config/esbuild.mjs
+
+ci: clean-target lint build bundle cover docs
 
 clean-deps: ## clean up the node_modules directory
 	rm -rf node_modules/
@@ -68,5 +77,5 @@ test: node_modules out
 yarn-global: ## install bundle as a global tool
 	yarn global add file:$(ROOT_PATH)
 
-yarn-update: ## check yarn for outdated packages
+yarn-upgrade: ## check yarn for potential upgrades
 	yarn upgrade-interactive --latest

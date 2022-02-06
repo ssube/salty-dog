@@ -1,3 +1,5 @@
+.PHONY: image image-build image-run
+
 image: ## build the docker image
 	docker build $(DOCKER_ARGS) -f Dockerfile -t $(DOCKER_IMAGE) .
 

@@ -32,17 +32,12 @@ export CI_RUNNER_DESCRIPTION ?= $(shell hostname)
 export CI_RUNNER_ID ?= $(shell hostname)
 export CI_RUNNER_VERSION ?= 0.0.0
 
-# Debug
-export DEBUG_BIND ?= 127.0.0.1
-export DEBUG_PORT ?= 9229
+.PHONY: all ci clean clean-target configure help release release-dry todo
 
-# Versions
-export RUNNER_VERSION := $(CI_RUNNER_VERSION)
+# Targets that must be provided by other files: bundle, build, cover, docs, clean-deps
 
 all: lint build cover docs ## builds, bundles, and tests the application
 	@echo Success!
-
-ci: clean-target lint build bundle cover docs
 
 clean: ## clean up everything added by the default target
 clean: clean-deps clean-target
