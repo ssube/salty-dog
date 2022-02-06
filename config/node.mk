@@ -1,6 +1,6 @@
 export NODE_VERSION := $(shell node -v 2>/dev/null || echo "none")
-export PACKAGE_NAME := $(shell jq -r '.name' package.json || echo "unknown")
-export PACKAGE_VERSION := $(shell jq -r '.version' package.json || echo "unknown")
+export PACKAGE_NAME := $(shell jq -r '.name' package.json 2>/dev/null || echo "unknown")
+export PACKAGE_VERSION := $(shell jq -r '.version' package.json 2>/dev/null || echo "unknown")
 export RUNNER_VERSION := $(CI_RUNNER_VERSION)
 
 # Debug
