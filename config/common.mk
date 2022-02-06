@@ -42,7 +42,7 @@ export RUNNER_VERSION := $(CI_RUNNER_VERSION)
 all: lint build cover docs ## builds, bundles, and tests the application
 	@echo Success!
 
-ci: clean-target lint build cover docs
+ci: clean-target lint build bundle cover docs
 
 clean: ## clean up everything added by the default target
 clean: clean-deps clean-target
