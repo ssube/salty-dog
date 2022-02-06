@@ -240,12 +240,10 @@ export function loadSchema(): any {
   if (doesExist(data)) {
     const parser = new YamlParser();
     const [schema] = parser.parse(data);
-
-    // TODO: parse schema data before returning
     return schema;
   }
 
-  throw new NotFoundError('');
+  throw new NotFoundError('loaded empty schema');
 }
 
 export function validateRules(ctx: VisitorContext, root: any): boolean {
