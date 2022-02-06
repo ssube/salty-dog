@@ -194,7 +194,11 @@ export async function loadRuleModules(modules: Array<string>, ctx: VisitorContex
 
       rules.push(...await loadRuleSource(data, ctx));
     } catch (err) {
-      ctx.logger.error(err, 'error requiring rule module');
+      if (err instanceof Error) {
+        ctx.logger.error(err, 'error loading rule module');
+      } else {
+        ctx.logger.error({ err }, 'unknown error type loading rule module');
+      }
     }
   }
 

@@ -1,6 +1,6 @@
 import { doesExist, NotFoundError } from '@apextoaster/js-utils';
 import { Stream } from 'bunyan';
-import { LogLevel } from 'noicejs';
+import { BaseError, LogLevel } from 'noicejs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -78,6 +78,15 @@ export async function loadConfig(name: string, ...extras: Array<string>): Promis
   throw new NotFoundError('unable to load config');
 }
 
+export function errorCode(err: unknown): string | undefined {
+  if (err instanceof Error) {
+    return (err as NodeJS.ErrnoException).code; // === 'ENOENT'
+  }
+
+  /* eslint-disable-next-line sonarjs/no-redundant-jump */
+  return;
+}
+
 export async function readConfig(path: string): Promise<string | undefined> {
   try {
     // need to await this read to catch the error, need to catch the error to check the code
@@ -85,9 +94,10 @@ export async function readConfig(path: string): Promise<string | undefined> {
     const data = await readSource(path);
     return data;
   } catch (err) {
-    if (err.code === 'ENOENT') {
+    if (errorCode(err) === 'ENOENT') {
       return;
+    } else {
+      throw err;
     }
-    throw err;
   }
 }
