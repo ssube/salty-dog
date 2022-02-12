@@ -77,6 +77,9 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
     return this;
   }
 
+  /**
+   * @TODO move to visitor
+   */
   public pick(path: string, root: any): Array<any> {
     const items = JSONPath({
       json: root,
@@ -98,7 +101,7 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
   /**
    * store some flash data. this is very much not the right way to do it.
    *
-   * @TODO: fix this
+   * @TODO fix this
    */
   public get visitData(): any {
     return this.data;

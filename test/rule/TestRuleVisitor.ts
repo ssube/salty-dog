@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { LogLevel, NullLogger } from 'noicejs';
 import { mock, spy, stub } from 'sinon';
 
-import { RuleVisitor } from '../../src/rule/RuleVisitor.js';
+import { RuleVisitor } from '../../src/visitor/RuleVisitor.js';
 import { SchemaRule } from '../../src/rule/SchemaRule.js';
 import { VisitorContext } from '../../src/visitor/VisitorContext.js';
 

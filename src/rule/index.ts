@@ -183,7 +183,6 @@ export async function loadRuleModules(modules: Array<string>, ctx: VisitorContex
 
   for (const name of modules) {
     try {
-      /* eslint-disable-next-line @typescript-eslint/no-var-requires */
       const data: RuleSourceModule = await importRuleModule(name, load);
       if (!validateRules(ctx, data)) {
         ctx.logger.error({

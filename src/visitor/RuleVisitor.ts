@@ -2,9 +2,9 @@ import { hasItems } from '@apextoaster/js-utils';
 import deepDiff from 'deep-diff';
 import lodash from 'lodash';
 
-import { Rule } from './index.js';
-import { Visitor } from '../visitor/index.js';
-import { VisitorContext } from '../visitor/VisitorContext.js';
+import { Rule } from '../rule/index.js';
+import { Visitor } from './index.js';
+import { VisitorContext } from './VisitorContext.js';
 
 const { applyDiff, diff } = deepDiff;
 /* eslint-disable-next-line @typescript-eslint/unbound-method */
