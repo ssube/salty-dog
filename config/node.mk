@@ -28,7 +28,11 @@ build: node_modules
 bundle: build
 	node config/esbuild.mjs
 
-ci: clean-target lint build bundle cover docs
+bundle-shebang: bundle
+	sed -i '1s;^;#! /usr/bin/env node\n\n;' $(TARGET_PATH)/bundle/index.cjs
+	chmod ug+x $(TARGET_PATH)/bundle/index.cjs
+
+ci: clean-target lint build bundle bundle-shebang cover docs
 
 clean-deps: ## clean up the node_modules directory
 	rm -rf node_modules/
