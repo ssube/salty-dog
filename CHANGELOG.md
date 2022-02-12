@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.9.0](https://github.com/ssube/salty-dog/compare/v0.9.0-0...v0.9.0) (2022-02-12)
+
+
+### Features
+
+* **build:** better error handling for image build ([c9fd4f1](https://github.com/ssube/salty-dog/commit/c9fd4f13bdd6d2b54acdeafd37aeddbf02058afc))
+* **deps:** upgrade Typescript to 4.5, improve config and rule module error handling ([bdf88f0](https://github.com/ssube/salty-dog/commit/bdf88f092e688bce9dc5845fc5149d184e483850))
+
+
+### Bug Fixes
+
+* **build:** add shebang to bundle before imaging ([ee41f60](https://github.com/ssube/salty-dog/commit/ee41f60d8c588fa0d1a8a10749f9082d9af7348f))
+* **build:** bundle during CI run ([80b7f69](https://github.com/ssube/salty-dog/commit/80b7f698ef732bc538229f198dee56e5590fd210))
+* **build:** move project-specific targets into their own file ([0fd8ea9](https://github.com/ssube/salty-dog/commit/0fd8ea9d5c3b16fa843a3e513875c3cc6ebd444b))
+* **build:** prevent unintentional exit from image script ([189b3e2](https://github.com/ssube/salty-dog/commit/189b3e202ec65f8a6b9b66a4ead82d3d21769464))
+* **build:** silence package metadata warnings when jq is not installed ([86aeac5](https://github.com/ssube/salty-dog/commit/86aeac58519f626cb9ca9b7611fb204323bf1b47))
+
 ## [0.9.0-0](https://github.com/ssube/salty-dog/compare/v0.8.3...v0.9.0-0) (2022-02-06)
 
 
