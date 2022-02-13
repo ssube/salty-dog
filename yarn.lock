@@ -2911,10 +2911,10 @@ min-indent@^1.0.0:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimatch@3.1.0:
-  version "3.1.0"
-  resolved "https://artifacts.apextoaster.com/repository/group-npm/minimatch/-/minimatch-3.1.0.tgz#f59168d5cba6b6fde15f6a88f557fe7eaf31d8ea"
-  integrity sha512-vgmUyWyt2qidcJXdF6e+kf4DgJha4vzf3ctWJ0uGjfvqEgoX2V4GXQt0eZwM2FJWKANfS8VmzpvPKbWYibkHZA==
+minimatch@4.1.0:
+  version "4.1.0"
+  resolved "https://artifacts.apextoaster.com/repository/group-npm/minimatch/-/minimatch-4.1.0.tgz#6cf9879294e33a259536492d905e31be8420800b"
+  integrity sha512-CRDd39hmjy31EqKRNlvKSIblWVXjoB9v1+qwqsxVDlnXXEHrC/63ilDd/iZFnmDLUT/FZxHc4+4t9JbG1ZoeYg==
   dependencies:
     brace-expansion "^1.1.7"
 
