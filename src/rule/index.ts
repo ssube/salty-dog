@@ -1,8 +1,8 @@
-import { ValidateFunction } from 'ajv';
 import { Diff } from 'deep-diff';
 import { LogLevel } from 'noicejs';
 
 import { Document, Element } from '../source.js';
+import { Context } from '../visitor/index.js';
 import { VisitorContext } from '../visitor/VisitorContext.js';
 
 export interface RuleData {
@@ -12,21 +12,25 @@ export interface RuleData {
   name: string;
   tags: Array<string>;
   // data
-  check: unknown;
-  filter?: unknown;
+  check: object;
+  filter?: object;
   select: string;
 }
 
-export type Validator = ValidateFunction;
+export interface ValidatorResult {
+  errors: Array<unknown>;
+  valid: boolean;
+}
 
 export interface Rule {
-  check: Validator;
   desc?: string;
-  filter?: Validator;
   level: LogLevel;
   name: string;
   select: string;
   tags: Array<string>;
+
+  check(ctx: Context, elem: Element): Promise<ValidatorResult>;
+  filter(ctx: Context, elem: Element): Promise<ValidatorResult>;
 
   pick(ctx: VisitorContext, root: Document): Promise<Array<Element>>;
   visit(ctx: VisitorContext, item: Element): Promise<RuleResult>;

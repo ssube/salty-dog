@@ -1,12 +1,12 @@
 import { doesExist, ensureArray } from '@apextoaster/js-utils';
 import minimatch from 'minimatch';
 
-import { isPOJSO, Rule, RuleData } from '.';
-import { YamlParser } from '../parser/YamlParser';
-import { listFiles, readSource } from '../source';
-import { VisitorContext } from '../visitor/VisitorContext';
-import { SchemaRule } from './SchemaRule';
-import { validateRules } from './validate';
+import { isPOJSO, Rule, RuleData } from './index.js';
+import { YamlParser } from '../parser/YamlParser.js';
+import { listFiles, readSource } from '../source.js';
+import { VisitorContext } from '../visitor/VisitorContext.js';
+import { SchemaRule } from './SchemaRule.js';
+import { validateRules } from './validate.js';
 
 const { Minimatch } = minimatch;
 

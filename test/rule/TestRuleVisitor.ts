@@ -5,6 +5,21 @@ import { mock, spy, stub } from 'sinon';
 import { RuleVisitor } from '../../src/visitor/RuleVisitor.js';
 import { SchemaRule } from '../../src/rule/SchemaRule.js';
 import { VisitorContext } from '../../src/visitor/VisitorContext.js';
+import { Element } from '../../src/source.js';
+
+function makeElement(data: unknown): Element {
+  return {
+    data,
+    document: {
+      data: {},
+      source: {
+        data: '',
+        path: '',
+      },
+    },
+    index: 0,
+  };
+}
 
 describe('rule visitor', async () => {
   it('should only call visit for selected items', async () => {
@@ -36,7 +51,7 @@ describe('rule visitor', async () => {
     const visitor = new RuleVisitor({
       rules: [rule],
     });
-    await visitor.visit(ctx, rule, {});
+    await visitor.visit(ctx, rule, makeElement({}));
 
     mockRule.verify();
     expect(ctx.errors.length).to.equal(0);
@@ -74,7 +89,7 @@ describe('rule visitor', async () => {
     const visitor = new RuleVisitor({
       rules: [rule],
     });
-    await visitor.visit(ctx, rule, {});
+    await visitor.visit(ctx, rule, makeElement({}));
 
     mockRule.verify();
     expect(ctx.errors.length).to.equal(0);
@@ -110,7 +125,7 @@ describe('rule visitor', async () => {
     const visitor = new RuleVisitor({
       rules: [rule],
     });
-    await visitor.visit(ctx, rule, data);
+    await visitor.visit(ctx, rule, makeElement(data));
 
     expect(pickSpy).to.have.callCount(1).and.to.have.been.calledWithExactly(ctx, data);
     expect(visitStub).to.have.callCount(data.foo.length);
@@ -140,35 +155,20 @@ describe('rule visitor', async () => {
     const visitStub = stub(rule, 'visit').returns(Promise.resolve({
       changes: [],
       errors: [{
-        data: {},
+        data: makeElement({}),
         level: LogLevel.Error,
         msg: 'kaboom!',
+        rule,
       }],
     }));
 
     const visitor = new RuleVisitor({
       rules: [rule],
     });
-    await visitor.visit(ctx, rule, data);
+    await visitor.visit(ctx, rule, makeElement(data));
 
     const EXPECTED_VISITS = 3;
     expect(visitStub).to.have.callCount(EXPECTED_VISITS);
     expect(ctx.errors.length).to.equal(EXPECTED_VISITS);
-  });
-
-  it('should not pick items', async () => {
-    const ctx = new VisitorContext({
-      logger: NullLogger.global,
-      schemaOptions: {
-        coerce: false,
-        defaults: false,
-        mutate: false,
-      },
-    });
-    const visitor = new RuleVisitor({
-      rules: [],
-    });
-
-    return expect(visitor.pick(ctx, rule, {})).to.eventually.deep.equal([]);
   });
 });

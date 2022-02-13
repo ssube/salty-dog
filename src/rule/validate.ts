@@ -1,11 +1,12 @@
 import { doesExist, mustExist, NotFoundError } from '@apextoaster/js-utils';
 import { readFileSync } from 'fs';
+import { BaseError } from 'noicejs';
 import { join } from 'path';
 
-import { dirName } from '../config';
-import { YamlParser } from '../parser/YamlParser';
-import { VisitorContext } from '../visitor/VisitorContext';
-import { RuleSourceData } from './load';
+import { dirName } from '../config/index.js';
+import { YamlParser } from '../parser/YamlParser.js';
+import { VisitorContext } from '../visitor/VisitorContext.js';
+import { RuleSourceData } from './load.js';
 
 export function loadSchema(): RuleSourceData {
   const path = join(dirName(), 'rules', 'salty-dog.yml');
@@ -23,19 +24,27 @@ export function loadSchema(): RuleSourceData {
   throw new NotFoundError('loaded empty schema');
 }
 
+export function isObject(it: unknown): it is object {
+  return typeof it === 'object';
+}
+
 export function validateRules(ctx: VisitorContext, root: unknown): boolean {
   const { definitions: defs, name } = loadSchema();
   const definitions = mustExist(defs);
 
-  const validCtx = new VisitorContext(ctx);
-  validCtx.addSchema(name, definitions);
-  const ruleSchema = validCtx.compile(mustExist(definitions.source));
+  if (isObject(definitions.source)) {
+    const validCtx = new VisitorContext(ctx);
+    validCtx.addSchema(name, definitions);
+    const ruleSchema = validCtx.compile(definitions.source);
 
-  if (ruleSchema(root) === true) {
-    return true;
+    if (ruleSchema(root) === true) {
+      return true;
+    } else {
+      ctx.logger.error({ errors: ruleSchema.errors }, 'error validating rules');
+      return false;
+    }
   } else {
-    ctx.logger.error({ errors: ruleSchema.errors }, 'error validating rules');
-    return false;
+    throw new BaseError('invalid schema, missing source definition');
   }
 }
 
@@ -43,14 +52,18 @@ export function validateConfig(ctx: VisitorContext, root: unknown): boolean {
   const { definitions: defs, name } = loadSchema();
   const definitions = mustExist(defs);
 
-  const validCtx = new VisitorContext(ctx);
-  validCtx.addSchema(name, definitions);
-  const ruleSchema = validCtx.compile(mustExist(definitions.config));
+  if (isObject(definitions.config)) {
+    const validCtx = new VisitorContext(ctx);
+    validCtx.addSchema(name, definitions);
+    const ruleSchema = validCtx.compile(mustExist(definitions.config));
 
-  if (ruleSchema(root) === true) {
-    return true;
+    if (ruleSchema(root) === true) {
+      return true;
+    } else {
+      ctx.logger.error({ errors: ruleSchema.errors }, 'error validating rules');
+      return false;
+    }
   } else {
-    ctx.logger.error({ errors: ruleSchema.errors }, 'error validating rules');
-    return false;
+    throw new BaseError('invalid schema, missing config definition');
   }
 }

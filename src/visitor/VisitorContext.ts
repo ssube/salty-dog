@@ -3,7 +3,7 @@ import Ajv, { ValidateFunction } from 'ajv';
 import { JSONPath } from 'jsonpath-plus';
 import { Logger } from 'noicejs';
 
-import { RuleChange, RuleError, RuleResult } from '../rule';
+import { RuleChange, RuleError, RuleResult } from '../rule/index.js';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -61,7 +61,7 @@ export class VisitorContext implements VisitorContextOptions, RuleResult {
     });
   }
 
-  public compile(schema: any): ValidateFunction {
+  public compile(schema: object): ValidateFunction {
     return this.ajv.compile(schema);
   }
 

@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { LogLevel, NullLogger } from 'noicejs';
+import { SchemaRule } from '../../src/rule/SchemaRule.js';
 
 import { VisitorContext } from '../../src/visitor/VisitorContext.js';
 
@@ -21,6 +22,7 @@ describe('visitor context', () => {
           document: {
             data: {},
             source: {
+              data: '',
               path: '',
             },
           },
@@ -30,7 +32,7 @@ describe('visitor context', () => {
           kind: 'N',
           rhs: {},
         },
-        rule: new NoopRule(),
+        rule: new SchemaRule({} as any),
       }],
       errors: [{
         data: {
@@ -40,6 +42,7 @@ describe('visitor context', () => {
           document: {
             data: {},
             source: {
+              data: '',
               path: '',
             },
           },
@@ -47,7 +50,7 @@ describe('visitor context', () => {
         },
         level: LogLevel.Info,
         msg: 'uh oh',
-        rule: new NoopRule(),
+        rule: new SchemaRule({} as any),
       }],
     });
 

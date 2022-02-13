@@ -1,10 +1,12 @@
-import { doesExist, hasItems } from '@apextoaster/js-utils';
+import { doesExist, ensureArray, hasItems } from '@apextoaster/js-utils';
 import { ErrorObject, ValidateFunction } from 'ajv';
 import lodash from 'lodash';
 import { LogLevel } from 'noicejs';
 
+import { Element } from '../source.js';
+import { Context } from '../visitor/index.js';
 import { VisitorContext } from '../visitor/VisitorContext.js';
-import { Rule, RuleData, RuleError, RuleResult } from './index.js';
+import { Rule, RuleData, RuleError, RuleResult, ValidatorResult } from './index.js';
 
 /* eslint-disable-next-line @typescript-eslint/unbound-method */
 const { cloneDeep, defaultTo } = lodash;
@@ -14,9 +16,9 @@ const { cloneDeep, defaultTo } = lodash;
 const DEFAULT_FILTER = () => true;
 
 export class SchemaRule implements Rule, RuleData {
-  public readonly check: ValidateFunction;
+  public readonly checkSchema: object;
   public readonly desc: string;
-  public readonly filter?: ValidateFunction;
+  public readonly filterSchema?: object;
   public readonly level: LogLevel;
   public readonly name: string;
   public readonly select: string;
@@ -30,9 +32,46 @@ export class SchemaRule implements Rule, RuleData {
     this.tags = Array.from(data.tags);
 
     // copy schema objects
-    this.check = cloneDeep(data.check);
+    this.checkSchema = cloneDeep(data.check);
     if (doesExist(data.filter)) {
-      this.filter = cloneDeep(data.filter);
+      this.filterSchema = cloneDeep(data.filter);
+    }
+  }
+
+  public async check(ctx: Context, elem: Element): Promise<ValidatorResult> {
+    const schema = ctx.compile(this.checkSchema);
+    if (schema(elem)) {
+      return {
+        errors: [],
+        valid: true,
+      };
+    } else {
+      return {
+        errors: ensureArray(schema.errors),
+        valid: false,
+      };
+    }
+  }
+
+  public async filter(ctx: Context, elem: Element): Promise<ValidatorResult> {
+    if (doesExist(this.filterSchema)) {
+      const schema = ctx.compile(this.filterSchema);
+      if (schema(elem)) {
+        return {
+          errors: [],
+          valid: true,
+        };
+      } else {
+        return {
+          errors: ensureArray(schema.errors),
+          valid: false,
+        };
+      }
+    } else {
+      return {
+        errors: [],
+        valid: true,
+      };
     }
   }
 
@@ -49,7 +88,7 @@ export class SchemaRule implements Rule, RuleData {
   public async visit(ctx: VisitorContext, node: any): Promise<RuleResult> {
     ctx.logger.debug({ item: node, rule: this }, 'visiting node');
 
-    const check = ctx.compile(this.check);
+    const check = ctx.compile(this.checkSchema);
     const filter = this.compileFilter(ctx);
     const errors: Array<RuleError> = [];
     const result: RuleResult = {
@@ -70,21 +109,27 @@ export class SchemaRule implements Rule, RuleData {
   }
 
   protected compileFilter(ctx: VisitorContext): ValidateFunction {
-    if (doesExist(this.filter)) {
-      return ctx.compile(this.filter);
+    if (doesExist(this.filterSchema)) {
+      return ctx.compile(this.filterSchema);
     } else {
       return DEFAULT_FILTER as any; // TODO: return something with schema/schemaEnv props
     }
   }
 }
 
+/**
+ * @todo this function needs to know what rule/doc the error came from
+ */
 export function friendlyError(ctx: VisitorContext, err: ErrorObject): RuleError {
   return {
     data: {
-      err,
+      data: err,
+      document: undefined as any,
+      index: 0,
     },
     level: LogLevel.Error,
     msg: friendlyErrorMessage(ctx, err),
+    rule: undefined as any,
   };
 }
 

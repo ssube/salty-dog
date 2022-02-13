@@ -1,3 +1,4 @@
+import { ValidateFunction } from 'ajv';
 import EventEmitter from 'events';
 
 import { Rule, RuleChange, RuleError, RuleResult } from '../rule/index.js';
@@ -9,6 +10,8 @@ import { Document, Element } from '../source.js';
  * results across all of the rules
  */
 export interface Context {
+  compile(schema: object): ValidateFunction;
+
   changes: ReadonlyArray<RuleChange>;
   errors: ReadonlyArray<RuleError>;
 }

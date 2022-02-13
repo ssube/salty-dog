@@ -104,7 +104,7 @@ describe('schema rule', async () => {
       },
     });
     const rule = new SchemaRule({
-      check: undefined,
+      check: {}, // TODO: used to be undefined, what should this be now?
       desc: TEST_NAME,
       level: LogLevel.Info,
       name: TEST_NAME,
@@ -165,7 +165,7 @@ describe('schema rule', async () => {
     ctx.compile = stub().onFirstCall().returns(checkSpy).onSecondCall().returns(filterSpy);
 
     const rule = new SchemaRule({
-      check: undefined,
+      check: {}, // TODO: used to be undefined, what should this be now?
       desc: TEST_NAME,
       filter: {},
       level: LogLevel.Info,
