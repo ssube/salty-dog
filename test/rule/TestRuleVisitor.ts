@@ -36,7 +36,7 @@ describe('rule visitor', async () => {
     const visitor = new RuleVisitor({
       rules: [rule],
     });
-    await visitor.visit(ctx, {});
+    await visitor.visit(ctx, rule, {});
 
     mockRule.verify();
     expect(ctx.errors.length).to.equal(0);
@@ -74,7 +74,7 @@ describe('rule visitor', async () => {
     const visitor = new RuleVisitor({
       rules: [rule],
     });
-    await visitor.visit(ctx, {});
+    await visitor.visit(ctx, rule, {});
 
     mockRule.verify();
     expect(ctx.errors.length).to.equal(0);
@@ -110,7 +110,7 @@ describe('rule visitor', async () => {
     const visitor = new RuleVisitor({
       rules: [rule],
     });
-    await visitor.visit(ctx, data);
+    await visitor.visit(ctx, rule, data);
 
     expect(pickSpy).to.have.callCount(1).and.to.have.been.calledWithExactly(ctx, data);
     expect(visitStub).to.have.callCount(data.foo.length);
@@ -149,7 +149,7 @@ describe('rule visitor', async () => {
     const visitor = new RuleVisitor({
       rules: [rule],
     });
-    await visitor.visit(ctx, data);
+    await visitor.visit(ctx, rule, data);
 
     const EXPECTED_VISITS = 3;
     expect(visitStub).to.have.callCount(EXPECTED_VISITS);
@@ -169,6 +169,6 @@ describe('rule visitor', async () => {
       rules: [],
     });
 
-    return expect(visitor.pick(ctx, {})).to.eventually.deep.equal([]);
+    return expect(visitor.pick(ctx, rule, {})).to.eventually.deep.equal([]);
   });
 });

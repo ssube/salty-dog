@@ -3,9 +3,8 @@ import { ErrorObject, ValidateFunction } from 'ajv';
 import lodash from 'lodash';
 import { LogLevel } from 'noicejs';
 
-import { Visitor, VisitorError, VisitorResult } from '../visitor/index.js';
 import { VisitorContext } from '../visitor/VisitorContext.js';
-import { Rule, RuleData } from './index.js';
+import { Rule, RuleData, RuleError, RuleResult } from './index.js';
 
 /* eslint-disable-next-line @typescript-eslint/unbound-method */
 const { cloneDeep, defaultTo } = lodash;
@@ -14,7 +13,7 @@ const { cloneDeep, defaultTo } = lodash;
 
 const DEFAULT_FILTER = () => true;
 
-export class SchemaRule implements Rule, RuleData, Visitor {
+export class SchemaRule implements Rule, RuleData {
   public readonly check: ValidateFunction;
   public readonly desc: string;
   public readonly filter?: ValidateFunction;
@@ -47,13 +46,13 @@ export class SchemaRule implements Rule, RuleData, Visitor {
     return items;
   }
 
-  public async visit(ctx: VisitorContext, node: any): Promise<VisitorResult> {
+  public async visit(ctx: VisitorContext, node: any): Promise<RuleResult> {
     ctx.logger.debug({ item: node, rule: this }, 'visiting node');
 
     const check = ctx.compile(this.check);
     const filter = this.compileFilter(ctx);
-    const errors: Array<VisitorError> = [];
-    const result: VisitorResult = {
+    const errors: Array<RuleError> = [];
+    const result: RuleResult = {
       changes: [],
       errors,
     };
@@ -79,7 +78,7 @@ export class SchemaRule implements Rule, RuleData, Visitor {
   }
 }
 
-export function friendlyError(ctx: VisitorContext, err: ErrorObject): VisitorError {
+export function friendlyError(ctx: VisitorContext, err: ErrorObject): RuleError {
   return {
     data: {
       err,

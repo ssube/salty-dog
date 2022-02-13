@@ -1,8 +1,10 @@
 import { expect } from 'chai';
 import { ConsoleLogger, LogLevel, NullLogger } from 'noicejs';
 
-import { createRuleSelector, createRuleSources, resolveRules, validateRules } from '../../src/rule/index.js';
+import { createRuleSources } from '../../src/rule/load.js';
+import { createRuleSelector, resolveRules } from '../../src/rule/resolve.js';
 import { SchemaRule } from '../../src/rule/SchemaRule.js';
+import { validateRules } from '../../src/rule/validate.js';
 import { VisitorContext } from '../../src/visitor/VisitorContext.js';
 
 const TEST_RULES = [new SchemaRule({

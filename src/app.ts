@@ -1,13 +1,15 @@
 import { createLogger } from 'bunyan';
 import yargs from 'yargs';
 
-import { loadConfig } from './config/index.js';
 import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs } from './config/args.js';
+import { loadConfig } from './config/index.js';
 import { YamlParser } from './parser/YamlParser.js';
-import { createRuleSelector, createRuleSources, loadRules, resolveRules, validateConfig } from './rule/index.js';
-import { RuleVisitor } from './visitor/RuleVisitor.js';
+import { createRuleSources, loadRules } from './rule/load.js';
+import { createRuleSelector, resolveRules } from './rule/resolve.js';
+import { validateConfig } from './rule/validate.js';
 import { readSource, writeSource } from './source.js';
 import { VERSION_INFO } from './version.js';
+import { RuleVisitor } from './visitor/RuleVisitor.js';
 import { VisitorContext } from './visitor/VisitorContext.js';
 
 const ARGS_START = 2;
@@ -63,7 +65,11 @@ export async function main(argv: Array<string>): Promise<number> {
 
   // load source
   const parser = new YamlParser();
-  const source = await readSource(args.source);
+  const sourceData = await readSource(args.source);
+  const source = {
+    data: sourceData,
+    path: args.source,
+  };
   const docs = parser.parse(source);
 
   const visitor = new RuleVisitor({
@@ -71,7 +77,9 @@ export async function main(argv: Array<string>): Promise<number> {
   });
 
   for (const root of docs) {
-    await visitor.visit(ctx, root);
+    for (const rule of activeRules) {
+      await visitor.visitAll(ctx, rule, root);
+    }
   }
 
   if (ctx.errors.length === 0) {

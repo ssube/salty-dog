@@ -4,7 +4,7 @@ import { LogLevel, NullLogger } from 'noicejs';
 import { spy, stub } from 'sinon';
 
 import { dirName } from '../../src/config/index.js';
-import { loadRuleFiles, loadRuleModules, loadRulePaths, loadRuleSource } from '../../src/rule/index.js';
+import { loadRuleFiles, loadRuleModules, loadRulePaths, loadRuleSource } from '../../src/rule/load.js';
 import { SchemaRule } from '../../src/rule/SchemaRule.js';
 import { Filesystem, setFs } from '../../src/source.js';
 import { VisitorContext } from '../../src/visitor/VisitorContext.js';

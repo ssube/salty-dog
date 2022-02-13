@@ -9,6 +9,44 @@ export const FILE_ENCODING = 'utf-8';
 
 export type Filesystem = Pick<typeof promises, 'readdir' | 'readFile' | 'writeFile'>;
 
+export interface Source {
+  data: string;
+
+  /**
+   * Path from which this source was loaded.
+   */
+  path: string;
+}
+
+export interface Document {
+  /**
+   * Document data.
+   */
+  data: unknown;
+
+  /**
+   * Original source.
+   */
+  source: Source;
+}
+
+export interface Element {
+  /**
+   * Element data.
+   */
+  data: unknown;
+
+  /**
+   * Containing document, *not* the immediate parent.
+   */
+  document: Document;
+
+  /**
+   * Position within a set of selected elements.
+   */
+  index: number;
+}
+
 /**
  * Hook for tests to override the fs fns.
  */

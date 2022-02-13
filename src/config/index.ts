@@ -68,7 +68,10 @@ export async function loadConfig(name: string, ...extras: Array<string>): Promis
     const data = await readConfig(p);
     if (doesExist(data)) {
       const parser = new YamlParser();
-      const [head] = parser.parse(data);
+      const [head] = parser.parse({
+        data,
+        path: p,
+      });
 
       /* eslint-disable-next-line sonarjs/prefer-immediate-return,@typescript-eslint/no-explicit-any */
       return head as any; // TODO: validate config

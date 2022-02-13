@@ -1,32 +1,28 @@
-import { Diff } from 'deep-diff';
-import { LogLevel } from 'noicejs';
+import EventEmitter from 'events';
 
-import { VisitorContext } from './VisitorContext.js';
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Rule, RuleChange, RuleError, RuleResult } from '../rule/index.js';
+import { Document, Element } from '../source.js';
 
 /**
- * This is a runtime error, not an exception.
+ * @todo what does this need to contain? accumulated errors?
+ * yes: since visit is called for each rule, this is what collects
+ * results across all of the rules
  */
-export interface VisitorError {
-  data: any;
-  level: LogLevel;
-  msg: string;
+export interface Context {
+  changes: ReadonlyArray<RuleChange>;
+  errors: ReadonlyArray<RuleError>;
 }
 
-export interface VisitorResult {
-  changes: ReadonlyArray<Diff<any, any>>;
-  errors: ReadonlyArray<VisitorError>;
-}
-
-export interface Visitor<TResult extends VisitorResult = VisitorResult> {
+export interface Visitor extends EventEmitter {
   /**
    * Select nodes eligible to be visited.
    */
-  pick(ctx: VisitorContext, root: any): Promise<Array<any>>;
+  pick(ctx: Context, rule: Rule, doc: Document): Promise<Array<Element>>;
 
   /**
    * Visit a node.
    */
-  visit(ctx: VisitorContext, node: any): Promise<TResult>;
+  visit(ctx: Context, rule: Rule, elem: Element): Promise<RuleResult>;
+
+  visitAll(ctx: Context, rule: Rule, doc: Document): Promise<Array<RuleResult>>;
 }

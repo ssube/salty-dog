@@ -15,11 +15,14 @@ describe('yaml parser', () => {
   describe('parse documents', () => {
     it('should parse multiple documents', async () => {
       const parser = new YamlParser();
-      const data = parser.parse(`
+      const data = parser.parse({
+        data: `
 foo: {}
 ---
 bar: {}
-      `);
+      `,
+        path: '',
+      });
 
       expect(Array.isArray(data)).to.equal(true);
       const EXPECTED_DOCS = 2;

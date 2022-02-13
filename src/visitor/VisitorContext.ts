@@ -3,7 +3,7 @@ import Ajv, { ValidateFunction } from 'ajv';
 import { JSONPath } from 'jsonpath-plus';
 import { Logger } from 'noicejs';
 
-import { VisitorError, VisitorResult } from './index.js';
+import { RuleChange, RuleError, RuleResult } from '../rule';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -18,20 +18,20 @@ export interface VisitorContextOptions {
   schemaOptions: RuleOptions;
 }
 
-export class VisitorContext implements VisitorContextOptions, VisitorResult {
+export class VisitorContext implements VisitorContextOptions, RuleResult {
   public readonly logger: Logger;
   public readonly schemaOptions: RuleOptions;
 
   protected readonly ajv: Ajv;
-  protected readonly changeBuffer: Array<any>;
-  protected readonly errorBuffer: Array<VisitorError>;
+  protected readonly changeBuffer: Array<RuleChange>;
+  protected readonly errorBuffer: Array<RuleError>;
   protected data: any;
 
-  public get changes(): ReadonlyArray<any> {
+  public get changes(): ReadonlyArray<RuleChange> {
     return this.changeBuffer;
   }
 
-  public get errors(): ReadonlyArray<VisitorError> {
+  public get errors(): ReadonlyArray<RuleError> {
     return this.errorBuffer;
   }
 
@@ -65,7 +65,7 @@ export class VisitorContext implements VisitorContextOptions, VisitorResult {
     return this.ajv.compile(schema);
   }
 
-  public mergeResult(other: VisitorResult, data: any = {}): this {
+  public mergeResult(other: RuleResult, data: any = {}): this {
     this.changeBuffer.push(...other.changes);
     this.errorBuffer.push(...other.errors.map((err) => ({
       ...err,

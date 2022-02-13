@@ -1,8 +1,10 @@
 import { hasItems } from '@apextoaster/js-utils';
 import deepDiff from 'deep-diff';
+import EventEmitter from 'events';
 import lodash from 'lodash';
 
-import { Rule } from '../rule/index.js';
+import { Rule, RuleResult } from '../rule/index.js';
+import { Document, Element } from '../source.js';
 import { Visitor } from './index.js';
 import { VisitorContext } from './VisitorContext.js';
 
@@ -16,58 +18,54 @@ export interface RuleVisitorOptions {
   rules: ReadonlyArray<Rule>;
 }
 
-export class RuleVisitor implements RuleVisitorOptions, Visitor {
+export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Visitor {
   public readonly rules: ReadonlyArray<Rule>;
 
   constructor(options: RuleVisitorOptions) {
+    super();
+
     this.rules = Array.from(options.rules);
   }
 
-  public async pick(ctx: VisitorContext, root: any): Promise<Array<any>> {
-    return []; // TODO: why is this part of visitor rather than rule?
+  public async pick(ctx: VisitorContext, rule: Rule, root: Document): Promise<Array<Element>> {
+    return rule.pick(ctx, root);
   }
 
-  public async visit(ctx: VisitorContext, root: any): Promise<VisitorContext> {
-    for (const rule of this.rules) {
-      const items = await rule.pick(ctx, root);
-      let itemIndex = 0;
-      for (const item of items) {
-        ctx.visitData = {
-          itemIndex,
-          rule,
-        };
+  public async visit(ctx: VisitorContext, rule: Rule, elem: Element): Promise<RuleResult> {
+    const results = {
+      changes: [],
+      errors: [],
+    };
 
-        await this.visitItem(ctx, item, itemIndex, rule);
-        itemIndex += 1;
-      }
-    }
-
-    return ctx;
-  }
-
-  public async visitItem(ctx: VisitorContext, item: any, itemIndex: number, rule: Rule): Promise<void> {
-    const itemResult = cloneDeep(item);
-    const ruleResult = await rule.visit(ctx, itemResult);
+    const elemResult = cloneDeep(elem);
+    const ruleResult = await rule.visit(ctx, elemResult);
 
     if (hasItems(ruleResult.errors)) {
       ctx.logger.warn({ count: ruleResult.errors.length, rule }, 'rule failed');
       ctx.mergeResult(ruleResult, ctx.visitData);
-      return;
+      return results;
     }
 
-    const itemDiff = diff(item, itemResult);
+    const itemDiff = diff(elem, elemResult);
     if (hasItems(itemDiff)) {
       ctx.logger.info({
         diff: itemDiff,
-        item,
+        item: elem,
         rule: rule.name,
       }, 'rule passed with modifications');
 
       if (ctx.schemaOptions.mutate) {
-        applyDiff(item, itemResult);
+        applyDiff(elem, elemResult);
       }
     } else {
       ctx.logger.info({ rule: rule.name }, 'rule passed');
     }
+
+    return results;
+  }
+
+  public async visitAll(ctx: VisitorContext, rule: Rule, doc: Document): Promise<Array<RuleResult>> {
+    const elems = await this.pick(ctx, rule, doc);
+    return Promise.all(elems.map((e) => this.visit(ctx, rule, e)));
   }
 }

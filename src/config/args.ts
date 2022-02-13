@@ -1,6 +1,7 @@
 import yargs, { Options } from 'yargs';
 
-import { RuleSelector, RuleSources } from '../rule/index.js';
+import { RuleSources } from '../rule/load.js';
+import { RuleSelector } from '../rule/resolve.js';
 import { VERSION_INFO } from '../version.js';
 
 export enum MODE {

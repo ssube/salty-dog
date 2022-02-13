@@ -1,4 +1,9 @@
+import { Document, Source } from '../source';
+
 export interface Parser {
-  dump(...data: Array<unknown>): string;
-  parse(body: string): Array<unknown>;
+  /**
+   * @todo should dump deal with Sources as well? does it care about paths?
+   */
+  dump(...data: Array<Document>): string;
+  parse(data: Source): Array<Document>;
 }

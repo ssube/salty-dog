@@ -16,15 +16,38 @@ describe('visitor context', () => {
 
     const nextCtx = firstCtx.mergeResult({
       changes: [{
-        kind: 'N',
-        rhs: {},
+        data: {
+          data: {},
+          document: {
+            data: {},
+            source: {
+              path: '',
+            },
+          },
+          index: 0,
+        },
+        diff: {
+          kind: 'N',
+          rhs: {},
+        },
+        rule: new NoopRule(),
       }],
       errors: [{
         data: {
-          foo: 2,
+          data: {
+            foo: 2,
+          },
+          document: {
+            data: {},
+            source: {
+              path: '',
+            },
+          },
+          index: 0,
         },
         level: LogLevel.Info,
         msg: 'uh oh',
+        rule: new NoopRule(),
       }],
     });
 

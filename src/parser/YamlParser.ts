@@ -2,10 +2,9 @@ import { createInclude, createSchema } from '@apextoaster/js-yaml-schema';
 import { existsSync, readFileSync, realpathSync } from 'fs';
 import { DEFAULT_SCHEMA, dump, loadAll, Schema } from 'js-yaml';
 import { join } from 'path';
+import { Document, Source } from '../source.js';
 
 import { Parser } from './index.js';
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export class YamlParser implements Parser {
   protected schema: Schema;
@@ -37,9 +36,12 @@ export class YamlParser implements Parser {
     return docs.join('\n---\n\n');
   }
 
-  public parse(body: string): Array<unknown> {
-    const docs: Array<unknown> = [];
-    loadAll(body, (doc: unknown) => docs.push(doc), {
+  public parse(source: Source): Array<Document> {
+    const docs: Array<Document> = [];
+    loadAll(source.data, (data: unknown) => docs.push({
+      data,
+      source,
+    }), {
       schema: this.schema,
     });
     return docs;
