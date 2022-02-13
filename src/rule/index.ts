@@ -1,3 +1,4 @@
+import { ErrorObject } from 'ajv';
 import { Diff } from 'deep-diff';
 import { LogLevel } from 'noicejs';
 
@@ -44,6 +45,7 @@ export interface RuleChange {
 
 export interface RuleError {
   data: Element;
+  err: ErrorObject;
   level: LogLevel;
   msg: string;
   rule: Rule;

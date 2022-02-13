@@ -1,12 +1,13 @@
 import { expect } from 'chai';
 
 import { YamlParser } from '../../src/parser/YamlParser.js';
+import { makeDocument } from '../helpers.js';
 
 describe('yaml parser', () => {
   describe('dump documents', () => {
     it('should dump multiple documents', async () => {
       const parser = new YamlParser();
-      const data = parser.dump({}, {});
+      const data = parser.dump(makeDocument({}), makeDocument({}));
 
       expect(data).to.contain('---');
     });

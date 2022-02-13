@@ -1,11 +1,13 @@
 import { expect } from 'chai';
 import { LogLevel, NullLogger } from 'noicejs';
-import { SchemaRule } from '../../src/rule/SchemaRule.js';
 
 import { VisitorContext } from '../../src/visitor/VisitorContext.js';
+import { createErrorContext } from '../helpers.js';
 
 describe('visitor context', () => {
   it('should merge results', async () => {
+    const { rule } = createErrorContext(''); // TODO: extract a makeRule helper
+
     const firstCtx = new VisitorContext({
       logger: NullLogger.global,
       schemaOptions: {
@@ -32,7 +34,7 @@ describe('visitor context', () => {
           kind: 'N',
           rhs: {},
         },
-        rule: new SchemaRule({} as any),
+        rule,
       }],
       errors: [{
         data: {
@@ -48,9 +50,10 @@ describe('visitor context', () => {
           },
           index: 0,
         },
+        err: {} as any,
         level: LogLevel.Info,
         msg: 'uh oh',
-        rule: new SchemaRule({} as any),
+        rule,
       }],
     });
 

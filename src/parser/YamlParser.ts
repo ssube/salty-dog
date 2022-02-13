@@ -25,10 +25,10 @@ export class YamlParser implements Parser {
     include.setSchema(this.schema);
   }
 
-  public dump(...data: Array<unknown>): string {
+  public dump(...data: Array<Document>): string {
     const docs: Array<unknown> = [];
     for (const doc of data) {
-      const part = dump(doc, {
+      const part = dump(doc.data, {
         schema: this.schema,
       });
       docs.push(part);

@@ -3,7 +3,7 @@ import { ErrorObject, ValidateFunction } from 'ajv';
 import lodash from 'lodash';
 import { LogLevel } from 'noicejs';
 
-import { Element } from '../source.js';
+import { Document, Element } from '../source.js';
 import { Context } from '../visitor/index.js';
 import { VisitorContext } from '../visitor/VisitorContext.js';
 import { Rule, RuleData, RuleError, RuleResult, ValidatorResult } from './index.js';
@@ -75,7 +75,7 @@ export class SchemaRule implements Rule, RuleData {
     }
   }
 
-  public async pick(ctx: VisitorContext, root: any): Promise<Array<any>> {
+  public async pick(ctx: VisitorContext, root: Document): Promise<Array<Element>> {
     const items = ctx.pick(this.select, root);
 
     if (items.length === 0) {
@@ -85,8 +85,8 @@ export class SchemaRule implements Rule, RuleData {
     return items;
   }
 
-  public async visit(ctx: VisitorContext, node: any): Promise<RuleResult> {
-    ctx.logger.debug({ item: node, rule: this }, 'visiting node');
+  public async visit(ctx: VisitorContext, elem: Element): Promise<RuleResult> {
+    ctx.logger.debug({ item: elem, rule: this }, 'visiting node');
 
     const check = ctx.compile(this.checkSchema);
     const filter = this.compileFilter(ctx);
@@ -96,53 +96,51 @@ export class SchemaRule implements Rule, RuleData {
       errors,
     };
 
-    if (filter(node)) {
-      ctx.logger.debug({ item: node }, 'checking item');
-      if (!check(node) && hasItems(check.errors)) {
-        errors.push(...check.errors.map((err) => friendlyError(ctx, err)));
+    if (filter(elem.data)) {
+      ctx.logger.debug({ item: elem }, 'checking item');
+      if (!check(elem.data) && hasItems(check.errors)) {
+        errors.push(...check.errors.map((err) => friendlyError(ctx, err, elem, this)));
       }
     } else {
-      ctx.logger.debug({ errors: filter.errors, item: node }, 'skipping item');
+      ctx.logger.debug({ errors: filter.errors, item: elem }, 'skipping item');
     }
 
     return result;
   }
 
+  /**
+   * @todo remove entirely
+   */
   protected compileFilter(ctx: VisitorContext): ValidateFunction {
     if (doesExist(this.filterSchema)) {
       return ctx.compile(this.filterSchema);
     } else {
-      return DEFAULT_FILTER as any; // TODO: return something with schema/schemaEnv props
+      return DEFAULT_FILTER as any;
     }
   }
 }
 
-/**
- * @todo this function needs to know what rule/doc the error came from
- */
-export function friendlyError(ctx: VisitorContext, err: ErrorObject): RuleError {
+export function friendlyError(ctx: VisitorContext, err: ErrorObject, data: Element, rule: Rule): RuleError {
   return {
-    data: {
-      data: err,
-      document: undefined as any,
-      index: 0,
-    },
+    data,
+    err,
     level: LogLevel.Error,
-    msg: friendlyErrorMessage(ctx, err),
-    rule: undefined as any,
+    msg: friendlyErrorMessage(ctx, err, data, rule),
+    rule,
   };
 }
 
-export function friendlyErrorMessage(ctx: VisitorContext, err: ErrorObject): string {
+export function friendlyErrorMessage(ctx: VisitorContext, err: ErrorObject, data: Element, rule: Rule): string {
   const msg = [err.instancePath];
   if (doesExist(err.message)) {
     msg.push(err.message);
   } else {
     msg.push(err.keyword);
   }
-  msg.push('at', 'item', ctx.visitData.itemIndex.toString());
-  msg.push('of', ctx.visitData.rule.select);
-  msg.push('for', ctx.visitData.rule.name);
+
+  msg.push('at', 'item', data.index.toString());
+  msg.push('of', rule.select);
+  msg.push('for', rule.name);
 
   return msg.join(' ');
 }

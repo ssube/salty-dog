@@ -4,6 +4,7 @@ import { JSONPath } from 'jsonpath-plus';
 import { Logger } from 'noicejs';
 
 import { RuleChange, RuleError, RuleResult } from '../rule/index.js';
+import { Document, Element } from '../source.js';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -65,6 +66,9 @@ export class VisitorContext implements VisitorContextOptions, RuleResult {
     return this.ajv.compile(schema);
   }
 
+  /**
+   * @todo should take the element
+   */
   public mergeResult(other: RuleResult, data: any = {}): this {
     this.changeBuffer.push(...other.changes);
     this.errorBuffer.push(...other.errors.map((err) => ({
@@ -80,9 +84,9 @@ export class VisitorContext implements VisitorContextOptions, RuleResult {
   /**
    * @TODO move to visitor
    */
-  public pick(path: string, root: any): Array<any> {
+  public pick(path: string, root: Document): Array<Element> {
     const items = JSONPath({
-      json: root,
+      json: root.data as any,
       path,
     });
 
@@ -92,22 +96,13 @@ export class VisitorContext implements VisitorContextOptions, RuleResult {
     }, 'path query picked items');
 
     if (hasItems(items)) {
-      return items.filter(doesExist);
+      return items.filter(doesExist).map((data, index) => ({
+        data,
+        document: root,
+        index,
+      }));
     } else {
       return [];
     }
-  }
-
-  /**
-   * store some flash data. this is very much not the right way to do it.
-   *
-   * @TODO fix this
-   */
-  public get visitData(): any {
-    return this.data;
-  }
-
-  public set visitData(value: any) {
-    this.data = value;
   }
 }

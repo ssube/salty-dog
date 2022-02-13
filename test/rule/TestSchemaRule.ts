@@ -4,6 +4,7 @@ import { stub } from 'sinon';
 
 import { friendlyError, SchemaRule } from '../../src/rule/SchemaRule.js';
 import { VisitorContext } from '../../src/visitor/VisitorContext.js';
+import { createErrorContext, makeDocument, makeElement } from '../helpers.js';
 
 /* eslint-disable @typescript-eslint/unbound-method */
 
@@ -30,9 +31,9 @@ describe('schema rule', async () => {
       select: '$.foo',
       tags: [],
     });
-    const results = await rule.pick(ctx, data);
+    const results = await rule.pick(ctx, makeDocument(data));
 
-    expect(results).to.deep.equal([data.foo]);
+    expect(results.map(r => r.data)).to.deep.equal([data.foo]);
   });
 
   it('should pick no items', async () => {
@@ -55,7 +56,7 @@ describe('schema rule', async () => {
       select: '$.foo',
       tags: [],
     });
-    const results = await rule.pick(ctx, data);
+    const results = await rule.pick(ctx, makeDocument(data));
 
     expect(results).to.deep.equal([]);
   });
@@ -90,7 +91,7 @@ describe('schema rule', async () => {
       tags: [],
     });
 
-    const results = await rule.visit(ctx, data);
+    const results = await rule.visit(ctx, makeElement(data));
     expect(results.errors.length).to.equal(0);
   });
 
@@ -111,9 +112,9 @@ describe('schema rule', async () => {
       select: '$.foo',
       tags: [],
     });
-    const results = await rule.pick(ctx, {
+    const results = await rule.pick(ctx, makeDocument({
       foo: [Math.random(), Math.random(), Math.random()],
-    });
+    }));
     expect(Array.isArray(results)).to.equal(true);
   });
 
@@ -144,7 +145,7 @@ describe('schema rule', async () => {
     });
 
     const data = {};
-    await rule.visit(ctx, data);
+    await rule.visit(ctx, makeElement(data));
 
     expect(filterSpy, 'filter spy should have been called with data').to.have.callCount(1).and.been.calledWithExactly(data);
     expect(checkSpy, 'check spy should have been called with data').to.have.callCount(1).and.been.calledWithExactly(data);
@@ -175,52 +176,27 @@ describe('schema rule', async () => {
     });
 
     const data = {};
-    await rule.visit(ctx, data);
+    await rule.visit(ctx, makeElement(data));
 
     expect(filterSpy, 'filter spy should have been called with data').to.have.callCount(1).and.been.calledWithExactly(data);
     expect(checkSpy, 'check spy should not have been called').to.have.callCount(0);
   });
 });
 
-function createErrorContext() {
-  const rule = new SchemaRule({
-    check: {},
-    desc: TEST_NAME,
-    level: LogLevel.Info,
-    name: TEST_NAME,
-    select: '',
-    tags: [TEST_NAME],
-  });
-  const ctx = new VisitorContext({
-    logger: NullLogger.global,
-    schemaOptions: {
-      coerce: false,
-      defaults: false,
-      mutate: false,
-    },
-  });
-  ctx.visitData = {
-    itemIndex: 0,
-    rule,
-  };
-
-  return { ctx, rule };
-}
-
 describe('friendly errors', () => {
   it('should have a message', async () => {
-    const { ctx } = createErrorContext();
+    const { ctx, rule } = createErrorContext(TEST_NAME);
     const err = friendlyError(ctx, {
       instancePath: 'test-path',
       keyword: TEST_NAME,
       params: { /* ? */ },
       schemaPath: 'test-path',
-    });
+    }, makeElement({}), rule);
     expect(err.msg).to.include(TEST_NAME);
   });
 
   it('should handle errors with an existing message', async () => {
-    const { ctx } = createErrorContext();
+    const { ctx, rule } = createErrorContext(TEST_NAME);
     const TEST_MESSAGE = 'test-message';
     const err = friendlyError(ctx, {
       instancePath: 'test-path',
@@ -228,7 +204,7 @@ describe('friendly errors', () => {
       message: TEST_MESSAGE,
       params: { /* ? */ },
       schemaPath: 'test-path',
-    });
+    }, makeElement({}), rule);
     expect(err.msg).to.include(TEST_MESSAGE);
   });
 });

@@ -12,8 +12,6 @@ const { applyDiff, diff } = deepDiff;
 /* eslint-disable-next-line @typescript-eslint/unbound-method */
 const { cloneDeep } = lodash;
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 export interface RuleVisitorOptions {
   rules: ReadonlyArray<Rule>;
 }
@@ -42,7 +40,7 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
 
     if (hasItems(ruleResult.errors)) {
       ctx.logger.warn({ count: ruleResult.errors.length, rule }, 'rule failed');
-      ctx.mergeResult(ruleResult, ctx.visitData);
+      ctx.mergeResult(ruleResult, elem);
       return results;
     }
 

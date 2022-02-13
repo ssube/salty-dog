@@ -2,24 +2,10 @@ import { expect } from 'chai';
 import { LogLevel, NullLogger } from 'noicejs';
 import { mock, spy, stub } from 'sinon';
 
-import { RuleVisitor } from '../../src/visitor/RuleVisitor.js';
 import { SchemaRule } from '../../src/rule/SchemaRule.js';
+import { RuleVisitor } from '../../src/visitor/RuleVisitor.js';
 import { VisitorContext } from '../../src/visitor/VisitorContext.js';
-import { Element } from '../../src/source.js';
-
-function makeElement(data: unknown): Element {
-  return {
-    data,
-    document: {
-      data: {},
-      source: {
-        data: '',
-        path: '',
-      },
-    },
-    index: 0,
-  };
-}
+import { makeDocument, makeElement } from '../helpers.js';
 
 describe('rule visitor', async () => {
   it('should only call visit for selected items', async () => {
@@ -51,7 +37,7 @@ describe('rule visitor', async () => {
     const visitor = new RuleVisitor({
       rules: [rule],
     });
-    await visitor.visit(ctx, rule, makeElement({}));
+    await visitor.visitAll(ctx, rule, makeDocument({}));
 
     mockRule.verify();
     expect(ctx.errors.length).to.equal(0);
@@ -95,7 +81,7 @@ describe('rule visitor', async () => {
     expect(ctx.errors.length).to.equal(0);
   });
 
-  it('should visit individual items', async () => {
+  it('should invoke the rule pick and visit', async () => {
     const ctx = new VisitorContext({
       logger: NullLogger.global,
       schemaOptions: {
@@ -104,9 +90,12 @@ describe('rule visitor', async () => {
         mutate: false,
       },
     });
+
     const data = {
       foo: [Math.random(), Math.random(), Math.random()],
     };
+    const doc = makeDocument(data);
+
     const rule = new SchemaRule({
       check: {},
       desc: '',
@@ -125,9 +114,9 @@ describe('rule visitor', async () => {
     const visitor = new RuleVisitor({
       rules: [rule],
     });
-    await visitor.visit(ctx, rule, makeElement(data));
+    await visitor.visitAll(ctx, rule, doc);
 
-    expect(pickSpy).to.have.callCount(1).and.to.have.been.calledWithExactly(ctx, data);
+    expect(pickSpy).to.have.callCount(1).and.to.have.been.calledWithExactly(ctx, doc);
     expect(visitStub).to.have.callCount(data.foo.length);
   });
 
@@ -156,6 +145,7 @@ describe('rule visitor', async () => {
       changes: [],
       errors: [{
         data: makeElement({}),
+        err: {} as any,
         level: LogLevel.Error,
         msg: 'kaboom!',
         rule,
