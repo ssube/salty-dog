@@ -6,8 +6,6 @@ import { Logger } from 'noicejs';
 import { RuleChange, RuleError, RuleResult } from '../rule/index.js';
 import { Document, Element } from '../source.js';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 export interface RuleOptions {
   coerce: boolean;
   defaults: boolean;
@@ -26,7 +24,6 @@ export class VisitorContext implements VisitorContextOptions, RuleResult {
   protected readonly ajv: Ajv;
   protected readonly changeBuffer: Array<RuleChange>;
   protected readonly errorBuffer: Array<RuleError>;
-  protected data: any;
 
   public get changes(): ReadonlyArray<RuleChange> {
     return this.changeBuffer;
@@ -50,7 +47,7 @@ export class VisitorContext implements VisitorContextOptions, RuleResult {
     this.schemaOptions = options.schemaOptions;
   }
 
-  public addSchema(name: string, schema: any): void {
+  public addSchema(name: string, schema: object): void {
     this.logger.debug({
       schema,
       schemaName: name,
@@ -67,8 +64,9 @@ export class VisitorContext implements VisitorContextOptions, RuleResult {
   }
 
   /**
-   * @todo should take the element
+   * @todo what is data? should use the element
    */
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   public mergeResult(other: RuleResult, data: any = {}): this {
     this.changeBuffer.push(...other.changes);
     this.errorBuffer.push(...other.errors.map((err) => ({
@@ -86,6 +84,7 @@ export class VisitorContext implements VisitorContextOptions, RuleResult {
    */
   public pick(path: string, root: Document): Array<Element> {
     const items = JSONPath({
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       json: root.data as any,
       path,
     });

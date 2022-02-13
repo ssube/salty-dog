@@ -53,6 +53,7 @@ describe('rule visitor', async () => {
       },
     });
     const data = {};
+    const doc = makeDocument({});
     const rule = new SchemaRule({
       check: {},
       desc: '',
@@ -64,7 +65,7 @@ describe('rule visitor', async () => {
 
     const mockRule = mock(rule);
 
-    const pickStub = mockRule.expects('pick').once().withArgs(ctx, data);
+    const pickStub = mockRule.expects('pick').once().withArgs(ctx, doc);
     pickStub.onFirstCall().returns(Promise.resolve([data]));
     pickStub.throws();
 
@@ -75,7 +76,7 @@ describe('rule visitor', async () => {
     const visitor = new RuleVisitor({
       rules: [rule],
     });
-    await visitor.visit(ctx, rule, makeElement({}));
+    await visitor.visitAll(ctx, rule, doc);
 
     mockRule.verify();
     expect(ctx.errors.length).to.equal(0);
@@ -155,7 +156,7 @@ describe('rule visitor', async () => {
     const visitor = new RuleVisitor({
       rules: [rule],
     });
-    await visitor.visit(ctx, rule, makeElement(data));
+    await visitor.visitAll(ctx, rule, makeDocument(data));
 
     const EXPECTED_VISITS = 3;
     expect(visitStub).to.have.callCount(EXPECTED_VISITS);

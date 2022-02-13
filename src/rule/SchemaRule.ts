@@ -11,8 +11,6 @@ import { Rule, RuleData, RuleError, RuleResult, ValidatorResult } from './index.
 /* eslint-disable-next-line @typescript-eslint/unbound-method */
 const { cloneDeep, defaultTo } = lodash;
 
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/strict-boolean-expressions */
-
 const DEFAULT_FILTER = () => true;
 
 export class SchemaRule implements Rule, RuleData {
@@ -115,6 +113,7 @@ export class SchemaRule implements Rule, RuleData {
     if (doesExist(this.filterSchema)) {
       return ctx.compile(this.filterSchema);
     } else {
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       return DEFAULT_FILTER as any;
     }
   }

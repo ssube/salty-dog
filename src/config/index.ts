@@ -73,7 +73,6 @@ export async function loadConfig(name: string, ...extras: Array<string>): Promis
         path: p,
       });
 
-      /* eslint-disable-next-line sonarjs/prefer-immediate-return,@typescript-eslint/no-explicit-any */
       return head.data as ConfigData; // TODO: validate config
     }
   }
