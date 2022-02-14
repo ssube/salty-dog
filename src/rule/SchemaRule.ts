@@ -1,4 +1,4 @@
-import { doesExist, ensureArray, hasItems } from '@apextoaster/js-utils';
+import { doesExist, toArray, hasItems } from '@apextoaster/js-utils';
 import { ErrorObject } from 'ajv';
 import { JSONPath } from 'jsonpath-plus';
 import lodash from 'lodash';
@@ -44,7 +44,7 @@ export class SchemaRule implements Rule, RuleData {
       };
     } else {
       return {
-        errors: ensureArray(schema.errors),
+        errors: toArray(schema.errors),
         valid: false,
       };
     }
@@ -60,7 +60,7 @@ export class SchemaRule implements Rule, RuleData {
         };
       } else {
         return {
-          errors: ensureArray(schema.errors),
+          errors: toArray(schema.errors),
           valid: false,
         };
       }

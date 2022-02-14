@@ -1,4 +1,4 @@
-import { doesExist, ensureArray } from '@apextoaster/js-utils';
+import { doesExist, toArray } from '@apextoaster/js-utils';
 import minimatch from 'minimatch';
 
 import { isPOJSO, Rule, RuleData } from './index.js';
@@ -12,9 +12,9 @@ const { Minimatch } = minimatch;
 
 export function createRuleSources(options: Partial<RuleSources>): RuleSources {
   return {
-    ruleFile: ensureArray(options.ruleFile),
-    ruleModule: ensureArray(options.ruleModule),
-    rulePath: ensureArray(options.rulePath),
+    ruleFile: toArray(options.ruleFile),
+    ruleModule: toArray(options.ruleModule),
+    rulePath: toArray(options.rulePath),
   };
 }
 

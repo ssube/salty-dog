@@ -1,4 +1,4 @@
-import { ensureArray } from '@apextoaster/js-utils';
+import { toArray } from '@apextoaster/js-utils';
 import lodash from 'lodash';
 import { LogLevel } from 'noicejs';
 import { Rule } from '.';
@@ -22,12 +22,12 @@ export interface RuleSelector {
 
 export function createRuleSelector(options: Partial<RuleSelector>): RuleSelector {
   return {
-    excludeLevel: ensureArray(options.excludeLevel),
-    excludeName: ensureArray(options.excludeName),
-    excludeTag: ensureArray(options.excludeTag),
-    includeLevel: ensureArray(options.includeLevel),
-    includeName: ensureArray(options.includeName),
-    includeTag: ensureArray(options.includeTag),
+    excludeLevel: toArray(options.excludeLevel),
+    excludeName: toArray(options.excludeName),
+    excludeTag: toArray(options.excludeTag),
+    includeLevel: toArray(options.includeLevel),
+    includeName: toArray(options.includeName),
+    includeTag: toArray(options.includeTag),
   };
 }
 

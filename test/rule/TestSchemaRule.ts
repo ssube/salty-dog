@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { LogLevel, NullLogger } from 'noicejs';
-import { match, stub } from 'sinon';
+import { stub } from 'sinon';
 
 import { friendlyError, SchemaRule } from '../../src/rule/SchemaRule.js';
 import { VisitorContext } from '../../src/visitor/VisitorContext.js';
