@@ -13,14 +13,17 @@ export interface Context {
 
 export interface Visitor extends EventEmitter {
   /**
-   * Select nodes eligible to be visited.
+   * Select elements eligible to be visited.
    */
   pick(ctx: Context, rule: Rule, doc: Document): Promise<Array<Element>>;
 
   /**
-   * Visit a node.
+   * Visit an element.
    */
   visit(ctx: Context, rule: Rule, elem: Element): Promise<RuleResult>;
 
+  /**
+   * Visit all selected elements within a document.
+   */
   visitAll(ctx: Context, rule: Rule, doc: Document): Promise<Array<RuleResult>>;
 }

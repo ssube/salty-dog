@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { LogLevel, NullLogger } from 'noicejs';
 
 import { VisitorContext } from '../../src/visitor/VisitorContext.js';
-import { createErrorContext } from '../helpers.js';
+import { createErrorContext, makeElement } from '../helpers.js';
 
 describe('visitor context', () => {
   it('should merge results', async () => {
@@ -17,7 +17,7 @@ describe('visitor context', () => {
       },
     });
 
-    const nextCtx = firstCtx.mergeResult({
+    const nextCtx = firstCtx.mergeResult(rule, makeElement({}), {
       changes: [{
         data: {
           data: {},

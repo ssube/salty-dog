@@ -1,7 +1,8 @@
 import Ajv, { ValidateFunction } from 'ajv';
 import { Logger } from 'noicejs';
 
-import { RuleChange, RuleError, RuleResult } from '../rule/index.js';
+import { Rule, RuleChange, RuleError, RuleResult } from '../rule/index.js';
+import { Element } from '../source.js';
 
 export interface RuleOptions {
   coerce: boolean;
@@ -60,19 +61,9 @@ export class VisitorContext implements VisitorContextOptions, RuleResult {
     return this.ajv.compile(schema);
   }
 
-  /**
-   * @TODO what is data? should use the element
-   */
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  public mergeResult(other: RuleResult, data: any = {}): this {
-    this.changeBuffer.push(...other.changes);
-    this.errorBuffer.push(...other.errors.map((err) => ({
-      ...err,
-      data: {
-        ...err.data,
-        ...data,
-      },
-    })));
+  public mergeResult(rule: Rule, elem: Element, result: RuleResult): this {
+    this.changeBuffer.push(...result.changes);
+    this.errorBuffer.push(...result.errors);
     return this;
   }
 }

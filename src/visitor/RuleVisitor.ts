@@ -30,17 +30,12 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
   }
 
   public async visit(ctx: VisitorContext, rule: Rule, elem: Element): Promise<RuleResult> {
-    const results = {
-      changes: [],
-      errors: [],
-    };
-
     const refData = cloneDeep(elem.data);
-    const ruleResult = await rule.visit(ctx, elem);
+    const results = await rule.visit(ctx, elem);
 
-    if (hasItems(ruleResult.errors)) {
-      ctx.logger.warn({ count: ruleResult.errors.length, rule }, 'rule failed');
-      ctx.mergeResult(ruleResult, elem);
+    if (hasItems(results.errors)) {
+      ctx.logger.warn({ count: results.errors.length, rule }, 'rule failed');
+      ctx.mergeResult(rule, elem, results);
       return results;
     }
 
