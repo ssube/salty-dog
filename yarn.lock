@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@apextoaster/js-utils@0.4.0":
-  version "0.4.0"
-  resolved "https://artifacts.apextoaster.com/repository/group-npm/@apextoaster/js-utils/-/js-utils-0.4.0.tgz#2fc1b83af1a4196ea2487d261c9bf6a6d922e814"
-  integrity sha512-vJHsEK5jFVSUQi8cNb5GhsQMEPyedBxGgxh6/s99GHGiQOMWZtkkNacjagOPGUGPqHymybthrqAhHkLlLQCkSw==
+"@apextoaster/js-utils@0.4.1":
+  version "0.4.1"
+  resolved "https://artifacts.apextoaster.com/repository/group-npm/@apextoaster/js-utils/-/js-utils-0.4.1.tgz#846a2ddd4cb7b514836f2a82d924657c5e124d9c"
+  integrity sha512-OfTVr9YU1XmAE9Ug8e8w1P7HlDXX1FIVbU/WBOu+yXmlJUBeTLEWfyK+ztiY/Wz2ckNycUyYSP/BBRQ5XNXLFw==
 
 "@apextoaster/js-yaml-schema@0.5.0":
   version "0.5.0"
