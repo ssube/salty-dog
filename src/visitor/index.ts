@@ -4,11 +4,6 @@ import EventEmitter from 'events';
 import { Rule, RuleChange, RuleError, RuleResult } from '../rule/index.js';
 import { Document, Element } from '../source.js';
 
-/**
- * @todo what does this need to contain? accumulated errors?
- * yes: since visit is called for each rule, this is what collects
- * results across all of the rules
- */
 export interface Context {
   compile(schema: object): ValidateFunction;
 

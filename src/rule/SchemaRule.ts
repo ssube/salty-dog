@@ -1,5 +1,6 @@
-import { doesExist, ensureArray } from '@apextoaster/js-utils';
+import { doesExist, ensureArray, hasItems } from '@apextoaster/js-utils';
 import { ErrorObject } from 'ajv';
+import { JSONPath } from 'jsonpath-plus';
 import lodash from 'lodash';
 import { LogLevel } from 'noicejs';
 
@@ -72,13 +73,28 @@ export class SchemaRule implements Rule, RuleData {
   }
 
   public async pick(ctx: VisitorContext, root: Document): Promise<Array<Element>> {
-    const items = ctx.pick(this.select, root);
+    const items = JSONPath({
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      json: root.data as any,
+      path: this.select,
+    }) as Array<unknown>;
 
-    if (items.length === 0) {
+    ctx.logger.debug({
+      items,
+      path: this.select,
+    }, 'path query picked items');
+
+    const elems = items.filter(doesExist).map((data, index) => ({
+      data,
+      document: root,
+      index,
+    }));
+
+    if (!hasItems(elems)) {
       ctx.logger.debug('no data selected');
     }
 
-    return items;
+    return elems;
   }
 
   public async visit(ctx: VisitorContext, elem: Element): Promise<RuleResult> {
