@@ -8,7 +8,7 @@ import { Document, Element } from '../source.js';
 import { Visitor } from './index.js';
 import { VisitorContext } from './VisitorContext.js';
 
-const { applyDiff, diff } = deepDiff;
+const { diff } = deepDiff;
 /* eslint-disable-next-line @typescript-eslint/unbound-method */
 const { cloneDeep } = lodash;
 

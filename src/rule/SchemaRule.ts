@@ -1,5 +1,5 @@
-import { doesExist, ensureArray, hasItems } from '@apextoaster/js-utils';
-import { ErrorObject, ValidateFunction } from 'ajv';
+import { doesExist, ensureArray } from '@apextoaster/js-utils';
+import { ErrorObject } from 'ajv';
 import lodash from 'lodash';
 import { LogLevel } from 'noicejs';
 
@@ -10,8 +10,6 @@ import { Rule, RuleData, RuleError, RuleResult, ValidatorResult } from './index.
 
 /* eslint-disable-next-line @typescript-eslint/unbound-method */
 const { cloneDeep, defaultTo } = lodash;
-
-const DEFAULT_FILTER = () => true;
 
 export class SchemaRule implements Rule, RuleData {
   public readonly checkSchema: object;
