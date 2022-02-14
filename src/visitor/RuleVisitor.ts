@@ -35,8 +35,8 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
       errors: [],
     };
 
-    const elemResult = cloneDeep(elem);
-    const ruleResult = await rule.visit(ctx, elemResult);
+    const refData = cloneDeep(elem.data);
+    const ruleResult = await rule.visit(ctx, elem);
 
     if (hasItems(ruleResult.errors)) {
       ctx.logger.warn({ count: ruleResult.errors.length, rule }, 'rule failed');
@@ -44,7 +44,7 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
       return results;
     }
 
-    const itemDiff = diff(elem, elemResult);
+    const itemDiff = diff(elem.data, refData);
     if (hasItems(itemDiff)) {
       ctx.logger.info({
         diff: itemDiff,
@@ -52,8 +52,8 @@ export class RuleVisitor extends EventEmitter implements RuleVisitorOptions, Vis
         rule: rule.name,
       }, 'rule passed with modifications');
 
-      if (ctx.schemaOptions.mutate) {
-        applyDiff(elem, elemResult);
+      if (ctx.schemaOptions.mutate === false) {
+        elem.data = refData; // restore original data
       }
     } else {
       ctx.logger.info({ rule: rule.name }, 'rule passed');

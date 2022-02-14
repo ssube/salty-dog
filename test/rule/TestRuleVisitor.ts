@@ -17,7 +17,7 @@ describe('rule visitor', async () => {
         mutate: false,
       },
     });
-    const data = {};
+    const doc = makeDocument({});
     const rule = new SchemaRule({
       check: {},
       desc: '',
@@ -30,14 +30,14 @@ describe('rule visitor', async () => {
     const mockRule = mock(rule);
     mockRule.expects('visit').never();
 
-    const pickStub = mockRule.expects('pick').once().withArgs(ctx, data);
+    const pickStub = mockRule.expects('pick').once().withArgs(ctx, doc);
     pickStub.onFirstCall().returns(Promise.resolve([]));
     pickStub.throws();
 
     const visitor = new RuleVisitor({
       rules: [rule],
     });
-    await visitor.visitAll(ctx, rule, makeDocument({}));
+    await visitor.visitAll(ctx, rule, doc);
 
     mockRule.verify();
     expect(ctx.errors.length).to.equal(0);

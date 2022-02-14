@@ -19,7 +19,7 @@ export interface RuleData {
 }
 
 export interface ValidatorResult {
-  errors: Array<unknown>;
+  errors: Array<ErrorObject>;
   valid: boolean;
 }
 

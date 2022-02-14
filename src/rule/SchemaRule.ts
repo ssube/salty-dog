@@ -38,7 +38,7 @@ export class SchemaRule implements Rule, RuleData {
 
   public async check(ctx: Context, elem: Element): Promise<ValidatorResult> {
     const schema = ctx.compile(this.checkSchema);
-    if (schema(elem)) {
+    if (schema(elem.data)) {
       return {
         errors: [],
         valid: true,
@@ -54,7 +54,7 @@ export class SchemaRule implements Rule, RuleData {
   public async filter(ctx: Context, elem: Element): Promise<ValidatorResult> {
     if (doesExist(this.filterSchema)) {
       const schema = ctx.compile(this.filterSchema);
-      if (schema(elem)) {
+      if (schema(elem.data)) {
         return {
           errors: [],
           valid: true,
@@ -86,17 +86,17 @@ export class SchemaRule implements Rule, RuleData {
   public async visit(ctx: VisitorContext, elem: Element): Promise<RuleResult> {
     ctx.logger.debug({ item: elem, rule: this }, 'visiting node');
 
-    const check = ctx.compile(this.checkSchema);
-    const filter = this.compileFilter(ctx);
     const errors: Array<RuleError> = [];
     const result: RuleResult = {
       changes: [],
       errors,
     };
 
-    if (filter(elem.data)) {
+    const filter = await this.filter(ctx, elem);
+    if (filter.valid) {
       ctx.logger.debug({ item: elem }, 'checking item');
-      if (!check(elem.data) && hasItems(check.errors)) {
+      const check = await this.check(ctx, elem);
+      if (check.valid === false) {
         errors.push(...check.errors.map((err) => friendlyError(ctx, err, elem, this)));
       }
     } else {
@@ -104,18 +104,6 @@ export class SchemaRule implements Rule, RuleData {
     }
 
     return result;
-  }
-
-  /**
-   * @todo remove entirely
-   */
-  protected compileFilter(ctx: VisitorContext): ValidateFunction {
-    if (doesExist(this.filterSchema)) {
-      return ctx.compile(this.filterSchema);
-    } else {
-      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-      return DEFAULT_FILTER as any;
-    }
   }
 }
 
