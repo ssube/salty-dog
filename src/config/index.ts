@@ -26,7 +26,7 @@ export function dirName(): string {
   if (doesExist(import.meta) && doesExist(import.meta.url)) {
     return join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
   } else {
-    return process.cwd();
+    return join(dirname(process.argv[1]), '..', '..');
   }
 }
 
