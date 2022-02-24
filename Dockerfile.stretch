@@ -8,6 +8,7 @@ RUN apt-get update -y \
 ENV PATH="${PATH}:$(yarn global bin)"
 
 WORKDIR /salty-dog
+ENV SALTY_DOG_SCHEMA /salty-dog/rules/salty-dog.yml
 
 # copy config, which changes rarely
 COPY docs/config-docker.yml /root/.salty-dog.yml

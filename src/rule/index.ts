@@ -237,8 +237,16 @@ export async function resolveRules(rules: Array<Rule>, selector: RuleSelector): 
   return Array.from(activeRules);
 }
 
+export function getSchemaPath(): string {
+  if (doesExist(process.env.SALTY_DOG_SCHEMA)) {
+    return process.env.SALTY_DOG_SCHEMA;
+  } else {
+    return join(dirName(), 'rules', 'salty-dog.yml');
+  }
+}
+
 export function loadSchema(): any {
-  const path = join(dirName(), 'rules', 'salty-dog.yml');
+  const path = getSchemaPath();
   const data = readFileSync(path, { encoding: 'utf-8' });
 
   if (doesExist(data)) {
