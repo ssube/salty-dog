@@ -4,8 +4,7 @@ import yargs from 'yargs';
 import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs } from './config/args.js';
 import { loadConfig } from './config/index.js';
 import { YamlParser } from './parser/YamlParser.js';
-import { SummaryReporter } from './reporter/SummaryReporter.js';
-import { TableReporter } from './reporter/TableReporter.js';
+import { YamlReporter } from './reporter/YamlReporter.js';
 import { createRuleSources, loadRules } from './rule/load.js';
 import { createRuleSelector, resolveRules } from './rule/resolve.js';
 import { validateConfig } from './rule/validate.js';
@@ -85,7 +84,7 @@ export async function main(argv: Array<string>): Promise<number> {
   }
 
   // invoke reporter
-  const reporter = new TableReporter();
+  const reporter = new YamlReporter();
   const report = await reporter.report([ctx]);
   logger.info(report);
 

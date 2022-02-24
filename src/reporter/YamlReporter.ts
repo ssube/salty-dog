@@ -1,8 +1,20 @@
 import { Reporter } from './index.js';
 import { RuleResult } from '../rule/index.js';
+import { YamlParser } from '../parser/YamlParser.js';
 
 export class YamlReporter implements Reporter {
-  public report(results: Array<RuleResult>): Promise<string> {
-    throw new Error('Method not implemented.');
+  public async report(results: Array<RuleResult>): Promise<string> {
+    const parser = new YamlParser();
+    const data = {
+      changes: results.flatMap((r) => r.changes).map((c) => c.rule.name),
+      errors: results.flatMap((r) => r.errors).map((c) => c.rule.name),
+    };
+    return parser.dump({
+      data,
+      source: {
+        data: '',
+        path: '',
+      },
+    });
   }
 }
