@@ -8,8 +8,16 @@ import { YamlParser } from '../parser/YamlParser.js';
 import { VisitorContext } from '../visitor/VisitorContext.js';
 import { RuleSourceData } from './load.js';
 
+export function getSchemaPath(): string {
+  if (doesExist(process.env.SALTY_DOG_SCHEMA)) {
+    return process.env.SALTY_DOG_SCHEMA;
+  } else {
+    return join(dirName(), 'rules', 'salty-dog.yml');
+  }
+}
+
 export function loadSchema(): RuleSourceData {
-  const path = join(dirName(), 'rules', 'salty-dog.yml');
+  const path = getSchemaPath();
   const data = readFileSync(path, { encoding: 'utf-8' });
 
   if (doesExist(data)) {
