@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.1](https://github.com/ssube/salty-dog/compare/v0.9.0...v0.9.1) (2022-02-25)
+
+
+### Bug Fixes
+
+* look up schema from entrypoint rather than cwd (fixes [#1023](https://github.com/ssube/salty-dog/issues/1023)) ([f40a52a](https://github.com/ssube/salty-dog/commit/f40a52a3832f03d2bdf276c5deaca61f8840788a))
+* use built in schema when executing container command ([5768224](https://github.com/ssube/salty-dog/commit/5768224b72339971f81a9d1010f5146265c8dc81))
+
 ## [0.9.0](https://github.com/ssube/salty-dog/compare/v0.9.0-0...v0.9.0) (2022-02-12)
 
 
