@@ -1,4 +1,4 @@
-import { isNil, mustExist } from '@apextoaster/js-utils';
+import { doesExist, isNil, mustExist } from '@apextoaster/js-utils';
 import { promises } from 'fs';
 import { join } from 'path';
 import { Readable, Writable } from 'stream';
@@ -134,10 +134,10 @@ export function writeStream(stream: Writable, data: string): Promise<void> {
   return new Promise((res, rej) => {
     /* eslint-disable-next-line @typescript-eslint/ban-types */
     stream.write(data, (err: Error | null | undefined) => {
-      if (isNil(err)) {
-        res();
-      } else {
+      if (doesExist(err)) {
         rej(err);
+      } else {
+        res();
       }
     });
   });

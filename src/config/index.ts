@@ -1,6 +1,6 @@
 import { doesExist, NotFoundError } from '@apextoaster/js-utils';
 import { Stream } from 'bunyan';
-import { BaseError, LogLevel } from 'noicejs';
+import { LogLevel } from 'noicejs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
