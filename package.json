@@ -52,7 +52,7 @@
     "@types/sinon": "10.0.11",
     "@types/sinon-chai": "3.2.8",
     "@types/source-map-support": "0.5.4",
-    "@types/yargs": "17.0.8",
+    "@types/yargs": "17.0.9",
     "@typescript-eslint/eslint-plugin": "5.13.0",
     "@typescript-eslint/parser": "5.13.0",
     "ajv": "8.10.0",
