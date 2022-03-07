@@ -1,3 +1,4 @@
+import { NotImplementedError } from '@apextoaster/js-utils';
 import Ajv, { ValidateFunction } from 'ajv';
 import { Logger } from 'noicejs';
 
@@ -22,6 +23,7 @@ export class VisitorContext implements VisitorContextOptions, RuleResult {
   protected readonly ajv: Ajv;
   protected readonly changeBuffer: Array<RuleChange>;
   protected readonly errorBuffer: Array<RuleError>;
+  protected readonly resultBuffer: Array<RuleResult>;
 
   public get changes(): ReadonlyArray<RuleChange> {
     return this.changeBuffer;
@@ -31,9 +33,18 @@ export class VisitorContext implements VisitorContextOptions, RuleResult {
     return this.errorBuffer;
   }
 
+  public get results(): ReadonlyArray<RuleResult> {
+    return this.resultBuffer;
+  }
+
+  public get rule(): Rule {
+    throw new NotImplementedError('context is not a rule');
+  }
+
   constructor(options: VisitorContextOptions) {
     this.changeBuffer = [];
     this.errorBuffer = [];
+    this.resultBuffer = [];
 
     this.ajv = new Ajv({
       $data: true,
@@ -62,6 +73,7 @@ export class VisitorContext implements VisitorContextOptions, RuleResult {
   }
 
   public mergeResult(rule: Rule, elem: Element, result: RuleResult): this {
+    this.resultBuffer.push(result);
     this.changeBuffer.push(...result.changes);
     this.errorBuffer.push(...result.errors);
     return this;

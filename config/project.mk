@@ -59,7 +59,7 @@ test-rules: build
 			--config-name config-stderr.yml \
 			--rules $(ROOT_PATH)/rules/salty-dog.yml \
 			--source $${file} \
-			--tag salty-dog > /dev/null || exit 1; \
+			--tag salty-dog 2>&1 >/dev/null | yarn bunyan || exit 1; \
 	done
 
 upload-climate:

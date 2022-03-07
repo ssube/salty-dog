@@ -110,6 +110,7 @@ describe('rule visitor', async () => {
     const visitStub = stub(rule, 'visit').returns(Promise.resolve({
       changes: [],
       errors: [],
+      rule,
     }));
 
     const visitor = new RuleVisitor({
@@ -151,6 +152,7 @@ describe('rule visitor', async () => {
         msg: 'kaboom!',
         rule,
       }],
+      rule,
     }));
 
     const visitor = new RuleVisitor({

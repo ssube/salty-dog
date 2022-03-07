@@ -1,8 +1,25 @@
+import { setOrPush } from '@apextoaster/js-utils';
+
+import { Rule, RuleError, RuleResult } from '../rule/index.js';
 import { Reporter } from './index.js';
-import { RuleResult } from '../rule/index.js';
 
 export class SummaryReporter implements Reporter {
-  public report(results: Array<RuleResult>): Promise<string> {
-    throw new Error('Method not implemented.');
+  public async report(results: Array<RuleResult>): Promise<string> {
+    const ruleErrors = new Map<Rule, Array<RuleError>>();
+
+    for (const err of results.flatMap((r) => r.errors)) {
+      setOrPush(ruleErrors, err.rule, err);
+    }
+
+    if (ruleErrors.size === 0) {
+      return 'no errors to report';
+    }
+
+    const summary = ['rule errors'];
+    for (const [rule, errors] of ruleErrors) {
+      summary.push(`${rule.name}: ${errors.length}`);
+    }
+
+    return summary.join('\n');
   }
 }

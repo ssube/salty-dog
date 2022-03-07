@@ -104,6 +104,7 @@ export class SchemaRule implements Rule, RuleData {
     const result: RuleResult = {
       changes: [],
       errors,
+      rule: this,
     };
 
     const filter = await this.filter(ctx, elem);

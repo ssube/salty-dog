@@ -54,6 +54,7 @@ export interface RuleError {
 export interface RuleResult {
   changes: ReadonlyArray<RuleChange>;
   errors: ReadonlyArray<RuleError>;
+  rule: Rule;
 }
 
 export function isPOJSO(val: object): val is RuleData {

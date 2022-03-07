@@ -85,7 +85,7 @@ export async function main(argv: Array<string>): Promise<number> {
 
   // invoke reporter
   const reporter = new TableReporter();
-  const report = await reporter.report([ctx]);
+  const report = await reporter.report(ctx.results);
   logger.info(report);
 
   if (ctx.errors.length === 0) {

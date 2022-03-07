@@ -55,6 +55,7 @@ describe('visitor context', () => {
         msg: 'uh oh',
         rule,
       }],
+      rule,
     });
 
     expect(nextCtx).to.equal(firstCtx);
