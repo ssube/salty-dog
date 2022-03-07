@@ -1,31 +1,33 @@
 import { getOrDefault, leftPad, setOrPush } from '@apextoaster/js-utils';
 
-import { RuleResult } from '../rule/index.js';
+import { Rule, RuleResult } from '../rule/index.js';
 import { Reporter } from './index.js';
 
 const MARGIN = '  ';
 const COL_DELIMITER = '|';
 const ROW_DELIMITER = '\n';
 
+interface RuleCounts {
+  changes: number;
+  errors: number;
+  rule: string;
+}
+
 export class TableReporter implements Reporter {
   public async report(results: ReadonlyArray<RuleResult>): Promise<string> {
-    const rules = new Map<string, {changes: number; errors: number}>();
+    const rules = new Map<Rule, RuleCounts>();
     for (const result of results) {
-      const prev = getOrDefault(rules, result.rule.name, {changes: 0, errors: 0});
+      const prev = getOrDefault(rules, result.rule, {
+        changes: 0,
+        errors: 0,
+        rule: result.rule.name,
+      });
       prev.changes += result.changes.length;
       prev.errors += result.errors.length;
-      rules.set(result.rule.name, prev);
+      rules.set(result.rule, prev);
     }
 
-    const rows: Array<{rule: string; changes: number; errors: number}> = [];
-    for (const [rule, counts] of rules) {
-      rows.push({
-        rule,
-        changes: counts.changes,
-        errors: counts.errors,
-      });
-    }
-
+    const rows = Array.from(rules.values());
     return printTable(rows, ['rule', 'errors', 'changes'], {
       delimiter: {
         column: COL_DELIMITER,
