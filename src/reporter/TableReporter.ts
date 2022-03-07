@@ -9,22 +9,24 @@ const ROW_DELIMITER = '\n';
 
 export class TableReporter implements Reporter {
   public async report(results: ReadonlyArray<RuleResult>): Promise<string> {
-    const rules = new Map<string, number>();
+    const rules = new Map<string, {changes: number; errors: number}>();
     for (const result of results) {
-      const prev = getOrDefault(rules, result.rule.name, 0);
-      rules.set(result.rule.name, prev + result.errors.length);
+      const prev = getOrDefault(rules, result.rule.name, {changes: 0, errors: 0});
+      prev.changes += result.changes.length;
+      prev.errors += result.errors.length;
+      rules.set(result.rule.name, prev);
     }
 
-    const rows: Array<{rule: string; count: number}> = [];
-    for (const [rule, count] of rules) {
+    const rows: Array<{rule: string; changes: number; errors: number}> = [];
+    for (const [rule, counts] of rules) {
       rows.push({
         rule,
-        count,
+        changes: counts.changes,
+        errors: counts.errors,
       });
     }
 
-
-    return printTable(rows, ['rule', 'count'], {
+    return printTable(rows, ['rule', 'errors', 'changes'], {
       delimiter: {
         column: COL_DELIMITER,
         row: ROW_DELIMITER,
