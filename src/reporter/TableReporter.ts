@@ -1,11 +1,13 @@
-import { getOrDefault, leftPad, setOrPush } from '@apextoaster/js-utils';
+import { getOrDefault, leftPad, mustExist, mustGet, setOrPush } from '@apextoaster/js-utils';
 
 import { Rule, RuleResult } from '../rule/index.js';
 import { Reporter } from './index.js';
 
 const MARGIN = '  ';
 const COL_DELIMITER = '|';
+const HEAD_DELIMITER = '-';
 const ROW_DELIMITER = '\n';
+const EXTRA_ROWS = 2;
 
 interface RuleCounts {
   changes: number;
@@ -31,6 +33,7 @@ export class TableReporter implements Reporter {
     return printTable(rows, ['rule', 'errors', 'changes'], {
       delimiter: {
         column: COL_DELIMITER,
+        head: HEAD_DELIMITER,
         row: ROW_DELIMITER,
       },
       margin: MARGIN,
@@ -42,6 +45,7 @@ export class TableReporter implements Reporter {
 export interface TableOptions {
   delimiter: {
     column: string;
+    head: string;
     row: string;
   };
   margin: string;
@@ -70,16 +74,25 @@ export function printTable<T>(rows: Array<T>, fields: Array<keyof T>, options: T
     }
   }
 
-  // get longest item in each
+  // get longest item in each column
   const lens = new Map<keyof T, number>();
-  for (const [key, value] of cols) {
-    const max = value.reduce((p, c) => Math.max(p, c.length), 0);
+  for (const [key, values] of cols) {
+    const max = values.reduce((p, c) => Math.max(p, c.length), 0);
     lens.set(key, max);
+  }
+
+  // add delimiter row
+  for (const field of fields) {
+    const max = mustGet(lens, field);
+    const gap = leftPad('', max, options.delimiter.head);
+    const col = mustGet(cols, field);
+
+    col.splice(1, 0, gap);
   }
 
   // build table
   const parts = [];
-  for (let rowIndex = 0; rowIndex <= rows.length; ++rowIndex) { // <= because headers were added
+  for (let rowIndex = 0; rowIndex < rows.length + EXTRA_ROWS; ++rowIndex) { // <= because headers were added
     parts.push(options.delimiter.column);
 
     for (const [key, values] of cols) {

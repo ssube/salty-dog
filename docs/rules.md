@@ -28,6 +28,10 @@ This is a descriptive standard for rules. The enforced meta-rules for rules [are
 
 Rules may be loaded from YAML or JSON files, using any extension.
 
+| table | with | gap | row |
+|  ---- |   -- | --- |   - |
+| foo   | bar  | bin | baz |
+
 ### YAML Schema
 
 The default YAML schema has been extended with some custom types.
