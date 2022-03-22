@@ -42,7 +42,7 @@ do
     echo "Test output:"
     echo "==="
     echo ""
-    tail -n5 ${STDOUT_PATH} | yarn bunyan
+    tail -n5 "${STDOUT_PATH}" | yarn bunyan
     echo ""
     echo "==="
   fi
@@ -52,7 +52,7 @@ do
     echo "Test errors:"
     echo "==="
     echo ""
-    tail -n5 ${STDERR_PATH} | yarn bunyan
+    tail -n5 "${STDERR_PATH}" | yarn bunyan
     echo ""
     echo "==="
   fi
