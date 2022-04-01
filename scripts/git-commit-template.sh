@@ -39,6 +39,24 @@ MESSAGE_TYPE="$2"
 
 debug_log "$(printf 'message file: %s\n' "$MESSAGE_FILE")"
 
+DEFAULT_MESSAGE="$(cat ${MESSAGE_FILE})"
+DEFAULT_TYPE=""
+
+# split up default message into segments
+if [[ "${DEFAULT_MESSAGE}" =~ [a-z]+\([a-z\/]+\)\:[\ ]+[-a-zA-Z0-9\.\(\)]+ ]];
+then
+  debug_log "default message is already conventional"
+  exit 0
+elif [[ "${DEFAULT_MESSAGE}" =~ [a-z]+(\(\))*\:[\ ]+[-a-zA-Z0-9\.\(\)]+ ]];
+then
+  debug_log "default message is missing scope"
+  DEFAULT_TYPE="$(echo "${DEFAULT_MESSAGE}" | sed 's/:.*$//' | sed 's/()//')"
+  DEFAULT_MESSAGE="$(echo "${DEFAULT_MESSAGE}" | sed 's/^.*://' | sed 's/^[ ]*//')"
+
+  debug_log "default type: ${DEFAULT_TYPE}"
+  debug_log "default message: ${DEFAULT_MESSAGE}"
+fi
+
 # git ls-files -m for modified but unstaged
 MODIFIED_FILES="$(git diff --name-only --cached)"
 
@@ -69,26 +87,24 @@ debug_log "$(printf 'unique scopes: %s\n' "${UNIQUE_SCOPES[@]}")"
 GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 GIT_PREFIX="$(printf '%s\n' "${GIT_BRANCH}" | sed 's:/.*$::g')"
 
-COMMIT_PREFIX="${COMMIT_PREFIX:-${GIT_PREFIX}}"
+COMMIT_TYPE="${DEFAULT_TYPE:-${GIT_PREFIX}}"
+COMMIT_MESSAGE=""
 
 debug_log "branch: $GIT_BRANCH"
-debug_log "prefix: $COMMIT_PREFIX"
-
-DEFAULT_MESSAGE="$(cat ${MESSAGE_FILE})"
-COMMIT_MESSAGE=""
+debug_log "prefix: $COMMIT_TYPE"
 
 if [[ ${#UNIQUE_SCOPES[@]} -gt 1 ]];
 then
   debug_log "many scopes"
-  COMMIT_MESSAGE="${COMMIT_PREFIX}: ${DEFAULT_MESSAGE}"
+  COMMIT_MESSAGE="${COMMIT_TYPE}: ${DEFAULT_MESSAGE}"
 else
   if [[ -z "${UNIQUE_SCOPES[0]}" ]];
   then
     debug_log "empty scope"
-    COMMIT_MESSAGE="${COMMIT_PREFIX}(???): ${DEFAULT_MESSAGE}"
+    COMMIT_MESSAGE="${COMMIT_TYPE}(???): ${DEFAULT_MESSAGE}"
   else
     debug_log "single scope"
-    COMMIT_MESSAGE="${COMMIT_PREFIX}(${UNIQUE_SCOPES[0]}): ${DEFAULT_MESSAGE}"
+    COMMIT_MESSAGE="${COMMIT_TYPE}(${UNIQUE_SCOPES[0]}): ${DEFAULT_MESSAGE}"
   fi
 fi
 
