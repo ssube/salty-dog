@@ -26,7 +26,7 @@ function filter_scope() {
     # debug_log "alias: ${alias}"
     if [[ "${alias}" == "${scope}" ]];
     then
-      scope="$(echo "${SCOPE_ALIAS[$alias]}" | sed 's/^[ ]*//')"
+      scope="${SCOPE_ALIAS[$alias]}"
     fi
   done
 
