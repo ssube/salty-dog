@@ -5,9 +5,10 @@
 # branch name. Can be used as a prepare-commit-msg hook.
 ###
 
+declare -A SCOPE_ALIAS
 SCOPE_ALIAS=(
-  'README.md:docs'    # with extension matches raw filename, pre-filter
-  'README:docs'       # without extension matches subdir or filename post-filter
+  ['README.md']='docs'   # with extension matches raw filename, pre-filter
+  ['README']='docs'      # without extension matches subdir or filename post-filter
 )
 
 SCOPE_ALLOW=(
@@ -20,18 +21,12 @@ function filter_scope() {
   local scope="${1}"
   local allowed="${2:-FALSE}"
 
-  for alias in "${SCOPE_ALIAS[@]}"
+  for alias in "${!SCOPE_ALIAS[@]}"
   do
-    local IFS=:
-    local parts
-    set -f
-    parts=( $alias )
-    set +f
-
     # debug_log "alias: ${alias}"
-    if [[ "${parts[0]}" == "${scope}" ]];
+    if [[ "${alias}" == "${scope}" ]];
     then
-      scope="$(echo "${parts[1]}" | sed 's/^[ ]*//')"
+      scope="$(echo "${SCOPE_ALIAS[$alias]}" | sed 's/^[ ]*//')"
     fi
   done
 
