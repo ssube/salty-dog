@@ -1,58 +1,71 @@
 #! /bin/bash
 
+###
+# This script will template conventional commit messages based on the currently staged file names, paths, and
+# branch name.
+#
+# TODO: scope aliases (README -> docs)
+# TODO: valid scope list (filter)
+###
+
 function debug_log() {
   if [[ ! -z "${DEBUG:-}" ]];
   then
-    echo "${[@]}"
+    echo "${@}"
   fi
 }
 
-function head_2() {
+function head_path() {
   local IFS=/
-  local foo
-  set -f # Disable glob expansion
-  foo=( $@ ) # Deliberately unquoted
+  local parts
+  set -f      # Disable glob expansion
+  parts=( $@ )  # Deliberately unquoted
   set +f
-  #printf '%d\n' "${#foo[@]}"
-  if [[ ${#foo[@]} -gt 1 ]];
+
+  if [[ ${#parts[@]} -gt 2 ]];
   then
-    printf '%s/' "${foo[@]:0:2}"
-  elif [[ ${#foo[@]} -gt 0 ]];
+    printf '%s/' "${parts[@]:0:2}"
+  elif [[ ${#parts[@]} -gt 1 ]];
   then
-    printf "${foo[@]:0:1}"
+    printf '%s/' "${parts[@]:0:1}"
   else
-    printf ''
+    printf "${parts[0]%%.*}"
   fi
 }
-
-set -x
 
 MESSAGE_FILE="$1"
+MESSAGE_TYPE="$2"
 
-debug_log "$(printf 'message: %s\n' "$1")"
+debug_log "$(printf 'file: %s\n' "$1")"
 
 # git ls-files -m for modified but unstaged
 MODIFIED_FILES="$(git diff --name-only --cached)"
+
+if [[ -z "${MODIFIED_FILES}" ]];
+then
+  debug_log "no staged files"
+  exit 0
+fi
 
 MODIFIED_PATHS=()
 
 while IFS= read -r file
 do
-  foo="$(head_2 "$file")"
+  path="$(head_path "$file")"
   debug_log "$(printf 'file: %s\n' "$file")"
-	debug_log "$(printf 'foo: %s\n' "$foo")"
-  MODIFIED_PATHS+=("$foo")
+	debug_log "$(printf 'path: %s\n' "$path")"
+  MODIFIED_PATHS+=("$path")
 done <<< "${MODIFIED_FILES}"
 
 debug_log "$(printf 'paths: %d\n' "${#MODIFIED_PATHS[@]}")"
 
 readarray -t UNIQUE_PATHS < <(printf '%s\n' "${MODIFIED_PATHS[@]}" | sort | uniq)
 
-debug_log "$(printf 'uniques: %s\n' "${UNIQUE_PATHS[@]}")"
+debug_log "$(printf 'unique paths: %s\n' "${UNIQUE_PATHS[@]}")"
 
-readarray -t UNIQUE_DIRS < <(for i in ${UNIQUE_PATHS[@]}; do echo $i; done | grep -e '.*/$')
+readarray -t UNIQUE_SCOPES < <(for i in ${UNIQUE_PATHS[@]}; do echo $i; done | grep -e '.*/$')
 
-debug_log "$(printf 'dirs: %s\n' "${UNIQUE_DIRS[@]}")"
+debug_log "$(printf 'unique scopes: %s\n' "${UNIQUE_SCOPES[@]}")"
 
 # git prefix
 GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
@@ -65,18 +78,20 @@ debug_log "prefix: $BRANCH_PREFIX"
 DEFAULT_MESSAGE="$(cat ${MESSAGE_FILE})"
 COMMIT_MESSAGE=""
 
-if [[ ${#UNIQUE_DIRS[@]} -gt 1 ]];
+if [[ ${#UNIQUE_SCOPES[@]} -gt 1 ]];
 then
   debug_log "many paths"
   COMMIT_MESSAGE="${BRANCH_PREFIX}: ${DEFAULT_MESSAGE}"
 else
   debug_log "single path"
-  if [[ ! -z "${UNIQUE_DIRS[0]}" ]];
+  if [[ ! -z "${UNIQUE_SCOPES[0]}" ]];
   then
-    COMMIT_MESSAGE="${BRANCH_PREFIX}(${UNIQUE_DIRS[0]}): ${DEFAULT_MESSAGE}"
+    COMMIT_MESSAGE="${BRANCH_PREFIX}(${UNIQUE_SCOPES[0]}): ${DEFAULT_MESSAGE}"
   else
     COMMIT_MESSAGE="${BRANCH_PREFIX}(???): ${DEFAULT_MESSAGE}"
   fi
 fi
+
+debug_log "message: $COMMIT_MESSAGE"
 
 echo "${COMMIT_MESSAGE}" > "${MESSAGE_FILE}"
