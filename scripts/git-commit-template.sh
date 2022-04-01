@@ -5,6 +5,7 @@
 # branch name. Can be used as a prepare-commit-msg hook.
 #
 # TODO: support globs in aliases
+# TODO: combine shared prefixes (src/foo/bar and src/foo/bin share src/foo)
 ###
 
 declare -A SCOPE_ALIAS
@@ -12,19 +13,17 @@ SCOPE_ALIAS=(
   ['README.md']='docs'   # with extension matches raw filename, pre-filter
   ['README']='docs'      # without extension matches subdir or filename post-filter
 
+  ['.codeclimate.yml']='build'
+  ['.eslintrc.json']='build'
+  ['.github']='build'
   ['.gitlab']='build'
   ['.gitlab-ci.yml']='build'
+  ['.mdlrc']='build'
+  ['.npmignore']='build'
+  ['.npmrc']='build'
   ['Makefile']='build'
-
-  ['.codeclimate.yml']='config'
-  ['.dockerignore']='config'
-  ['.eslintrc.json']='config'
-  ['.github']='config'
-  ['.mdlrc']='config'
-  ['.npmignore']='config'
-  ['.npmrc']='config'
-  ['renovate.json']='config'
-  ['tsconfig.json']='config'
+  ['renovate.json']='build'
+  ['tsconfig.json']='build'
 
   ['package.json']='deps'
   ['yarn.lock']='deps'
@@ -32,19 +31,29 @@ SCOPE_ALIAS=(
 
   ['LICENSE.md']='docs'
 
+  ['.dockerignore']='image'
   ['Dockerfile.alpine']='image'
   ['Dockerfile.stretch']='image'
 )
 
 SCOPE_ALLOW=(
+  # aliases
   'build'
-  'config'
   'deps'
-  'docs'
   'image'
-  'src'
+  # dirs
+  'docs'
+  'rules'
   'scripts'
   'test'
+  # src subdirs
+  'config'
+  'parser'
+  'reporter'
+  'rule'
+  'visitor'
+  # misc
+  'lint'
 )
 
 function filter_scope() {
@@ -89,9 +98,12 @@ function head_path() {
   parts=( $@ )    # Deliberately unquoted
   set +f
 
-  if [[ ${#parts[@]} -gt 2 ]];
+  if [[ ${#parts[@]} -gt 3 ]];
   then
-    printf '%s/' "${parts[@]:0:2}"
+    printf '%s/' "${parts[@]:1:2}"
+  elif [[ ${#parts[@]} -gt 2 ]];
+  then
+    printf '%s/' "${parts[@]:1:1}"
   elif [[ ${#parts[@]} -gt 1 ]];
   then
     printf '%s/' "${parts[@]:0:1}"
@@ -101,26 +113,34 @@ function head_path() {
 }
 
 MESSAGE_FILE="$1"
-MESSAGE_TYPE="$2"
+MESSAGE_SOURCE="$2"
 
 debug_log "$(printf 'message file: %s\n' "$MESSAGE_FILE")"
 
-DEFAULT_MESSAGE="$(cat ${MESSAGE_FILE})"
-DEFAULT_TYPE=""
+MESSAGE_BODY=""
+MESSAGE_TYPE=""
+
+if [[ "${MESSAGE_FILE}" == "-" ]];
+then
+  echo -n 'message body: '
+  read -e MESSAGE_BODY
+else
+  MESSAGE_BODY="$(cat ${MESSAGE_FILE})"
+fi
 
 # split up default message into segments
-if [[ "${DEFAULT_MESSAGE}" =~ [a-z]+\([a-z\/]+\)\:[\ ]+[-a-zA-Z0-9\.\(\)]+ ]];
+if [[ "${MESSAGE_BODY}" =~ [a-z]+\([a-z\/]+\)\:[\ ]+[-a-zA-Z0-9\.\(\)]+ ]];
 then
   debug_log "default message is already conventional"
   exit 0
-elif [[ "${DEFAULT_MESSAGE}" =~ [a-z]+(\(\))*\:[\ ]+[-a-zA-Z0-9\.\(\)]+ ]];
+elif [[ "${MESSAGE_BODY}" =~ [a-z]+(\(\))*\:[\ ]+[-a-zA-Z0-9\.\(\)]+ ]];
 then
   debug_log "default message is missing scope"
-  DEFAULT_TYPE="$(echo "${DEFAULT_MESSAGE}" | sed 's/:.*$//' | sed 's/()//')"
-  DEFAULT_MESSAGE="$(echo "${DEFAULT_MESSAGE}" | sed 's/^.*://' | sed 's/^[ ]*//')"
+  MESSAGE_TYPE="$(echo "${MESSAGE_BODY}" | sed 's/:.*$//' | sed 's/()//')"
+  MESSAGE_BODY="$(echo "${DEFAULT_MESSAGE}" | sed 's/^.*://' | sed 's/^[ ]*//')"
 
-  debug_log "default type: ${DEFAULT_TYPE}"
-  debug_log "default message: ${DEFAULT_MESSAGE}"
+  debug_log "default type: ${MESSAGE_TYPE}"
+  debug_log "default message: ${MESSAGE_BODY}"
 fi
 
 # git ls-files -m for modified but unstaged
@@ -142,6 +162,7 @@ do
   # reduce filenames to <= 2 segments
   path="$(head_path "$file")"
   path="${path%/}"
+  debug_log "$(printf 'prefile: %s\n' "$path")"
 
   # post-filter truncated paths
   path="$(filter_scope "$path")"
@@ -161,7 +182,7 @@ debug_log "$(printf 'unique scopes: %s\n' "${UNIQUE_SCOPES[@]}")"
 GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 GIT_PREFIX="$(printf '%s\n' "${GIT_BRANCH}" | sed 's:/.*$::g')"
 
-COMMIT_TYPE="${DEFAULT_TYPE:-${GIT_PREFIX}}"
+COMMIT_TYPE="${MESSAGE_TYPE:-${GIT_PREFIX}}"
 COMMIT_MESSAGE=""
 
 debug_log "branch: $GIT_BRANCH"
@@ -170,18 +191,23 @@ debug_log "prefix: $COMMIT_TYPE"
 if [[ ${#UNIQUE_SCOPES[@]} -gt 1 ]];
 then
   debug_log "many scopes"
-  COMMIT_MESSAGE="${COMMIT_TYPE}: ${DEFAULT_MESSAGE}"
+  COMMIT_MESSAGE="${COMMIT_TYPE}: ${MESSAGE_BODY}"
 else
   if [[ -z "${UNIQUE_SCOPES[0]}" ]];
   then
     debug_log "empty scope"
-    COMMIT_MESSAGE="${COMMIT_TYPE}(???): ${DEFAULT_MESSAGE}"
+    COMMIT_MESSAGE="${COMMIT_TYPE}(???): ${MESSAGE_BODY}"
   else
     debug_log "single scope"
-    COMMIT_MESSAGE="${COMMIT_TYPE}(${UNIQUE_SCOPES[0]}): ${DEFAULT_MESSAGE}"
+    COMMIT_MESSAGE="${COMMIT_TYPE}(${UNIQUE_SCOPES[0]}): ${MESSAGE_BODY}"
   fi
 fi
 
 debug_log "message: $COMMIT_MESSAGE"
 
-echo "${COMMIT_MESSAGE}" > "${MESSAGE_FILE}"
+if [[ "${MESSAGE_FILE}" == "-" ]];
+then
+  echo "${COMMIT_MESSAGE}" > /dev/stdout
+else
+  echo "${COMMIT_MESSAGE}" > "${MESSAGE_FILE}"
+fi
