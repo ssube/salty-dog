@@ -3,11 +3,52 @@
 ###
 # This script will template conventional commit messages based on the currently staged file names, paths, and
 # branch name. Can be used as a prepare-commit-msg hook.
-#
-# TODO: do not add type(scope) if one already exists in message
-# TODO: replace scope aliases (README -> docs)
-# TODO: filter valid scope (allow list)
 ###
+
+SCOPE_ALIAS=(
+  'README.md:docs'    # with extension matches raw filename, pre-filter
+  'README:docs'       # without extension matches subdir or filename post-filter
+)
+
+SCOPE_ALLOW=(
+  'docs'
+  'src'
+  'scripts'
+)
+
+function filter_scope() {
+  local scope="${1}"
+  local allowed="${2:-FALSE}"
+
+  for alias in "${SCOPE_ALIAS[@]}"
+  do
+    local IFS=:
+    local parts
+    set -f
+    parts=( $alias )
+    set +f
+
+    # debug_log "alias: ${alias}"
+    if [[ "${parts[0]}" == "${scope}" ]];
+    then
+      scope="$(echo "${parts[1]}" | sed 's/^[ ]*//')"
+    fi
+  done
+
+  for allow in "${SCOPE_ALLOW[@]}"
+  do
+    # debug_log "allow: ${allow}"
+    if [[ "${allow}" == "${scope}" ]];
+    then
+      allowed=TRUE
+    fi
+  done
+
+  if [[ ${allowed} == TRUE ]];
+  then
+    printf '%s' "${scope}"
+  fi
+}
 
 function debug_log() {
   if [[ ! -z "${DEBUG:-}" ]];
@@ -70,11 +111,19 @@ MODIFIED_PATHS=()
 
 while IFS= read -r file
 do
+  # pre-filter the raw path with filename
+  file="$(filter_scope "$file" TRUE)"
+
+  # reduce filenames to <= 2 segments
   path="$(head_path "$file")"
   path="${path%/}"
+
+  # post-filter truncated paths
+  path="$(filter_scope "$path")"
+  MODIFIED_PATHS+=("$path")
+
   debug_log "$(printf 'file: %s\n' "$file")"
   debug_log "$(printf 'path: %s\n' "$path")"
-  MODIFIED_PATHS+=("$path")
 done <<< "${MODIFIED_FILES}"
 
 debug_log "$(printf 'paths: %d\n' "${#MODIFIED_PATHS[@]}")"
