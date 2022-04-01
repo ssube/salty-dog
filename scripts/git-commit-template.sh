@@ -3,18 +3,48 @@
 ###
 # This script will template conventional commit messages based on the currently staged file names, paths, and
 # branch name. Can be used as a prepare-commit-msg hook.
+#
+# TODO: support globs in aliases
 ###
 
 declare -A SCOPE_ALIAS
 SCOPE_ALIAS=(
   ['README.md']='docs'   # with extension matches raw filename, pre-filter
   ['README']='docs'      # without extension matches subdir or filename post-filter
+
+  ['.gitlab']='build'
+  ['.gitlab-ci.yml']='build'
+  ['Makefile']='build'
+
+  ['.codeclimate.yml']='config'
+  ['.dockerignore']='config'
+  ['.eslintrc.json']='config'
+  ['.github']='config'
+  ['.mdlrc']='config'
+  ['.npmignore']='config'
+  ['.npmrc']='config'
+  ['renovate.json']='config'
+  ['tsconfig.json']='config'
+
+  ['package.json']='deps'
+  ['yarn.lock']='deps'
+  ['vendor']='deps'
+
+  ['LICENSE.md']='docs'
+
+  ['Dockerfile.alpine']='image'
+  ['Dockerfile.stretch']='image'
 )
 
 SCOPE_ALLOW=(
+  'build'
+  'config'
+  'deps'
   'docs'
+  'image'
   'src'
   'scripts'
+  'test'
 )
 
 function filter_scope() {
