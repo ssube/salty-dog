@@ -2,10 +2,11 @@
 
 ###
 # This script will template conventional commit messages based on the currently staged file names, paths, and
-# branch name.
+# branch name. Can be used as a prepare-commit-msg hook.
 #
-# TODO: scope aliases (README -> docs)
-# TODO: valid scope list (filter)
+# TODO: do not add type(scope) if one already exists in message
+# TODO: replace scope aliases (README -> docs)
+# TODO: filter valid scope (allow list)
 ###
 
 function debug_log() {
@@ -18,8 +19,8 @@ function debug_log() {
 function head_path() {
   local IFS=/
   local parts
-  set -f      # Disable glob expansion
-  parts=( $@ )  # Deliberately unquoted
+  set -f          # Disable glob expansion
+  parts=( $@ )    # Deliberately unquoted
   set +f
 
   if [[ ${#parts[@]} -gt 2 ]];
@@ -29,14 +30,14 @@ function head_path() {
   then
     printf '%s/' "${parts[@]:0:1}"
   else
-    printf "${parts[0]%%.*}"
+    printf '%s' "${parts[0]%%.*}"
   fi
 }
 
 MESSAGE_FILE="$1"
 MESSAGE_TYPE="$2"
 
-debug_log "$(printf 'file: %s\n' "$1")"
+debug_log "$(printf 'message file: %s\n' "$MESSAGE_FILE")"
 
 # git ls-files -m for modified but unstaged
 MODIFIED_FILES="$(git diff --name-only --cached)"
@@ -54,7 +55,7 @@ do
   path="$(head_path "$file")"
   path="${path%/}"
   debug_log "$(printf 'file: %s\n' "$file")"
-	debug_log "$(printf 'path: %s\n' "$path")"
+  debug_log "$(printf 'path: %s\n' "$path")"
   MODIFIED_PATHS+=("$path")
 done <<< "${MODIFIED_FILES}"
 
@@ -81,13 +82,13 @@ then
   debug_log "many scopes"
   COMMIT_MESSAGE="${COMMIT_PREFIX}: ${DEFAULT_MESSAGE}"
 else
-  debug_log "single scope"
-  if [[ ! -z "${UNIQUE_SCOPES[0]}" ]];
+  if [[ -z "${UNIQUE_SCOPES[0]}" ]];
   then
-    COMMIT_MESSAGE="${COMMIT_PREFIX}(${UNIQUE_SCOPES[0]}): ${DEFAULT_MESSAGE}"
-  else
     debug_log "empty scope"
     COMMIT_MESSAGE="${COMMIT_PREFIX}(???): ${DEFAULT_MESSAGE}"
+  else
+    debug_log "single scope"
+    COMMIT_MESSAGE="${COMMIT_PREFIX}(${UNIQUE_SCOPES[0]}): ${DEFAULT_MESSAGE}"
   fi
 fi
 
