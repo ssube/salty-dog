@@ -1,11 +1,20 @@
 #! /bin/bash
 
 ###
-# This script will template conventional commit messages based on the currently staged file names, paths, and
-# branch name. Can be used as a prepare-commit-msg hook.
+# This script will add conventional commit fields to commit messages based on the staged files, branch name,
+# and any fields provided in the message.
+#
+# Can be used as a prepare-commit-msg hook. Committing with -m will run the hook without giving you a
+# chance to review the results, omitting -m will launch your $EDITOR. Prefixing the message with ~ will skip
+# the template altogether.
 #
 # TODO: support globs in aliases
 # TODO: combine shared prefixes (src/foo/bar and src/foo/bin share src/foo)
+#
+# Project-specific settings:
+#
+# - SCOPE_ALIAS: list of path and scope replacements
+# - SCOPE_ALLOW: list of allowed scopes (after ALIAS replacement)
 ###
 
 declare -A SCOPE_ALIAS
@@ -142,6 +151,17 @@ then
 
   debug_log "message type: ${MESSAGE_TYPE}"
   debug_log "message body: ${MESSAGE_BODY}"
+elif [[ "${MESSAGE_BODY}" =~ \~.+ ]];
+then
+  debug_log "unconventional message marker found"
+
+  if [[ "${MESSAGE_FILE}" != "-" ]];
+  then
+    sed -i '0,/./s/^.//' "${MESSAGE_FILE}"
+    debug_log "removed marker"
+  fi
+
+  exit 0
 fi
 
 # git ls-files -m for modified but unstaged
