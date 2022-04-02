@@ -13,6 +13,7 @@ SCOPE_ALIAS=(
   ['README.md']='docs'   # with extension matches raw filename, pre-filter
   ['README']='docs'      # without extension matches subdir or filename post-filter
 
+  # build
   ['.codeclimate.yml']='build'
   ['.eslintrc.json']='build'
   ['.github']='build'
@@ -24,13 +25,13 @@ SCOPE_ALIAS=(
   ['Makefile']='build'
   ['renovate.json']='build'
   ['tsconfig.json']='build'
-
+  # deps
   ['package.json']='deps'
   ['yarn.lock']='deps'
   ['vendor']='deps'
-
+  # docs
   ['LICENSE.md']='docs'
-
+  # image
   ['.dockerignore']='image'
   ['Dockerfile.alpine']='image'
   ['Dockerfile.stretch']='image'
@@ -87,7 +88,7 @@ function filter_scope() {
 function debug_log() {
   if [[ ! -z "${DEBUG:-}" ]];
   then
-    echo "${@}"
+    printf '%s\n' "${@}"
   fi
 }
 
@@ -122,25 +123,25 @@ MESSAGE_TYPE=""
 
 if [[ "${MESSAGE_FILE}" == "-" ]];
 then
-  echo -n 'message body: '
+  printf 'message body: '
   read -e MESSAGE_BODY
 else
   MESSAGE_BODY="$(cat ${MESSAGE_FILE})"
 fi
 
-# split up default message into segments
+# split up the existing message into segments, if any are present
 if [[ "${MESSAGE_BODY}" =~ [a-z]+\([a-z\/]+\)\:[\ ]+[-a-zA-Z0-9\.\(\)]+ ]];
 then
-  debug_log "default message is already conventional"
+  debug_log "message is already conventional"
   exit 0
 elif [[ "${MESSAGE_BODY}" =~ [a-z]+(\(\))*\:[\ ]+[-a-zA-Z0-9\.\(\)]+ ]];
 then
-  debug_log "default message is missing scope"
+  debug_log "message is missing scope"
   MESSAGE_TYPE="$(echo "${MESSAGE_BODY}" | sed 's/:.*$//' | sed 's/()//')"
-  MESSAGE_BODY="$(echo "${DEFAULT_MESSAGE}" | sed 's/^.*://' | sed 's/^[ ]*//')"
+  MESSAGE_BODY="$(echo "${MESSAGE_BODY}" | sed 's/^.*://' | sed 's/^[ ]*//')"
 
-  debug_log "default type: ${MESSAGE_TYPE}"
-  debug_log "default message: ${MESSAGE_BODY}"
+  debug_log "message type: ${MESSAGE_TYPE}"
+  debug_log "message body: ${MESSAGE_BODY}"
 fi
 
 # git ls-files -m for modified but unstaged
@@ -207,7 +208,7 @@ debug_log "message: $COMMIT_MESSAGE"
 
 if [[ "${MESSAGE_FILE}" == "-" ]];
 then
-  echo "${COMMIT_MESSAGE}" > /dev/stdout
+  printf '%s\n' "${COMMIT_MESSAGE}"
 else
-  echo "${COMMIT_MESSAGE}" > "${MESSAGE_FILE}"
+  printf '%s' "${COMMIT_MESSAGE}" > "${MESSAGE_FILE}"
 fi
