@@ -1,10 +1,14 @@
+import { mustGet } from '@apextoaster/js-utils';
 import { createLogger } from 'bunyan';
 import yargs from 'yargs';
 
 import { CONFIG_ARGS_NAME, CONFIG_ARGS_PATH, MODE, parseArgs } from './config/args.js';
 import { loadConfig } from './config/index.js';
 import { YamlParser } from './parser/YamlParser.js';
+import { Reporter } from './reporter/index.js';
+import { SummaryReporter } from './reporter/SummaryReporter.js';
 import { TableReporter } from './reporter/TableReporter.js';
+import { YamlReporter } from './reporter/YamlReporter.js';
 import { createRuleSources, loadRules } from './rule/load.js';
 import { createRuleSelector, resolveRules } from './rule/resolve.js';
 import { validateConfig } from './rule/validate.js';
@@ -17,6 +21,12 @@ const ARGS_START = 2;
 export const STATUS_SUCCESS = 0;
 export const STATUS_ERROR = 1;
 export const STATUS_MAX = 255;
+
+export const REPORTERS = new Map<string, new () => Reporter>([
+  ['summary', SummaryReporter],
+  ['table', TableReporter],
+  ['yaml', YamlReporter],
+]);
 
 export async function main(argv: Array<string>): Promise<number> {
   const { args, mode } = await parseArgs(argv.slice(ARGS_START));
@@ -83,8 +93,12 @@ export async function main(argv: Array<string>): Promise<number> {
     }
   }
 
+  // eslint-disable-next-line no-console
+  console.info('reporter', args.reporter, REPORTERS.keys(), REPORTERS.get(args.reporter));
+
   // invoke reporter
-  const reporter = new TableReporter();
+  const reporterClass = mustGet(REPORTERS, args.reporter);
+  const reporter = new reporterClass();
   const report = await reporter.report(ctx.results);
   logger.info(report);
 

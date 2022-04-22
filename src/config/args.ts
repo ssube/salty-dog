@@ -35,6 +35,7 @@ export interface ParsedArgs extends RuleSelector, RuleSources {
   dest: string;
   mode: string;
   mutate: boolean;
+  reporter: string;
   source: string;
 }
 
@@ -134,6 +135,12 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
       'include-tag': {
         ...RULE_OPTION,
         alias: ['t', 'tag'],
+      },
+      'reporter': {
+        alias: ['report'],
+        default: 'summary',
+        desc: 'Reporter format',
+        type: 'string',
       },
       'rule-file': {
         alias: ['r', 'rule', 'rules'],
