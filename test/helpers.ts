@@ -1,5 +1,6 @@
 import { LogLevel, NullLogger } from 'noicejs';
 
+import { RuleChange, RuleError } from '../src/rule/index.js';
 import { SchemaRule } from '../src/rule/SchemaRule.js';
 import { Document, Element } from '../src/source.js';
 import { VisitorContext } from '../src/visitor/VisitorContext.js';
@@ -35,4 +36,23 @@ export function makeElement(data: unknown): Element {
     document: makeDocument({}),
     index: 0,
   };
+}
+
+export function makeResults(names: Array<string>, changes: Array<RuleChange> = [], errors: Array<RuleError> = []) {
+  const rules = names.map((name) => new SchemaRule({
+    check: {},
+    desc: name,
+    level: LogLevel.Info,
+    name,
+    select: '',
+    tags: [],
+  }));
+
+  const results = rules.map((rule) => ({
+    changes,
+    errors,
+    rule,
+  }));
+
+  return { rules, results };
 }

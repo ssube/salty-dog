@@ -1,4 +1,4 @@
-import { getOrDefault, leftPad, mustExist, mustGet, setOrPush } from '@apextoaster/js-utils';
+import { getOrDefault, leftPad, mustGet, setOrPush } from '@apextoaster/js-utils';
 
 import { Rule, RuleResult } from '../rule/index.js';
 import { Reporter } from './index.js';
@@ -15,6 +15,8 @@ interface RuleCounts {
   rule: string;
 }
 
+export const ERROR_EMPTY_RESULT = 'no results to format';
+
 export class TableReporter implements Reporter {
   public async report(results: ReadonlyArray<RuleResult>): Promise<string> {
     const rules = new Map<Rule, RuleCounts>();
@@ -30,6 +32,11 @@ export class TableReporter implements Reporter {
     }
 
     const rows = Array.from(rules.values());
+
+    if (rows.length === 0) {
+      return ERROR_EMPTY_RESULT;
+    }
+
     return printTable(rows, ['rule', 'errors', 'changes'], {
       delimiter: {
         column: COL_DELIMITER,

@@ -7,7 +7,7 @@ export class YamlReporter implements Reporter {
     const parser = new YamlParser();
     const data = {
       changes: results.flatMap((r) => r.changes).map((c) => c.rule.name),
-      errors: results.flatMap((r) => r.errors).map((c) => c.rule.name),
+      errors: results.flatMap((r) => r.errors).map((e) => e.rule.name),
     };
     return parser.dump({
       data,
