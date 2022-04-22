@@ -29,9 +29,15 @@ describe('table reporter', () => {
     const reporter = new TableReporter();
     const report = await reporter.report(results);
 
-    for (const line of report.split('\n')) {
-      expect(line).to.match(/^|/);
+    const lines = report.split('\n');
+    const lastLine = lines.pop();
+
+    // eslint-disable-next-line no-console
+    console.log(lines.length, lines);
+    for (const line of lines) {
+      expect(line).to.match(/^[|]/);
     }
+    expect(lastLine).to.equal('');
   });
 });
 
