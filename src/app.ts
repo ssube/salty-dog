@@ -93,9 +93,6 @@ export async function main(argv: Array<string>): Promise<number> {
     }
   }
 
-  // eslint-disable-next-line no-console
-  console.info('reporter', args.reporter, REPORTERS.keys(), REPORTERS.get(args.reporter));
-
   // invoke reporter
   const reporterClass = mustGet(REPORTERS, args.reporter);
   const reporter = new reporterClass();
