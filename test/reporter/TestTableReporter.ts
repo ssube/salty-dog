@@ -32,8 +32,6 @@ describe('table reporter', () => {
     const lines = report.split('\n');
     const lastLine = lines.pop();
 
-    // eslint-disable-next-line no-console
-    console.log(lines.length, lines);
     for (const line of lines) {
       expect(line).to.match(/^[|]/);
     }
