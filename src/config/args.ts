@@ -112,7 +112,7 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
         type: 'boolean',
       },
       'dest': {
-        alias: ['d'],
+        alias: ['d', 'destination'],
         default: '-',
         type: 'string',
       },
