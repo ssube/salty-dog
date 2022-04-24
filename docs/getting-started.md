@@ -53,10 +53,12 @@ You can create an alias for this container and mount the current working directo
 
 _Note:_ using volumes with Podman on MacOS [requires an SSHFS mount](https://dalethestirling.github.io/Macos-volumes-with-Podman/).
 
+You can also create your own container `FROM docker.io/ssube/salty-dog` in order to include your own rules or install
+additional modules.
+
 Container images are available for each branch and release tag. When using the container for CI, you do not need to
 install NodeJS elsewhere, and should pin your image reference to a specific tag - tools like [RenovateBot](https://github.com/renovatebot/renovate)
-can automatically update those tags in a testable way. You can also create your own container
-`FROM docker.io/ssube/salty-dog` in order to include your own rules or install additional modules.
+can automatically update those tags in a testable way.
 
 ### Formatting The Output
 
@@ -131,13 +133,27 @@ multiple projects.
 
 ### Using Within Gitlab CI
 
-Using the Docker or Kubernetes executors, define a job like:
+Using the Docker or Kubernetes executors, you should define a job using the latest image tag and run `salty-dog` as
+a global command:
 
 ```yaml
 validate:
-  image: docker.io/ssube/salty-dog
+  image: docker.io/ssube/salty-dog:v0.9.1
   script:
-    - salty-dog --stuff
+    - salty-dog --rules /salty-dog/rules/kubernetes.yml --tag kubernetes --source ${CI_PROJECT_DIR}/file-to-validate.yml 2> >(bunyan)
+```
+
+Redirecting standard error through bunyan will pretty-print the logs, while leaving the output as plain YAML:
+
+```none
+[2022-04-24T22:31:15.189Z]  INFO: salty-dog/23 on 71f0bb07fa7e: rule passed (rule=salty-dog-rule)
+[2022-04-24T22:31:15.189Z]  INFO: salty-dog/23 on 71f0bb07fa7e: rule passed (rule=salty-dog-rule)
+[2022-04-24T22:31:15.200Z]  INFO: salty-dog/23 on 71f0bb07fa7e: rule passed (rule=salty-dog-source)
+[2022-04-24T22:31:15.200Z]  INFO: salty-dog/23 on 71f0bb07fa7e: all rules passed
+name: salty-dog-meta
+definitions:
+  log-level:
+    type: string
 ```
 
 ## Loading Rules
