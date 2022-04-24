@@ -5,12 +5,12 @@
 - [Getting Started With salty-dog](#getting-started-with-salty-dog)
   - [Contents](#contents)
   - [Installing & Running](#installing--running)
-    - [Formatting The Output](#formatting-the-output)
     - [Installing npm Package](#installing-npm-package)
     - [Using Within Gitlab CI](#using-within-gitlab-ci)
   - [Loading Rules](#loading-rules)
     - [Including & Excluding Rules](#including--excluding-rules)
   - [Using Check Mode](#using-check-mode)
+    - [Formatting The Output](#formatting-the-output)
     - [Redirecting Source & Destination](#redirecting-source--destination)
   - [Using Fix Mode](#using-fix-mode)
     - [Using Defaults With Alternatives](#using-defaults-with-alternatives)
@@ -59,56 +59,6 @@ additional modules.
 Container images are available for each branch and release tag. When using the container for CI, you do not need to
 install NodeJS elsewhere, and should pin your image reference to a specific tag - tools like [RenovateBot](https://github.com/renovatebot/renovate)
 can automatically update those tags in a testable way.
-
-### Formatting The Output
-
-Logs from `salty-dog` are structured JSON and will be written to standard error by default, but you can configure the
-output streams in order to write them to a file or standard output instead. The raw JSON is not the easiest to read
-without pretty-printing, and there are a few tools that can help. The container image contains both [`bunyan`](https://github.com/trentm/node-bunyan)
-and [`jq`](https://stedolan.github.io/jq/), for formatting and filtering, respectively.
-
-```shell
-> salty-dog --source test/examples/kubernetes-resources-some.yml --rules rules/kubernetes.yml --tag kubernetes --dest /tmp/valid-app.yml 2>&1 | yarn bunyan
-
-[2022-04-24T22:16:17.236Z]  INFO: salty-dog/1365 on ceebfd6fbf03: version info
-    build: {
-      "job": "",
-      "node": "v16.14.2",
-      "runner": ""
-    }
-    --
-    git: {
-      "branch": "master",
-      "commit": "a8bfb58d2ddbc12b040eaa39ee36abfa598e30e6"
-    }
-    --
-    package: {
-      "name": "salty-dog",
-      "version": "0.9.1"
-    }
-...
-[2022-04-24T22:16:02.280Z]  INFO: salty-dog/1325 on ceebfd6fbf03: no errors to report
-[2022-04-24T22:16:02.280Z]  INFO: salty-dog/1325 on ceebfd6fbf03: all rules passed
-
-# or with jq
-> salty-dog --source test/examples/kubernetes-resources-some.yml --rules rules/kubernetes.yml --tag kubernetes --dest /tmp/valid-app.yml 2>&1 | jq .
-
-{
-  "name": "salty-dog",
-  "hostname": "4c8d1249ca96",
-  "pid": 1,
-  "level": 30,
-  "build": {
-    "job": "",
-    "node": "v16.14.2",
-    "runner": ""
-  },
-...
-  "msg": "some rules failed",
-  "time": "2022-04-24T20:51:08.597Z",
-  "v": 0
-}
-```
 
 ### Installing npm Package
 
@@ -229,6 +179,56 @@ and if the source documents are valid, they will be written out to the destinati
     kubernetes-resources: 1
     kubernetes-labels: 1
 [2022-04-24T20:59:17.374Z] ERROR: salty-dog/175 on ceebfd6fbf03: some rules failed (count=2)
+```
+
+### Formatting The Output
+
+Logs from `salty-dog` are structured JSON and will be written to standard error by default, but you can configure the
+output streams in order to write them to a file or standard output instead. The raw JSON is not the easiest to read
+without pretty-printing, and there are a few tools that can help. The container image contains both [`bunyan`](https://github.com/trentm/node-bunyan)
+and [`jq`](https://stedolan.github.io/jq/), for formatting and filtering, respectively.
+
+```shell
+> salty-dog --source test/examples/kubernetes-resources-some.yml --rules rules/kubernetes.yml --tag kubernetes --dest /tmp/valid-app.yml 2>&1 | yarn bunyan
+
+[2022-04-24T22:16:17.236Z]  INFO: salty-dog/1365 on ceebfd6fbf03: version info
+    build: {
+      "job": "",
+      "node": "v16.14.2",
+      "runner": ""
+    }
+    --
+    git: {
+      "branch": "master",
+      "commit": "a8bfb58d2ddbc12b040eaa39ee36abfa598e30e6"
+    }
+    --
+    package: {
+      "name": "salty-dog",
+      "version": "0.9.1"
+    }
+...
+[2022-04-24T22:16:02.280Z]  INFO: salty-dog/1325 on ceebfd6fbf03: no errors to report
+[2022-04-24T22:16:02.280Z]  INFO: salty-dog/1325 on ceebfd6fbf03: all rules passed
+
+# or with jq
+> salty-dog --source test/examples/kubernetes-resources-some.yml --rules rules/kubernetes.yml --tag kubernetes --dest /tmp/valid-app.yml 2>&1 | jq .
+
+{
+  "name": "salty-dog",
+  "hostname": "4c8d1249ca96",
+  "pid": 1,
+  "level": 30,
+  "build": {
+    "job": "",
+    "node": "v16.14.2",
+    "runner": ""
+  },
+...
+  "msg": "some rules failed",
+  "time": "2022-04-24T20:51:08.597Z",
+  "v": 0
+}
 ```
 
 ### Redirecting Source & Destination
