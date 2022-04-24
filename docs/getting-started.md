@@ -24,7 +24,7 @@
 
 ## Installing & Running
 
-You can run salty-dog from a container or install it as an npm package. The container is the recommended method and
+You can run `salty-dog` from a container or install it as an npm package. The container is the recommended method and
 comes complete with the recommended version of node and default rules.
 
 ```shell
@@ -60,15 +60,36 @@ can automatically update those tags in a testable way. You can also create your 
 
 ### Formatting The Output
 
-Logs from salty-dog are structured JSON and will be written to standard error by default, but you can configure the
+Logs from `salty-dog` are structured JSON and will be written to standard error by default, but you can configure the
 output streams in order to write them to a file or standard output instead. The raw JSON is not the easiest to read
 without pretty-printing, and there are a few tools that can help. The container image contains both [`bunyan`](https://github.com/trentm/node-bunyan)
 and [`jq`](https://stedolan.github.io/jq/), for formatting and filtering, respectively.
 
-TODO: commands to run `salty-dog | jq | bunyan` all within the container
-
 ```shell
-> salty-dog --source test/examples/kubernetes-resources-some.yml --rules rules/kubernetes.yml --tag kubernetes 2>&1 | jq .
+> salty-dog --source test/examples/kubernetes-resources-some.yml --rules rules/kubernetes.yml --tag kubernetes --dest /tmp/valid-app.yml 2>&1 | yarn bunyan
+
+[2022-04-24T22:16:17.236Z]  INFO: salty-dog/1365 on ceebfd6fbf03: version info
+    build: {
+      "job": "",
+      "node": "v16.14.2",
+      "runner": ""
+    }
+    --
+    git: {
+      "branch": "master",
+      "commit": "a8bfb58d2ddbc12b040eaa39ee36abfa598e30e6"
+    }
+    --
+    package: {
+      "name": "salty-dog",
+      "version": "0.9.1"
+    }
+...
+[2022-04-24T22:16:02.280Z]  INFO: salty-dog/1325 on ceebfd6fbf03: no errors to report
+[2022-04-24T22:16:02.280Z]  INFO: salty-dog/1325 on ceebfd6fbf03: all rules passed
+
+# or with jq
+> salty-dog --source test/examples/kubernetes-resources-some.yml --rules rules/kubernetes.yml --tag kubernetes --dest /tmp/valid-app.yml 2>&1 | jq .
 
 {
   "name": "salty-dog",
@@ -99,11 +120,10 @@ exports most of the symbols for usage as a library.
 Import the main module using:
 
 ```typescript
-// TODO: use packaged module exports
 import { main } from 'salty-dog/app';
 ```
 
-Unless you want to ship salty-dog as a production library without bundling, it should typically be installed as a
+Unless you want to ship `salty-dog` as a production library without bundling, it should typically be installed as a
 development dependency.
 
 Installing as a global package is not recommended, since it makes managing versions difficult and updates will effect
@@ -122,7 +142,7 @@ validate:
 
 ## Loading Rules
 
-Like many lint tools, salty-dog checks your documents against a set of rules. Each rule uses a different schema,
+Like many lint tools, `salty-dog` checks your documents against a set of rules. Each rule uses a different schema,
 and may only check sub-paths within the document. Rules have a brief name used in the logs, a friendly
 description meant for people, a severity level, and some tags. You can easily include a group of related rules by
 giving them the same tag.
@@ -201,13 +221,13 @@ Source and destination can each be a file or standard input/output stream. If no
 standard streams for use with shell pipes:
 
 ```shell
-> wget https://example.com/very-trusted-app.yml | salty-dog --rules rules/kubernetes.yml --tag kubernetes | kubectl apply -f -
+> wget https://example.com/trusted-app.yml | salty-dog --rules rules/kubernetes.yml --tag kubernetes | kubectl apply -f -
 ```
 
 The mode and options can also be explicitly set, so that short command is equivalent to:
 
 ```shell
-> wget https://example.com/very-trusted-app.yml | salty-dog check --source - --dest - --rules rules/kubernetes.yml --tag kubernetes | kubectl apply -f -
+> wget https://example.com/trusted-app.yml | salty-dog check --source - --dest - --rules rules/kubernetes.yml --tag kubernetes | kubectl apply -f -
 ```
 
 To read the input from a file, set the `--source` path:
@@ -219,7 +239,7 @@ To read the input from a file, set the `--source` path:
 To write the output to a file, set the `--destination` path:
 
 ```shell
-> wget https://example.com/very-trusted-app.yml | salty-dog --rules rules/kubernetes.yml --tag kubernetes --dest /tmp/valid-app.yml
+> wget https://example.com/trusted-app.yml | salty-dog --rules rules/kubernetes.yml --tag kubernetes --dest /tmp/valid-app.yml
 ```
 
 Since output and logs are written to standard output and error, respectively, shell redirection works normally. To
@@ -239,26 +259,26 @@ Using the `kubernetes-container-pull-policy` rule as an example, you can add a d
 are missing their own. Modifying the default rule to include a `default`:
 
 ```yaml
-  - name: kubernetes-container-pull-policy
-    desc: all containers should have a pull policy
-    level: info
-    tags:
-      - kubernetes
-      - image
-      - optional
+- name: kubernetes-container-pull-policy
+  desc: all containers should have a pull policy
+  level: info
+  tags:
+    - kubernetes
+    - image
+    - optional
 
-    select: '$..containers.*'
-    check:
-      type: object
-      required: [image, imagePullPolicy]
-      properties:
-        imagePullPolicy:
-          type: string
-          default: IfNotPresent     # this line has been added
-          enum:
-            - Always
-            - IfNotPresent
-            - Never
+  select: '$..containers.*'
+  check:
+    type: object
+    required: [image, imagePullPolicy]
+    properties:
+      imagePullPolicy:
+        type: string
+        default: IfNotPresent     # this line has been added
+        enum:
+          - Always
+          - IfNotPresent
+          - Never
 ```
 
 Then running with a brief pod spec that does not have the `imagePullPolicy` field:
@@ -312,7 +332,7 @@ spec:
 
 ### Using Defaults With Alternatives
 
-JSON schema supports a few alternative keywords, such as `allOf`, `anyOf`, and `oneOf`. salty-dog uses
+JSON schema supports a few alternative keywords, such as `allOf`, `anyOf`, and `oneOf`. `salty-dog` uses
 [the ajv library](https://ajv.js.org/guide/modifying-data.html) to validate schemas and insert defaults. Fix mode is
 specific to ajv and not part of the JSON schema spec, and so may not be portable to other tools - use with care.
 
@@ -396,19 +416,20 @@ rule checks to make sure none of them exist.
 ## Other Examples
 
 Much of this guide uses Kubernetes resources as examples, but there are many other JSON and YAML formats that
-desperately need schema validation. salty-dog should support most of them, although it cannot parse files that usex
+desperately need schema validation. `salty-dog` should support most of them, although it cannot parse files that use
 custom YAML schema extensions, such as Gitlab's `!reference`.
 
 ### Checking Grafana Dashboard Tags
 
-To validate a kubernetes YAML file before applying it, in the same command, run:
+Since YAML is a superset of JSON, `salty-dog` can validate JSON files equally well. If you want to use fix mode and
+need the output to be in JSON, you will need to use [a tool like `yq`](https://mikefarah.gitbook.io/yq/usage/convert#encode-json-simple)
+to encode the output - `salty-dog` does not yet support JSON output directly.
 
-```shell
-> salty-dog --source foo.yaml --rules kubernetes.yml --tag kubernetes | kubectl apply -f -
+```yaml
+> salty-dog check --source ./dashboards/nodes.json --rules rules/grafana.yml --tag grafana | yq -o=json '.'
+# or for older versions of yq
+> salty-dog check --source ./dashboards/nodes.json --rules rules/grafana.yml --tag grafana | yq '.'
 ```
-
-If the resources do not match the rules, `salty-dog` will exit with an error and will not print the document, so
-nothing will be applied. If they are valid, or can be made valid by inserting defaults, then they will be applied.
 
 ### Checking salty-dog Rules
 
