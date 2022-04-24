@@ -69,14 +69,14 @@ exports most of the symbols for usage as a library.
 > yarn add -D salty-dog
 ```
 
+Unless you want to ship `salty-dog` as a production library without bundling, it should typically be installed as a
+development dependency.
+
 Import the main module using:
 
 ```typescript
 import { main } from 'salty-dog/app';
 ```
-
-Unless you want to ship `salty-dog` as a production library without bundling, it should typically be installed as a
-development dependency.
 
 Installing as a global package is not recommended, since it makes managing versions difficult and updates will effect
 multiple projects.
