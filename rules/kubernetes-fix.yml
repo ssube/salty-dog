@@ -1,0 +1,23 @@
+name: kubernetes-fix
+rules:
+  - name: kubernetes-container-pull-policy
+    desc: all containers should have a pull policy
+    level: info
+    tags:
+      - kubernetes
+      - image
+      - optional
+
+    select: '$..containers.*'
+    check:
+      type: object
+      required: [image, imagePullPolicy]
+      properties:
+        imagePullPolicy:
+          type: string
+          default: IfNotPresent
+          enum:
+            - Always
+            - IfNotPresent
+            - Never
+
