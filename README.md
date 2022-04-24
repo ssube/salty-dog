@@ -4,44 +4,11 @@
 select parts of the document, supports multiple documents in the same stream or file, and can insert defaults during
 validation.
 
-## Getting Started
-
-`salty-dog` is distributed as both a Docker container and an npm package, so it can be installed or pulled:
-
-```shell
-# docker image
-> docker pull ssube/salty-dog:master
-
-# npm project install
-> yarn add -D salty-dog
-
-# npm global install
-> yarn global add salty-dog
-```
-
-**Note:** while the container is the preferred way of running `salty-dog`, it has a serious limitation: `docker run`
-combines `stdout` and `stderr`, making it difficult to separate logs and the output document. Writing either the logs
-or data to a file works around this.
-
-To download, validate, and apply a Kubernetes resource:
-
-```shell
-> curl https://raw.githubusercontent.com/ssube/k8s-shards/master/roles/apps/gitlab/server/templates/ingress.yml | \
-    salty-dog \
-      --rules rules/kubernetes.yml \
-      --source - \
-      --tag kubernetes | \
-    kubectl apply --dry-run -f -
-
-...
-{"name":"salty-dog","hostname":"cerberus","pid":7860,"level":30,"msg":"all rules passed","time":"2019-06-16T02:04:37.797Z","v":0}
-ingress.extensions/gitlab created (dry run)
-```
+[Check out the getting started guide](./docs/getting-started.md).
 
 ## Contents
 
 - [Salty Dog](#salty-dog)
-  - [Getting Started](#getting-started)
   - [Contents](#contents)
   - [Status](#status)
   - [Releases](#releases)
