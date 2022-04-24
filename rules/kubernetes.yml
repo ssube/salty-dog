@@ -137,13 +137,14 @@ rules:
       type: object
       required: [image, imagePullPolicy]
       properties:
+        image:
+          type: string
         imagePullPolicy:
           type: string
           enum:
             - Always
             - IfNotPresent
             - Never
-
 
   - name: kubernetes-image-latest
     desc: images should never use :latest tag
