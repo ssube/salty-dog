@@ -28,7 +28,8 @@
     "test": "test"
   },
   "exports": {
-    "app": "./out/src/app.js"
+    "./app": "./out/src/app.js",
+    "./bundle": "./out/bundle/index.cjs"
   },
   "scripts": {
     "build": "make",
