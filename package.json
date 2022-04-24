@@ -27,6 +27,9 @@
     "doc": "docs",
     "test": "test"
   },
+  "exports": {
+    "app": "./out/src/app.js"
+  },
   "scripts": {
     "build": "make",
     "test": "make test"

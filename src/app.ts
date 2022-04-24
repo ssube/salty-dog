@@ -17,6 +17,19 @@ import { VERSION_INFO } from './version.js';
 import { RuleVisitor } from './visitor/RuleVisitor.js';
 import { VisitorContext } from './visitor/VisitorContext.js';
 
+// re-exports
+export { YamlParser } from './parser/YamlParser.js';
+export { SummaryReporter } from './reporter/SummaryReporter.js';
+export { TableReporter } from './reporter/TableReporter.js';
+export { YamlReporter } from './reporter/YamlReporter.js';
+export { createRuleSources, loadRules } from './rule/load.js';
+export { createRuleSelector, resolveRules } from './rule/resolve.js';
+export { validateConfig } from './rule/validate.js';
+export { readSource, writeSource } from './source.js';
+export { VERSION_INFO } from './version.js';
+export { RuleVisitor } from './visitor/RuleVisitor.js';
+export { VisitorContext } from './visitor/VisitorContext.js';
+
 const ARGS_START = 2;
 export const STATUS_SUCCESS = 0;
 export const STATUS_ERROR = 1;
