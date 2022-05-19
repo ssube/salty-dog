@@ -69,7 +69,7 @@ lint: node_modules
 MOCHA_ARGS := --async-only \
 	--check-leaks \
 	--forbid-only \
-	--require source-map-support \
+	--require source-map-support/register \
 	--require out/test/setup.js \
 	--recursive \
 	--sort
