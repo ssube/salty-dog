@@ -2,6 +2,8 @@
 
 IMAGE_OPTIONS ?=
 
+ci-full: ci test-examples test-rules
+
 cover-fixup: ## run mocha unit tests with coverage reports
 cover-fixup: cover
 	sed -i $(TARGET_PATH)/coverage/lcov.info \

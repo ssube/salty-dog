@@ -16,7 +16,7 @@ build-node:
     - .build-node
 
   script:
-    - make ci
+    - make ci-full
 
   artifacts:
     when: always
