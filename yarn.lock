@@ -1936,7 +1936,7 @@ fs-extra@~7.0.1:
     jsonfile "^4.0.0"
     universalify "^0.1.0"
 
-fs-monkey@1.0.3:
+fs-monkey@^1.0.3:
   version "1.0.3"
   resolved "https://artifacts.apextoaster.com/repository/group-npm/fs-monkey/-/fs-monkey-1.0.3.tgz#ae3ac92d53bb328efe0e9a1d9541f6ad8d48e2d3"
   integrity sha512-cybjIfiiE+pTWicSCLFHSrXZ6EilF30oh91FDP9S2B051prEa7QWfrVTQm10/dDpswBDXZugPa1Ogu8Yh+HV0Q==
@@ -2831,12 +2831,12 @@ map-obj@^4.0.0:
   resolved "https://artifacts.apextoaster.com/repository/group-npm/map-obj/-/map-obj-4.1.0.tgz#b91221b542734b9f14256c0132c897c5d7256fd5"
   integrity sha512-glc9y00wgtwcDmp7GaE/0b0OnxpNJsVf3ael/An6Fe2Q51LLwN1er6sdomLRzz5h0+yMpiYLhWYF5R7HeqVd4g==
 
-memfs@3.4.4:
-  version "3.4.4"
-  resolved "https://artifacts.apextoaster.com/repository/group-npm/memfs/-/memfs-3.4.4.tgz#e8973cd8060548916adcca58a248e7805c715e89"
-  integrity sha512-W4gHNUE++1oSJVn8Y68jPXi+mkx3fXR5ITE/Ubz6EQ3xRpCN5k2CQ4AUR8094Z7211F876TyoBACGsIveqgiGA==
+memfs@3.4.6:
+  version "3.4.6"
+  resolved "https://artifacts.apextoaster.com/repository/group-npm/memfs/-/memfs-3.4.6.tgz#74097983d27c82b973665885dc75f27a65174510"
+  integrity sha512-rH9mjopto6Wkr7RFuH9l9dk3qb2XGOcYKr7xMhaYqfzuJqOqhRrcFvfD7JMuPj6SLmPreh5+6eAuv36NFAU+Mw==
   dependencies:
-    fs-monkey "1.0.3"
+    fs-monkey "^1.0.3"
 
 meow@^3.3.0:
   version "3.7.0"
