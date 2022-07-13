@@ -45,9 +45,10 @@ validation.
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=ssube_salty-dog&metric=ncloc)](https://sonarcloud.io/dashboard?id=ssube_salty-dog)
 [![Test coverage](https://codecov.io/gh/ssube/salty-dog/branch/master/graph/badge.svg)](https://codecov.io/gh/ssube/salty-dog)
 [![Technical debt ratio](https://img.shields.io/codeclimate/tech-debt/ssube/salty-dog.svg)](https://codeclimate.com/github/ssube/salty-dog/trends/technical_debt)
+
 [![Maintainability score](https://api.codeclimate.com/v1/badges/5d4326d6f68a2fa137cd/maintainability)](https://codeclimate.com/github/ssube/salty-dog/maintainability)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/ssube/salty-dog.svg?logo=lgtm)](https://lgtm.com/projects/g/ssube/salty-dog/context:javascript)
 [![Quality issues](https://img.shields.io/codeclimate/issues/ssube/salty-dog.svg)](https://codeclimate.com/github/ssube/salty-dog/issues)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/ssube/salty-dog.svg?logo=lgtm)](https://lgtm.com/projects/g/ssube/salty-dog/context:javascript)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/ssube/salty-dog.svg)](https://lgtm.com/projects/g/ssube/salty-dog/alerts/)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fssube%2Fsalty-dog.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fssube%2Fsalty-dog?ref=badge_shield)
 
