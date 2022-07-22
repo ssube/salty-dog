@@ -73,7 +73,7 @@
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-mocha": "10.1.0",
     "eslint-plugin-no-null": "1.0.2",
-    "eslint-plugin-sonarjs": "0.13.0",
+    "eslint-plugin-sonarjs": "0.14.0",
     "js-yaml": "4.1.0",
     "jsonpath-plus": "7.0.0",
     "lodash": "4.17.21",
