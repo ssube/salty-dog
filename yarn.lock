@@ -492,10 +492,10 @@
   resolved "https://artifacts.apextoaster.com/repository/group-npm/@types/node/-/node-12.20.24.tgz#c37ac69cb2948afb4cef95f424fa0037971a9a5c"
   integrity sha512-yxDeaQIAJlMav7fH5AQqPH1u8YIuhYJXYBzxaQ4PifsU0GDO38MSdmEDeRlIxrKbC6NbEaaEHDanWb+y30U8SQ==
 
-"@types/node@18.11.5":
-  version "18.11.5"
-  resolved "https://artifacts.apextoaster.com/repository/group-npm/@types/node/-/node-18.11.5.tgz#1bc94cf2f9ab5fe33353bc7c79c797dcc5325bef"
-  integrity sha512-3JRwhbjI+cHLAkUorhf8RnqUbFXajvzX4q6fMn5JwkgtuwfYtRQYI3u4V92vI6NJuTsbBQWWh3RZjFsuevyMGQ==
+"@types/node@18.11.7":
+  version "18.11.7"
+  resolved "https://artifacts.apextoaster.com/repository/group-npm/@types/node/-/node-18.11.7.tgz#8ccef136f240770c1379d50100796a6952f01f94"
+  integrity sha512-LhFTglglr63mNXUSRYD8A+ZAIu5sFqNJ4Y2fPuY7UlrySJH87rRRlhtVmMHplmfk5WkoJGmDjE9oiTfyX94CpQ==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
