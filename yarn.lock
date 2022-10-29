@@ -2903,10 +2903,10 @@ map-obj@^4.0.0:
   resolved "https://artifacts.apextoaster.com/repository/group-npm/map-obj/-/map-obj-4.1.0.tgz#b91221b542734b9f14256c0132c897c5d7256fd5"
   integrity sha512-glc9y00wgtwcDmp7GaE/0b0OnxpNJsVf3ael/An6Fe2Q51LLwN1er6sdomLRzz5h0+yMpiYLhWYF5R7HeqVd4g==
 
-memfs@3.4.8:
-  version "3.4.8"
-  resolved "https://artifacts.apextoaster.com/repository/group-npm/memfs/-/memfs-3.4.8.tgz#4204fbd4cb72e2bbcf5941d784c6b6ce2be3dd52"
-  integrity sha512-E8QAFfd4csESWOqKIpN+khILPFSAZwPR9S+DO/5UtJNcuanF1jLZz0oWUAPF7xd2c1r6dGjGx+jH1st+MFWufA==
+memfs@3.4.9:
+  version "3.4.9"
+  resolved "https://artifacts.apextoaster.com/repository/group-npm/memfs/-/memfs-3.4.9.tgz#403bb953776d72fef4e39e1197a25ffa156d143a"
+  integrity sha512-3rm8kbrzpUGRyPKSGuk387NZOwQ90O4rI9tsWQkzNW7BLSnKGp23RsEsKK8N8QVCrtJoAMqy3spxHC4os4G6PQ==
   dependencies:
     fs-monkey "^1.0.3"
 
