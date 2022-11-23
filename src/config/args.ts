@@ -1,4 +1,5 @@
-import yargs, { Options } from 'yargs';
+import { LogLevel } from 'noicejs';
+import yargs from 'yargs';
 
 import { RuleSources } from '../rule/load.js';
 import { RuleSelector } from '../rule/resolve.js';
@@ -14,27 +15,14 @@ export enum MODE {
 export const CONFIG_ARGS_NAME = 'config-name';
 export const CONFIG_ARGS_PATH = 'config-path';
 
-const RULE_OPTION: Options = {
-  default: [],
-  group: 'Rules:',
-  type: 'array',
-};
-
-export interface Args {
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  args: any;
-  mode: string;
-}
-
 export interface ParsedArgs extends RuleSelector, RuleSources {
   [CONFIG_ARGS_NAME]: string;
-  [CONFIG_ARGS_PATH]: string;
-  coerce: boolean;
+  [CONFIG_ARGS_PATH]: Array<string>;
+  coerce?: boolean;
   count: boolean;
-  defaults: boolean;
+  defaults?: boolean;
   dest: string;
-  mode: string;
-  mutate: boolean;
+  mutate?: boolean;
   reporter: string;
   source: string;
 }
@@ -50,7 +38,8 @@ export interface ParseResults {
 export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
   let mode: MODE = MODE.check;
 
-  const parser = yargs(argv).usage('Usage: salty-dog <mode> [options]')
+  const parser = yargs(argv)
+    .usage('Usage: salty-dog <mode> [options]')
     .command({
       command: ['check', '*'],
       describe: 'validate the source documents',
@@ -101,7 +90,7 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
         type: 'string',
       },
       [CONFIG_ARGS_PATH]: {
-        default: [],
+        default: [] as Array<string>,
         group: 'Config:',
         type: 'array',
       },
@@ -116,25 +105,43 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
         default: '-',
         type: 'string',
       },
-      'exclude-level': RULE_OPTION,
-      'exclude-name': RULE_OPTION,
-      'exclude-tag': RULE_OPTION,
+      'exclude-level': {
+        default: [] as Array<LogLevel>,
+        group: 'Rules:',
+        type: 'array',
+      },
+      'exclude-name': {
+        default: [] as Array<string>,
+        group: 'Rules:',
+        type: 'array',
+      },
+      'exclude-tag': {
+        default: [] as Array<string>,
+        group: 'Rules:',
+        type: 'array',
+      },
       'format': {
         alias: ['f'],
         default: 'yaml',
         type: 'string',
       },
       'include-level': {
-        ...RULE_OPTION,
         alias: ['l', 'level'],
+        default: [] as Array<LogLevel>,
+        group: 'Rules:',
+        type: 'array',
       },
       'include-name': {
-        ...RULE_OPTION,
         alias: ['n', 'name'],
+        default: [] as Array<string>,
+        group: 'Rules:',
+        type: 'array',
       },
       'include-tag': {
-        ...RULE_OPTION,
         alias: ['t', 'tag'],
+        default: [] as Array<string>,
+        group: 'Rules:',
+        type: 'array',
       },
       'reporter': {
         alias: ['report'],
@@ -171,10 +178,7 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
     .version(VERSION_INFO.package.version)
     .alias('version', 'v');
 
-  // @TODO: this should not need a cast but the parser's type omits command options and doesn't expose camelCase
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  const args = parser.parse(argv) as any;
-
+  const args = await parser.parse(argv);
   return {
     args,
     mode,

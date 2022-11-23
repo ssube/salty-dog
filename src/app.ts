@@ -1,4 +1,4 @@
-import { mustGet } from '@apextoaster/js-utils';
+import { mustDefault, mustGet } from '@apextoaster/js-utils';
 import { createLogger } from 'bunyan';
 import yargs from 'yargs';
 
@@ -58,9 +58,9 @@ export async function main(argv: Array<string>): Promise<number> {
   const ctx = new VisitorContext({
     logger,
     schemaOptions: {
-      coerce: args.coerce,
-      defaults: args.defaults,
-      mutate: args.mutate,
+      coerce: mustDefault(args.coerce, false),
+      defaults: mustDefault(args.defaults, true),
+      mutate:  mustDefault(args.mutate, true),
     },
   });
 
