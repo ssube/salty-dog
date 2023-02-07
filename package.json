@@ -2,6 +2,11 @@
   "name": "salty-dog",
   "version": "0.9.1",
   "description": "Rule-based JSON/YAML validator using JSON schemas",
+  "homepage": "https://github.com/ssube/salty-dog",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ssube/salty-dog.git"
+  },
   "keywords": [
     "cli",
     "json",
