@@ -2,6 +2,51 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.2](https://github.com/ssube/salty-dog/compare/v0.9.1...v0.9.2) (2023-02-19)
+
+
+### Features
+
+* **build:** include compiled src in image ([38e349a](https://github.com/ssube/salty-dog/commit/38e349a628ebfc1ff967233569183f32ddcda9c0))
+* re-export most significant symbols from app ([8196d6c](https://github.com/ssube/salty-dog/commit/8196d6c10aebd5c7f2528c4bfef438cc1185edd6))
+* **app:** add CLI option for reporter ([912eb82](https://github.com/ssube/salty-dog/commit/912eb82accf8033c871218ae84834252fe0f63ad))
+* **config:** add destination as an alias for d/dest ([3ac66cf](https://github.com/ssube/salty-dog/commit/3ac66cf1e8720183e1918bba92921f408c1733f0))
+* **docs:** outline of guide ([28cb25e](https://github.com/ssube/salty-dog/commit/28cb25e179591f4599ce9ac1e7939bd4cbdae734))
+* **reporter:** add markdown delimiter row to table report ([8ce71b9](https://github.com/ssube/salty-dog/commit/8ce71b9bfba226b0c5294a1184cce386c8e09240))
+* **reporter:** format total errors per rule in table reporter ([9fbc6b0](https://github.com/ssube/salty-dog/commit/9fbc6b06c41be2c66a862eabb70274cb8636a018))
+* **reporter:** include changes in table report ([2941a1c](https://github.com/ssube/salty-dog/commit/2941a1cd9d9df45bd143c65b226f1a4b419862ab))
+* **scripts:** add a way to skip conventional formatting ([4aa23fe](https://github.com/ssube/salty-dog/commit/4aa23fe75f85dae1658dfdad57b248d3dc0b1c9e))
+* **scripts:** add commit message template ([9ae54f3](https://github.com/ssube/salty-dog/commit/9ae54f3a18aa9b1067fdbad94beede564a7f42f0))
+* **scripts:** add project-specific aliases ([64f5429](https://github.com/ssube/salty-dog/commit/64f54294dccd044946c4df9e6724b4e05ed8b6e9))
+* **scripts:** add scope alias and allow functions ([ddb7fbc](https://github.com/ssube/salty-dog/commit/ddb7fbcc2c87f0ff2c963e0f85913fcdb7d8d714))
+* **scripts:** clean up debug logging, handle filenames better ([a5d9a96](https://github.com/ssube/salty-dog/commit/a5d9a9670e488b042ca9e61d1c57d01737578242))
+* **scripts:** correctly handle path scopes ([e8f3103](https://github.com/ssube/salty-dog/commit/e8f31036f6ed3e28d645984f26d19479d82e84cb))
+* **scripts:** lint commit script ([118ec94](https://github.com/ssube/salty-dog/commit/118ec94b836859faab24492d3ebb409a37390d4d))
+* **scripts:** remove trim from scope alias ([6023dcd](https://github.com/ssube/salty-dog/commit/6023dcde99b1e326af3abc4478681edbc0c297ea))
+* **scripts:** support stdin/out instead of message file ([cb6c047](https://github.com/ssube/salty-dog/commit/cb6c04708be5e23906dc1b3f40b67c228bb5ba94))
+* **scripts:** use assoc arrays for alias rather than splitting repeatedly ([387bef7](https://github.com/ssube/salty-dog/commit/387bef7ff0f0bae2d6f465839482c2e64a4d7ab6))
+* **source:** formalize source data with Document and Element ([1fa3865](https://github.com/ssube/salty-dog/commit/1fa386581e0a210041679c6cd8ced74b481891d2))
+* **test:** add example and rule to insert image pull policy ([047673c](https://github.com/ssube/salty-dog/commit/047673c6afbd4f2a6a1c1e368f6906d7915a98d9))
+
+
+### Bug Fixes
+
+* **build:** correct mapped line numbers in test stack traces ([57c667c](https://github.com/ssube/salty-dog/commit/57c667cc991f543fc3323770d520ca5cec6e728f))
+* **build:** run rule/example tests during CI ([81aac07](https://github.com/ssube/salty-dog/commit/81aac07fd5783856e9337d5f208c29ffec6b0857))
+* **config:** make args parser type safe ([0427a09](https://github.com/ssube/salty-dog/commit/0427a092bec59c72743e8172002073bfc7b6a9e2))
+* **deps:** replace usage of deprecated array helper with new name ([84afd78](https://github.com/ssube/salty-dog/commit/84afd78b6983f1946f6dff6420c46f842da8829a))
+* **docs:** clean up readme badges ([3bd740e](https://github.com/ssube/salty-dog/commit/3bd740eea59ff941d1aaf1695ef2737bdc4f14ca))
+* **docs:** flesh out getting started guide ([fa86f1d](https://github.com/ssube/salty-dog/commit/fa86f1d73eb0b1900b87736f78013df10cffe525))
+* **docs:** remove test table from docs ([b2122d5](https://github.com/ssube/salty-dog/commit/b2122d57808ebf7f29bb1b46025eae95e63d50e4))
+* **lint:** quote test output ([0719045](https://github.com/ssube/salty-dog/commit/0719045782fa600553b4d89f5bb9cf840b04cd35))
+* **reporter:** add margin before and after each table field ([f7a4b63](https://github.com/ssube/salty-dog/commit/f7a4b63d5c6a20f422bfa4f87c50d20550a9cf41))
+* **reporter:** avoid repeat copies in table report ([fe4d13d](https://github.com/ssube/salty-dog/commit/fe4d13d51cbae0ca7ec5538a014ac8c428be459d))
+* **rules:** expect required image field to be a string in pull policy rule ([6da2eb5](https://github.com/ssube/salty-dog/commit/6da2eb54d2291131844036d5cb1bfffed9fd9c9a))
+* **scripts:** correct parsing of type-only messages ([27164c6](https://github.com/ssube/salty-dog/commit/27164c6b4ecb764b3e1c0c790b49f3031f5d69d3))
+* **scripts:** use commit type from message file when present ([4cadb4c](https://github.com/ssube/salty-dog/commit/4cadb4ccda374b64d802d2e715bb0b13906554d3))
+* **test:** correctly check lines, remove empty alternative ([322de06](https://github.com/ssube/salty-dog/commit/322de068f8a79fbcc4c7731cd46dab9659e8decf))
+* **test:** cover new reporters ([09f83ee](https://github.com/ssube/salty-dog/commit/09f83ee5ab52c3c7d63c0629af0e678192dd3b41))
+
 ### [0.9.1](https://github.com/ssube/salty-dog/compare/v0.9.0...v0.9.1) (2022-02-25)
 
 
