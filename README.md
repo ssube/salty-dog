@@ -56,7 +56,7 @@ validation.
 
 [![github release link](https://img.shields.io/badge/github-release-blue?logo=github)](https://github.com/ssube/salty-dog/releases)
 [![github release version](https://img.shields.io/github/tag/ssube/salty-dog.svg)](https://github.com/ssube/salty-dog/releases)
-[![github commits since release](https://img.shields.io/github/commits-since/ssube/salty-dog/v0.9.1.svg)](https://github.com/ssube/salty-dog/compare/v0.8.0...master)
+[![github commits since release](https://img.shields.io/github/commits-since/ssube/salty-dog/v0.9.2.svg)](https://github.com/ssube/salty-dog/compare/v0.9.2...master)
 
 [![npm package link](https://img.shields.io/badge/npm-package-blue?logo=npm)](https://www.npmjs.com/package/salty-dog)
 [![npm release version](https://img.shields.io/npm/v/salty-dog.svg)](https://www.npmjs.com/package/salty-dog)
