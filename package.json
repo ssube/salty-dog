@@ -83,7 +83,7 @@
     "jsonpath-plus": "7.2.0",
     "lodash": "4.17.21",
     "memfs": "3.4.13",
-    "minimatch": "5.1.1",
+    "minimatch": "5.1.6",
     "mocha": "10.2.0",
     "noicejs": "4.0.0",
     "nyc": "15.1.0",
