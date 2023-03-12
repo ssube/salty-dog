@@ -92,6 +92,7 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
       [CONFIG_ARGS_PATH]: {
         default: [] as Array<string>,
         group: 'Config:',
+        string: true,
         type: 'array',
       },
       'count': {
@@ -108,16 +109,19 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
       'exclude-level': {
         default: [] as Array<LogLevel>,
         group: 'Rules:',
+        string: true,
         type: 'array',
       },
       'exclude-name': {
         default: [] as Array<string>,
         group: 'Rules:',
+        string: true,
         type: 'array',
       },
       'exclude-tag': {
         default: [] as Array<string>,
         group: 'Rules:',
+        string: true,
         type: 'array',
       },
       'format': {
@@ -129,18 +133,21 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
         alias: ['l', 'level'],
         default: [] as Array<LogLevel>,
         group: 'Rules:',
+        string: true,
         type: 'array',
       },
       'include-name': {
         alias: ['n', 'name'],
         default: [] as Array<string>,
         group: 'Rules:',
+        string: true,
         type: 'array',
       },
       'include-tag': {
         alias: ['t', 'tag'],
         default: [] as Array<string>,
         group: 'Rules:',
+        string: true,
         type: 'array',
       },
       'reporter': {
@@ -178,7 +185,8 @@ export async function parseArgs(argv: Array<string>): Promise<ParseResults> {
     .version(VERSION_INFO.package.version)
     .alias('version', 'v');
 
-  const args = await parser.parse(argv);
+  // some of the enums complain about a type of `Array<string> | Array<enum>` without this cast
+  const args = await parser.parse(argv) as ParsedArgs;
   return {
     args,
     mode,
