@@ -339,10 +339,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@microsoft/api-documenter@7.22.7":
-  version "7.22.7"
-  resolved "https://artifacts.apextoaster.com/repository/group-npm/@microsoft/api-documenter/-/api-documenter-7.22.7.tgz#6e69d4fe4ebeffa68fe2111581b93b71868e395f"
-  integrity sha512-iv7C5oQLk0sxMWwhkW29lPgG5YIZfWk/JksJgpODI9ubnCD4me5cMBAoEd+3Z/ysL7ynThXaL/1wGLkEFec0Xg==
+"@microsoft/api-documenter@7.22.8":
+  version "7.22.8"
+  resolved "https://artifacts.apextoaster.com/repository/group-npm/@microsoft/api-documenter/-/api-documenter-7.22.8.tgz#9d0116595a719e81869f57a71a58b6dbb7d23ed1"
+  integrity sha512-0LHxKIcAskKRyZF0HmTYlEKFPJffKdumoLrMy3CNmE8y4xVza9RjpePvSvOFksAwrr3ClOLCSzd71mlvnjh4hQ==
   dependencies:
     "@microsoft/api-extractor-model" "7.27.1"
     "@microsoft/tsdoc" "0.14.2"
