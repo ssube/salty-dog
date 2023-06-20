@@ -1,4 +1,4 @@
-FROM docker.artifacts.apextoaster.com/library/node:19-alpine
+FROM docker.artifacts.apextoaster.com/library/node:20-alpine
 
 # dependencies: log filtering
 RUN apk add --update jq \
